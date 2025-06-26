@@ -25,12 +25,23 @@ jobs:
     - name: List current directory
       run: ls -la
         
-    - name: Deploy via SFTP
-      uses: appleboy/scp-action@v0.1.7
+    - name: Deploy via FTP
+      uses: SamKirkland/FTP-Deploy-Action@v4
       with:
-        host: ${{ secrets.SERVER }}
+        server: ${{ secrets.SERVER }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
+        protocol: ftp
         port: 21098  # adjust if your SFTP uses a different port
         source: "*" 
         target: "/home/waseekxy/unifood.wasesupportservices.co.uk/" 
+
+    # - name: Deploy via SFTP
+    #   uses: appleboy/scp-action@v0.1.7
+    #   with:
+    #     host: ${{ secrets.SERVER }}
+    #     username: ${{ secrets.USERNAME }}
+    #     password: ${{ secrets.PASSWORD }}
+    #     port: 21098  # adjust if your SFTP uses a different port
+    #     source: "*" 
+    #     target: "/home/waseekxy/unifood.wasesupportservices.co.uk/" 
