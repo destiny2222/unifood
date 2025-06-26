@@ -32,7 +32,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         protocol: ftp
-        port: 21098  # adjust if your SFTP uses a different port
+        port: 21  # adjust if your SFTP uses a different port
         timeout: 60000
         log-level: verbose
        
