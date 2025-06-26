@@ -22,9 +22,8 @@ jobs:
 
     - name: Install PHP dependencies
       run: composer install --no-dev --optimize-autoloader
-
-    - name: List unifood directory
-      run: ls -la unifood
+    - name: List current directory
+      run: ls -la
         
     - name: Deploy via SFTP
       uses: appleboy/scp-action@v0.1.7
