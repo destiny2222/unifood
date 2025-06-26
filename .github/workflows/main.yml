@@ -31,6 +31,6 @@ jobs:
         host: ${{ secrets.SERVER }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
-        port: 22  # adjust if your SFTP uses a different port
+        port: 21098  # adjust if your SFTP uses a different port
         source: "*" 
         target: "/home/waseekxy/unifood.wasesupportservices.co.uk/" 
