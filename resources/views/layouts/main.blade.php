@@ -206,14 +206,14 @@
      <!--=============================
         FOOTER START
     ==============================-->
-    <footer style="background: url(/uploads/website-images/footer_background-2022-12-13-12-06-33-5633.jpg);">
+    <footer style="background: url({{ asset('footer_background.jpg') }});">
         <div class="footer_overlay pt_100 xs_pt_70 pb_100 xs_pb_70">
             <div class="container wow fadeInUp" data-wow-duration="1s">
                 <div class="row justify-content-between">
                     <div class="col-lg-4 col-sm-8 col-md-6">
                         <div class="wsus__footer_content">
                             <a class="footer_logo" href="index.htm">
-                                <img src="/uploads/website-images/footer_logo-2022-12-13-05-17-08-5906.png"
+                                <img src="{{ asset('images/logo/footer_logo.png') }}"
                                     alt="UniFood" class="img-fluid w-100">
                             </a>
                             <span>There are many variations of Lorem Ipsum available, but the majority have

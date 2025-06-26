@@ -926,7 +926,7 @@
     <!--=============================
         TEAM START
     ==============================-->
-    <section class="wsus__team pt_95 xs_pt_65 pb_150 xs_pb_120" style="background: url(/user/images/chefs_bg.jpg);">
+    <section class="wsus__team pt_95 xs_pt_65 pb_150 xs_pb_120" style="background: url({{ asset('chefs_bg.jpg') }});">
         <span class="banner_shape_1">
             <img src="{{ asset('images/shape/chef_left_image.png') }}" alt="shape"
                 class="img-fluid w-100">
@@ -1098,7 +1098,7 @@
     <section class="wsus__download mt_100 xs_mt_70">
         <div class="container">
             <div class="wsus__download_bg"
-                style="background: url(/website-images/app_background_one-2022-12-13-01-02-55-7947.jpg);">
+                style="background: url({{ asset('app_background_one.jpg') }});">
                 <div class="wsus__download_overlay">
                     <div class="row justify-content-between">
                         <div class="col-xl-5 col-lg-6 wow fadeInUp" data-wow-duration="1s">
@@ -1128,7 +1128,7 @@
                         </div>
                         <div class="col-xl-6 col-lg-6 wow fadeInUp" data-wow-duration="1s">
                             <div class="wsus__download_img">
-                                <img src="/website-images/app-image-2022-12-12-01-03-00-7574.png"
+                                <img src="/app-image.png"
                                     alt="download" class="img-fluid w-100">
                             </div>
                         </div>
@@ -1146,7 +1146,7 @@
         COUNTER START
     ==============================-->
     <section class="wsus__counter mt_100 xs_mt_70"
-        style="background: url(/website-images/counter-bg-2023-03-06-09-34-03-6121.jpg);">
+        style="background: url( {{ asset('counter-bg.jpg') }} );">
         <div class="wsus__counter_overlay pt_100 xs_pt_70 pb_100 xs_pb_70">
             <div class="container">
                 <div class="row">
@@ -1402,7 +1402,7 @@
     ==============================-->
 
     <section class="wsus__blog"
-        style="background: url(/website-images/blog_background-2022-12-15-03-17-45-5083.jpg);">
+        style="background: url({{ asset('footer_background.jpg') }});">
         <div class="wsus__blog_overlay pt_95 xs_pt_65 pb_100 xs_pb_70">
             <div class="container">
 
@@ -1424,7 +1424,7 @@
                     <div class="col-xl-4 col-sm-6 col-lg-4 wow fadeInUp" data-wow-duration="1s">
                         <div class="wsus__single_blog">
                             <a href="blog/the-secret-to-perfectly-cooked-steaks.html" class="wsus__single_blog_img">
-                                <img src="/custom-images/blog--2023-03-05-05-34-11-4870.jpg" alt="blog"
+                                <img src="{{ asset('images/blog/blog-02.jpg') }}" alt="blog"
                                     class="img-fluid w-100">
                             </a>
                             <div class="wsus__single_blog_text">
@@ -1442,7 +1442,7 @@
                     <div class="col-xl-4 col-sm-6 col-lg-4 wow fadeInUp" data-wow-duration="1s">
                         <div class="wsus__single_blog">
                             <a href="blog/why-our-pasta-is-worth-the-visit.html" class="wsus__single_blog_img">
-                                <img src="/custom-images/blog--2023-03-05-05-35-24-9694.jpg" alt="blog"
+                                <img src="{{ asset('images/blog/blog-01.jpg') }}" alt="blog"
                                     class="img-fluid w-100">
                             </a>
                             <div class="wsus__single_blog_text">
@@ -1461,7 +1461,7 @@
                         <div class="wsus__single_blog">
                             <a href="blog/the-science-of-pairing-wine-and-cheese.html"
                                 class="wsus__single_blog_img">
-                                <img src="/custom-images/blog--2023-03-05-05-36-09-3126.jpg" alt="blog"
+                                <img src="{{ asset('images/blog/blog-03.jpg') }}" alt="blog"
                                     class="img-fluid w-100">
                             </a>
                             <div class="wsus__single_blog_text">
@@ -1490,7 +1490,7 @@
         BRAND START
     ==============================-->
     <section class="wsus__brand"
-        style="background: url(/website-images/counter-bg-2023-03-06-09-34-36-3312.jpg);">
+        style="background: url({{ asset('counter-bg.jpg') }});">
         <div class="wsus__brand_overlay">
             <div class="container">
                 <div class="row brand_slider wow fadeInUp" data-wow-duration="1s">
