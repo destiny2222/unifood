@@ -26,15 +26,14 @@ jobs:
       run: ls -la
         
     - name: Deploy via FTP
-      uses: SamKirkland/FTP-Deploy-Action@v4
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
         server: ${{ secrets.SERVER }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         protocol: ftp
         port: 21098  # adjust if your SFTP uses a different port
-        source: "*" 
-        target: "/home/waseekxy/unifood.wasesupportservices.co.uk/" 
+       
 
     # - name: Deploy via SFTP
     #   uses: appleboy/scp-action@v0.1.7
@@ -45,3 +44,24 @@ jobs:
     #     port: 21098  # adjust if your SFTP uses a different port
     #     source: "*" 
     #     target: "/home/waseekxy/unifood.wasesupportservices.co.uk/" 
+
+    # - name: ssh key passphrase
+    #   uses: appleboy/ssh-action@v0.1.8
+    #   with:
+    #     host: ${{ secrets.SERVER }}
+    #     username: ${{ secrets.SSH_USERNAME }}
+    #     password: ${{ secrets.SSH_PASSWORD }}
+    #     timeout: 120s  # Increase connection timeout
+    #     command_timeout: 20m  # Increase command execution timeout
+    #     script: |
+    #       whoami
+    #       ls -al
+    #       cd dexnovate.com
+    #       php artisan storage:link
+    #       php artisan key:generate
+    #       php artisan migrate
+    #       php artisan cache:clear
+    #       php artisan view:clear
+    #       php artisan route:clear
+    #       php artisan config:clear
+    #       php artisan optimize:clear
