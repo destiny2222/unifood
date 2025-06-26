@@ -28,6 +28,8 @@ jobs:
         server: ${{ secrets.LARAVEL_SITE_SERVER}}
         username: ${{ secrets.LARAVEL_SITE_USER}}
         password: ${{ secrets.LARAVEL_SITE_PASS}}
+        port: 21 
+        log-level: verbose
 
     - name: ssh key passphrase
       uses: appleboy/ssh-action@v0.1.8
@@ -36,6 +38,8 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         port: ${{ secrets.SSH_PORT }}
         password: ${{ secrets.SSH_PASSWORD }}
+        timeout: 120s  # Increase connection timeout
+        command_timeout: 20m  # Increase command execution timeout
         script: |
           whoami
           ls -al
