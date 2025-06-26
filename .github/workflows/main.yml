@@ -25,9 +25,9 @@ jobs:
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@4.0.0
       with:
-        server: ${{ secrets.SERVER}}
-        username: ${{ secrets.USERNAME}}
-        password: ${{ secrets.PASSWORD}}
+        server: ${{ secrets.LARAVEL_SITE_SERVER}}
+        username: ${{ secrets.LARAVEL_SITE_USER}}
+        password: ${{ secrets.LARAVEL_SITE_PASS}}
 
     - name: ssh key passphrase
       uses: appleboy/ssh-action@v0.1.8
