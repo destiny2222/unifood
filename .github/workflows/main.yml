@@ -17,44 +17,33 @@ jobs:
     - name: Install PHP and Composer
       uses: shivammathur/setup-php@v2
       with:
-          php-version: '8.2' # Adjust to match the PHP version used by your Laravel project
-          tools: 'composer'
+        php-version: '8.2'
+        tools: 'composer'
 
     - name: Install PHP dependencies
       run: composer install --no-dev --optimize-autoloader
+
     - name: List current directory
       run: ls -la
-        
-    - name: Deploy via FTP
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+
+    - name: Deploy via SFTP
+      uses: appleboy/scp-action@v0.1.7
       with:
-        server: ${{ secrets.SERVER }}
+        host: ${{ secrets.SERVER }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
-        protocol: ftp
-        port: 21  # adjust if your SFTP uses a different port
-        timeout: 60000
-        log-level: verbose
-       
+        port: 21098
+        source: "*"
+        target: "/home/waseekxy/unifood.wasesupportservices.co.uk/"
 
-    # - name: Deploy via SFTP
-    #   uses: appleboy/scp-action@v0.1.7
-    #   with:
-    #     host: ${{ secrets.SERVER }}
-    #     username: ${{ secrets.USERNAME }}
-    #     password: ${{ secrets.PASSWORD }}
-    #     port: 21098  # adjust if your SFTP uses a different port
-    #     source: "*" 
-    #     target: "/home/waseekxy/unifood.wasesupportservices.co.uk/" 
-
-    - name: ssh key passphrase
+    - name: SSH for Laravel commands
       uses: appleboy/ssh-action@v0.1.8
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
         password: ${{ secrets.SSH_PASSWORD }}
-        timeout: 120s  # Increase connection timeout
-        command_timeout: 20m  # Increase command execution timeout
+        timeout: 120s
+        command_timeout: 20m
         script: |
           whoami
           ls -al
