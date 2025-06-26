@@ -22,6 +22,9 @@ jobs:
 
     - name: Install PHP dependencies
       run: composer install --no-dev --optimize-autoloader
+
+    - name: List unifood directory
+      run: ls -la unifood
         
     - name: Deploy via SFTP
       uses: appleboy/scp-action@v0.1.7
@@ -30,5 +33,5 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: 22  # adjust if your SFTP uses a different port
-        source: "dist/*" 
+        source: "*" 
         target: "/home/waseekxy/unifood.wasesupportservices.co.uk/" 
