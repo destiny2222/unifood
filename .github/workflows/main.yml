@@ -1,58 +1,50 @@
-name: Publish Website to CPanel
+name: Laravel
+
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
 jobs:
-  FTP-Deploy-Action:
-    name: FTP-Deploy-Action
+  deployment:
+
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v2.1.0
+    - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
       with:
-        fetch-depth: 2 
-    - name: Build assets
-      run: npm install && npm run build
-
-    - name: Install PHP and Composer
-      uses: shivammathur/setup-php@v2
+        php-version: '8.0'
+    - uses: actions/checkout@v3
+    - name: Copy .env
+      run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+      
+    - name: Directory Permissions
+      run: chmod -R 777 storage bootstrap/cache
+      
+    - name: 📂 Sync files
+      uses: SamKirkland/FTP-Deploy-Action@4.0.0
       with:
-        php-version: '8.2'
-        tools: 'composer'
+        server: ${{ secrets.SERVER}}
+        username: ${{ secrets.USERNAME}}
+        password: ${{ secrets.PASSWORD}}
 
-    - name: Install PHP dependencies
-      run: composer install --no-dev --optimize-autoloader
-
-    - name: List current directory
-      run: ls -la
-
-    - name: Deploy via SFTP
-      uses: appleboy/scp-action@v0.1.7
-      with:
-        host: ${{ secrets.SERVER }}
-        username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
-        port: 21098
-        source: "*"
-        target: "/home/waseekxy/unifood.wasesupportservices.co.uk/"
-
-    - name: SSH for Laravel commands
+    - name: ssh key passphrase
       uses: appleboy/ssh-action@v0.1.8
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
+        port: ${{ secrets.SSH_PORT }}
         password: ${{ secrets.SSH_PASSWORD }}
-        timeout: 120s
-        command_timeout: 20m
         script: |
           whoami
           ls -al
           cd unifood.wasesupportservices.co.uk
+          composer install --ignore-platform-reqs
           php artisan storage:link
-          php artisan key:generate
-          php artisan migrate
-          php artisan cache:clear
-          php artisan view:clear
-          php artisan route:clear
+          php artisan config:cache
           php artisan config:clear
-          php artisan optimize:clear
+          php artisan view:clear
+          php artisan cache:clear
+          php artisan optimize
+          php artisan migrate --force
