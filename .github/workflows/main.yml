@@ -23,9 +23,12 @@ jobs:
     - name: Install PHP dependencies
       run: composer install --no-dev --optimize-autoloader
         
-    - name: FTP-Deploy-Action
-      uses: SamKirkland/FTP-Deploy-Action@4.3.3
+    - name: Deploy via SFTP
+      uses: appleboy/scp-action@v0.1.7
       with:
-        server: ${{ secrets.SERVER }}
+        host: ${{ secrets.SERVER }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
+        port: 22  # adjust if your SFTP uses a different port
+        source: "unifood/*" 
+        target: "/home/waseekxy/unifood.wasesupportservices.co.uk/" 
