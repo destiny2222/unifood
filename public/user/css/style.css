@@ -1,4 +1,4 @@
-@import url('../../../css2');
+@import url('./css2');
 
 * {
     margin: 0;
@@ -20,6 +20,32 @@ a {
 
 a:hover {
     text-decoration: none;
+}
+
+
+:root {
+    --colorPrimary: #45871B;
+    --paraColor: #494949;
+    --colorBlack: #010f1c;
+    --colorWhite: #ffffff;
+    --paraFont: 'Barlow', sans-serif;
+    --headingFont: 'Jost', sans-serif;
+    --cursiveFont: 'Lobster', cursive;
+    --boxShadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    --gradiantBg: #45871B linear-gradient(0deg, #45871B 0%, #6bbf3c 100%);
+    --gradiantHoverBg: #6bbf3c linear-gradient(0deg, #6bbf3c 0%, #45871B 100%);
+}
+
+.footer_overlay {
+    background: #45871B !important;
+}
+.footer_overlay {
+    background: #45871B !important;
+}
+
+
+.topbar_icon li a {
+    background: #45871B !important;
 }
 
 h1,
@@ -49,6 +75,8 @@ body {
     color: var(--paraColor);
     font-family: var(--paraFont);
 }
+
+
 
 img {
     width: 100% !important;
@@ -234,7 +262,7 @@ button {
     text-align: center;
     font-size: 14px;
     margin-right: 10px;
-    background: #ca0628;
+    background: #0d1e02;
     transition: all linear .3s;
     -webkit-transition: all linear .3s;
     -moz-transition: all linear .3s;
@@ -310,7 +338,11 @@ button {
 
 .main_menu .navbar-brand {
     display: inline-block;
-    width: 150px;
+    width: 100px;
+}
+
+.main_menu .navbar-brand img{
+    width:60px !important;
 }
 
 .main_menu .navbar-nav {
@@ -2387,7 +2419,7 @@ footer {
 }
 
 .footer_overlay {
-    background: #b90424fa;
+    background: #45871B;
 }
 
 .wsus__footer_content .footer_logo {
@@ -2553,7 +2585,7 @@ footer {
 .wsus__footer_bottom {
     background: var(--gradiantBg);
     padding: 30px 0px;
-    border-top: 1px solid #f22020;
+    border-top: 1px solid #45871B;
 }
 
 .wsus__footer_bottom_text p {
@@ -3657,7 +3689,7 @@ footer {
 }
 
 .wsus__single_comment .inactive {
-    background: #f5506d;
+    background: #45871B;
 }
 
 .comment_input {
@@ -7131,4 +7163,31 @@ CHECKOUT PAGE START
 
 .wsus__why_choose .wsus__choose_single:last-child {
     /* border: none; */
+}
+
+#Password-toggle-btn{
+  position: absolute;
+  right:5%;
+  top: 40px;
+  /* right: 10px;
+  top: 10px;
+  cursor: pointer;
+  color: #fff;
+  font-size: 20px;
+  z-index: 999; */
+}
+#Password-toggle{
+  position: absolute;
+  right:5%;
+  top: 40px;
+  /* right: 10px;
+  top: 10px;
+  cursor: pointer;
+  color: #fff;
+  font-size: 20px;
+  z-index: 999; */
+}
+
+.input_group{
+    position:relative;
 }

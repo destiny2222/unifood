@@ -22,9 +22,9 @@ Route::prefix('admin')->name('admin.')->group(function (){
 
     Route::middleware('admin.logged_out')->group(function () {
         Route::controller(LoginController::class)->group(function (){
-            Route::get('login','showLoginForm')->name('login.form');
-            Route::post('login-post', 'login')->name('login');
-            Route::post('logout','logout')->name('logout');
+            Route::get('login-form','showLoginForm')->name('login.form');
+            Route::post('login-post', 'login')->name('admin.login');
+            Route::post('logout','logout')->name('admin.logout');
         });
     });
 

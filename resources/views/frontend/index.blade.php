@@ -321,7 +321,7 @@
                 <div class="col-xl-3 col-sm-6 col-lg-4 category_1 wow fadeInUp " data-wow-duration="1s">
                     <div class="wsus__menu_item">
                         <div class="wsus__menu_item_img">
-                            <img src="/custom-images/hyderabadi-biryani-2023-03-05-01-14-59-9689.png"
+                            <img src="/images/hyderabadi-biryani.png"
                                 alt="menu" class="img-fluid w-100">
                             <a class="category" href="#">Burger</a>
                         </div>
@@ -355,7 +355,7 @@
                 <div class="col-xl-3 col-sm-6 col-lg-4 category_1 wow fadeInUp " data-wow-duration="1s">
                     <div class="wsus__menu_item">
                         <div class="wsus__menu_item_img">
-                            <img src="/custom-images/daria-shevtsova-2023-03-05-02-47-26-3957.png"
+                            <img src="/images/daria-shevtsova.png"
                                 alt="menu" class="img-fluid w-100">
                             <a class="category" href="#">Burger</a>
                         </div>
@@ -389,7 +389,7 @@
                 <div class="col-xl-3 col-sm-6 col-lg-4 category_1 wow fadeInUp " data-wow-duration="1s">
                     <div class="wsus__menu_item">
                         <div class="wsus__menu_item_img">
-                            <img src="/custom-images/spicy-burger-2023-03-05-02-57-08-4535.png" alt="menu"
+                            <img src="/custom-images/spicy-burger.png" alt="menu"
                                 class="img-fluid w-100">
                             <a class="category" href="#">Burger</a>
                         </div>
@@ -1146,7 +1146,7 @@
         COUNTER START
     ==============================-->
     <section class="wsus__counter mt_100 xs_mt_70"
-        style="background: url( {{ asset('counter-bg.jpg') }} );">
+        style="background: url( {{ asset('images/breadcrumb_image.jpg') }} );">
         <div class="wsus__counter_overlay pt_100 xs_pt_70 pb_100 xs_pb_70">
             <div class="container">
                 <div class="row">
@@ -1490,7 +1490,7 @@
         BRAND START
     ==============================-->
     <section class="wsus__brand"
-        style="background: url({{ asset('counter-bg.jpg') }});">
+        style="background: url({{ asset('images/breadcrumb_image.jpg') }});">
         <div class="wsus__brand_overlay">
             <div class="container">
                 <div class="row brand_slider wow fadeInUp" data-wow-duration="1s">

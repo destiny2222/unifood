@@ -6,8 +6,8 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densityDpi=device-dpi">
 
-    <title>UniFood - Welcome to Our Restaurant Management Project</title>
-    <meta name="description" content="Unifood - Welcome to Our Restaurant Management">
+    <title> {{ config('app.name' ) }} - Welcome to Our Restaurant Management </title>
+    <meta name="description" content="MightyOlu Grocery - Welcome to Our Restaurant Management">
 
     <link rel="icon" type="image/png" href="/images/logo/favicon.png">
     <link rel="stylesheet" href="/user/css/all.min.css">
@@ -18,39 +18,14 @@
     <link rel="stylesheet" href="/user/css/venobox.min.css">
     <link rel="stylesheet" href="/user/css/animate.css">
     <link rel="stylesheet" href="/user/css/jquery.exzoom.css">
-    <link rel="stylesheet" href="/toastr/toastr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.css">
     <link rel="stylesheet" href="/user/css/style.css">
     <link rel="stylesheet" href="/user/css/responsive.css">
     <link rel="stylesheet" href="/backend/css/bootstrap-datepicker.min.css">
     <link rel="stylesheet" href="/backend/css/select2.min.css">
 
 
-    <style>
-        :root {
-            --colorPrimary: #eb0029;
-            --paraColor: #494949;
-            --colorBlack: #010f1c;
-            --colorWhite: #ffffff;
-            --paraFont: 'Barlow', sans-serif;
-            --headingFont: 'Jost', sans-serif;
-            --cursiveFont: 'Lobster', cursive;
-            --boxShadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-            --gradiantBg: rgb(156, 3, 30)linear-gradient(0deg, rgba(156, 3, 30, 1) 0%, rgba(235, 0, 41, 1) 100%);
-            --gradiantHoverBg: rgb(235, 0, 41)linear-gradient(0deg, rgba(235, 0, 41, 1) 0%, rgba(156, 3, 30, 1) 100%);
-        }
 
-
-        .footer_overlay {
-            background: #b90424fa !important;
-        }
-
-
-        .topbar_icon li a {
-            background: #ca0628 !important;
-        }
-    </style>
-
-    
 </head>
 
 <body>
@@ -78,7 +53,7 @@
                 <div class="col-xl-6 col-md-6">
                     <div class="topbar_right">
                         <div class="topbar_language">
-                            <form id="setLanguage" action="https://unifood.websolutionus.com/set-language">
+                            <form id="setLanguage" action="">
                                 <select id="select_js3" name="code">
                                     <option value="en" selected="">English</option>
                                     <option value="bn">Bangla</option>
@@ -108,7 +83,7 @@
     <nav class="navbar navbar-expand-lg main_menu">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <img src="{{ asset('images/logo/logo.png') }}" alt="UniFood" class="img-fluid">
+                <img src="{{ asset('images/logo/logo.png') }}" width="50" height="50" alt="UniFood" class="img-fluid">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -151,11 +126,10 @@
                                 class="topbar_cart_qty">0</span></a>
                     </li>
                     <li>
-                        <a href="#"><i class="fas fa-user"></i></a>
+                        <a href="/login"><i class="fas fa-user"></i></a>
                     </li>
                     <li>
                         <a class="common_btn" href="#">reservation</a>
-
                     </li>
                 </ul>
             </div>
@@ -231,11 +205,11 @@
                         <div class="wsus__footer_content">
                             <h3>Important Link</h3>
                             <ul>
-                                <li><a href="index.htm">Home</a></li>
-                                <li><a href="about-us.html">About Us</a></li>
-                                <li><a href="contact-us.html">Contact Us</a></li>
-                                <li><a href="our-chef.html">Our Chef</a></li>
-                                <li><a href="our-chef.html">Dashboard</a></li>
+                                <li><a href="/">Home</a></li>
+                                <li><a href="#">About Us</a></li>
+                                <li><a href="#">Contact Us</a></li>
+                                <li><a href="#">Our Chef</a></li>
+                                <li><a href="#">Dashboard</a></li>
 
                             </ul>
                         </div>
@@ -244,11 +218,11 @@
                         <div class="wsus__footer_content">
                             <h3>Help Link</h3>
                             <ul>
-                                <li><a href="blogs.html">Our Blogs</a></li>
-                                <li><a href="testimonial.html">Testimonial</a></li>
-                                <li><a href="faq.html">FAQ</a></li>
-                                <li><a href="privacy-policy.html">Privacy and Policy</a></li>
-                                <li><a href="terms-and-condition.html">Terms anc Conditions</a></li>
+                                <li><a href="#">Our Blogs</a></li>
+                                <li><a href="#">Testimonial</a></li>
+                                <li><a href="#">FAQ</a></li>
+                                <li><a href="#">Privacy and Policy</a></li>
+                                <li><a href="#">Terms anc Conditions</a></li>
                             </ul>
                         </div>
                     </div>
@@ -256,9 +230,7 @@
                         <div class="wsus__footer_content">
                             <h3>Subscribe to Newsletter</h3>
                             <form id="subscribe_form">
-                                <input type="hidden" name="_token"
-                                    value="bEl0FV3NGFotgbZzLm70xYzARsANzVbxSb6MiMoq" autocomplete="off"> <input
-                                    type="email" placeholder="Email" name="email">
+                                 <input type="email" placeholder="Email" name="email">
                                 <button id="subscribe_btn" type="submit"><i
                                         class="fas fa-paper-plane"></i></button>
                             </form>
@@ -286,10 +258,10 @@
                         <div class="wsus__footer_bottom_text d-flex flex-wrap justify-content-between">
                             <p>©2024 websolutionus All rights reserved</p>
                             <ul class="d-flex flex-wrap">
-                                <li><a href="faq.html">FAQ</a></li>
-                                <li><a href="login.html">Payment</a></li>
-                                <li><a href="login.html">Checkout</a></li>
-                                <li><a href="login.html">Dashboard</a></li>
+                                <li><a href="#">FAQ</a></li>
+                                <li><a href="#">Payment</a></li>
+                                <li><a href="#">Checkout</a></li>
+                                <li><a href="#">Dashboard</a></li>
                             </ul>
                         </div>
                     </div>
@@ -303,7 +275,7 @@
 
 
     <!--jquery library js-->
-    <script src="/user/js/jquery-3.6.3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!--bootstrap js-->
     <script src="/user/js/bootstrap.bundle.min.js"></script>
     <!--font-awesome js-->
@@ -333,9 +305,11 @@
     <!--main/custom js-->
     <script src="/user/js/main.js"></script>
 
-    <script src="/toastr/toastr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.js"></script>
     <script src="/backend/js/select2.min.js"></script>
-
+    <script src="{{ asset('show-password.min.js') }}"></script>
+    @include('partials.message')
+    @stack('scripts')
 </body>
 </html>
 
