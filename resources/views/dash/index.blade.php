@@ -996,7 +996,7 @@
                                                         <div class="wsus__comment_imput_single input_group" id="Password-toggle2">
                                                             <label>Current Password</label>
                                                             <input type="password" placeholder="Current Password" name="current_password">
-                                                            <a href="javascript:void(0);" class="" id="Password-toggle">
+                                                            <a href="javascript:void(0);" class="" id="Password_toggle">
                                                                 <i class="fal fa-eye-slash" aria-hidden="true"></i>
                                                             </a>
                                                         </div>
@@ -1005,7 +1005,7 @@
                                                         <div class="wsus__comment_imput_single input_group" id="Password-toggle3">
                                                             <label>New Password</label>
                                                             <input type="password" placeholder="New Password" name="new_password">
-                                                            <a href="javascript:void(0);" class="" id="Password-toggle">
+                                                            <a href="javascript:void(0);" class="" id="Password_toggle">
                                                                 <i class="fal fa-eye-slash" aria-hidden="true"></i>
                                                             </a>
                                                         </div>
@@ -1014,7 +1014,7 @@
                                                         <div class="wsus__comment_imput_single input_group" id="Password-toggle1">
                                                             <label>Confirm Password</label>
                                                             <input type="password" name="confirm_password" placeholder="Confirm Password">
-                                                            <a href="javascript:void(0);" class="" id="Password-toggle">
+                                                            <a href="javascript:void(0);" class="" id="Password_toggle">
                                                                 <i class="fal fa-eye-slash" aria-hidden="true"></i>
                                                             </a>
                                                         </div>
