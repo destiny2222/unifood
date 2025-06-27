@@ -23,7 +23,6 @@ jobs:
         run: |
           php artisan storage:link
           php artisan key:generate
-          php artisan migrate
           php artisan cache:clear
           php artisan view:clear
           php artisan route:clear
