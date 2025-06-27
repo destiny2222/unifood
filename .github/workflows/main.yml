@@ -32,6 +32,7 @@ jobs:
           server: ${{ secrets.LARAVEL_SITE_SERVER }}
           username: ${{ secrets.LARAVEL_SITE_USER }}
           password: ${{ secrets.LARAVEL_SITE_PASS }}
+          port: 21
           server-dir: /
           protocol: ftp
-          timeout: 60
+          timeout: 6000
