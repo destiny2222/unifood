@@ -188,7 +188,7 @@
             <div class="row offer_item_slider wow fadeInUp" data-wow-duration="1s">
                 <div class="col-xl-4">
                     <div class="wsus__offer_item_single"
-                        style="background: url(/custom-images/dal-makhani-paneer-2023-03-05-01-25-44-9364.jpg);">
+                        style="background: url({{ asset('images/dal-makhani.jpg')   }});">
 
                         <span>17% off</span>
 
@@ -209,7 +209,7 @@
                 </div>
                 <div class="col-xl-4">
                     <div class="wsus__offer_item_single"
-                        style="background: url(/custom-images/indian-cuisine-pakora-2023-03-05-01-32-04-5856.jpg);">
+                        style="background: url({{ asset('images/indian-cuisine-pakora.jpg')  }});">
 
                         <span>17% off</span>
 
@@ -231,7 +231,7 @@
                 </div>
                 <div class="col-xl-4">
                     <div class="wsus__offer_item_single"
-                        style="background: url(/custom-images/beef-masala-salad-2023-03-05-01-42-23-6194.jpg);">
+                        style="background: url({{ asset('images/beef-masala-salad.jpg') }});">
 
                         <span>13% off</span>
 
@@ -252,7 +252,7 @@
                 </div>
                 <div class="col-xl-4">
                     <div class="wsus__offer_item_single"
-                        style="background: url(/custom-images/chicken-nuggets-2023-03-05-01-50-15-6100.jpg);">
+                        style="background: url({{ asset('images/chicken-nuggets.jpg') }});">
 
                         <span>40% off</span>
 
