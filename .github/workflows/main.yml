@@ -29,9 +29,9 @@ jobs:
       - name: Deploy via SFTP
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: ${{ secrets.LARAVEL_SITE_SERVER }}
-          username: ${{ secrets.LARAVEL_SITE_USER }}
-          password: ${{ secrets.LARAVEL_SITE_PASS }}
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
           source: "."
           target: "/home/waseekxy/unifood.wasesupportservices.co.uk"
-          port: 22
