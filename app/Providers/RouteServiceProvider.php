@@ -15,7 +15,7 @@ class RouteServiceProvider extends ServiceProvider
     public const ADMIN = '/admin/dashboard';
     // public const WELCOME = '/';
 
-    public const WELCOME = '/admin/login-form';
+    public const WELCOME = '/admin/login';
 
     public function register(): void
     {

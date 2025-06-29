@@ -38,10 +38,10 @@ Route::prefix('dashboard')->group(function (){
         // Route::get('/order/failed', [CheckoutController::class, 'failed'])->name('order.failed');
 
         // wishlist
-        // Route::get('/wishlist', [WishListController::class, 'index'])->name('wishlist.index');
-        // Route::post('/wishlist/add/', [WishListController::class, 'addProduct'])->name('wishlist.add');
-        // Route::post('/wishlist/add/cart', [WishListController::class, 'addProductToCart'])->name('wishlist.add.cart');
-        // Route::delete('/wishlist/{id}/remove', [WishListController::class, 'removeProduct'])->name('wishlist.remove');
+        Route::get('/wishlist', [WishListController::class, 'index'])->name('wishlist.index');
+        Route::post('/wishlist/add/', [WishListController::class, 'addProduct'])->name('wishlist.add');
+        Route::post('/wishlist/add/cart', [WishListController::class, 'addProductToCart'])->name('wishlist.add.cart');
+        Route::delete('/wishlist/{id}/remove', [WishListController::class, 'removeProduct'])->name('wishlist.remove');
 
         // review routes
         // Route::post('/reviews', [ReviewRatingController::class, 'reviewstore'])->name('review.store');

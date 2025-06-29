@@ -82,7 +82,7 @@
     ==============================-->
     <nav class="navbar navbar-expand-lg main_menu">
         <div class="container">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="/">
                 <img src="{{ asset('images/logo/logo.png') }}" width="50" height="50" alt="UniFood" class="img-fluid">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -93,7 +93,7 @@
                 <ul class="navbar-nav m-auto">
 
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Home</a>
+                        <a class="nav-link" href="/">Home</a>
                     </li>
 
                     <li class="nav-item">
@@ -101,7 +101,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Products</a>
+                        <a class="nav-link" href="/product">Products</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Blogs</a>

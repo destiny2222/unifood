@@ -22,9 +22,9 @@ Route::prefix('admin')->name('admin.')->group(function (){
 
     Route::middleware('admin.logged_out')->group(function () {
         Route::controller(LoginController::class)->group(function (){
-            Route::get('login-form','showLoginForm')->name('login.form');
-            Route::post('login-post', 'login')->name('admin.login');
-            Route::post('logout','logout')->name('admin.logout');
+            Route::get('login','showLoginForm')->name('login.form');
+            Route::post('login-post', 'login')->name('login');
+            Route::post('logout','logout')->name('logout');
         });
     });
 
@@ -33,21 +33,21 @@ Route::prefix('admin')->name('admin.')->group(function (){
         Route::get('/setting', [ HomeController::class,'settings' ])->name('settings.index');
 
         // category
-        // Route::get('/category/list', [CategoryController::class, 'index'])->name('category.index');
-        // Route::get('/category/create', [CategoryController::class, 'create'])->name('category.create');
-        // Route::post('/category/store', [CategoryController::class, 'store'])->name('category.store');
-        // Route::get('/category/{id}/edit', [CategoryController::class, 'edit'])->name('category.edit');
-        // Route::put('/category/{id}/update', [CategoryController::class, 'update'])->name('category.update');
-        // Route::delete('/category/{id}/delete', [CategoryController::class, 'destroy'])->name('category.delete');
+        Route::get('/category/list', [CategoryController::class, 'index'])->name('category.index');
+        Route::get('/category/create', [CategoryController::class, 'create'])->name('category.create');
+        Route::post('/category/store', [CategoryController::class, 'store'])->name('category.store');
+        Route::get('/category/{id}/edit', [CategoryController::class, 'edit'])->name('category.edit');
+        Route::put('/category/{id}/update', [CategoryController::class, 'update'])->name('category.update');
+        Route::delete('/category/{id}/delete', [CategoryController::class, 'destroy'])->name('category.delete');
 
 
         // product 
-        // Route::get('/product/list', [ProductController::class, 'index'])->name('product.index');
-        // Route::get('/product/create', [ProductController::class, 'create'])->name('product.create');
-        // Route::post('/product/store', [ProductController::class, 'store'])->name('product.store');
-        // Route::get('/product/{id}/edit', [ProductController::class, 'edit'])->name('product.edit');
-        // Route::put('/product/{id}/update', [ProductController::class, 'update'])->name('product.update');
-        // Route::delete('/product/{id}/delete', [ProductController::class, 'destroy'])->name('product.delete');
+        Route::get('/product/list', [ProductController::class, 'index'])->name('product.index');
+        Route::get('/product/create', [ProductController::class, 'create'])->name('product.create');
+        Route::post('/product/store', [ProductController::class, 'store'])->name('product.store');
+        Route::get('/product/{id}/edit', [ProductController::class, 'edit'])->name('product.edit');
+        Route::put('/product/{id}/update', [ProductController::class, 'update'])->name('product.update');
+        Route::delete('/product/{id}/delete', [ProductController::class, 'destroy'])->name('product.delete');
 
         // order list
         // Route::get('order/list', [OrderController::class , 'index'])->name('order.list');   
