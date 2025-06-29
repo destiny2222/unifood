@@ -1,3 +1,9 @@
+@php
+    $carts = \App\Models\Cart::where('user_id', optional(Auth::user())->id)->get();
+    $wishlist = \App\Models\Wishlist::where('user_id', optional(Auth::user())->id)->get();
+    $categories = \App\Models\Category::orderBy('id', 'DESC')->get();
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,7 +12,7 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densityDpi=device-dpi">
 
-    <title> {{ config('app.name' ) }} - Welcome to Our Restaurant Management </title>
+    <title> {{ config('app.name') }} - Welcome to Our Restaurant Management </title>
     <meta name="description" content="MightyOlu Grocery - Welcome to Our Restaurant Management">
 
     <link rel="icon" type="image/png" href="/images/logo/favicon.png">
@@ -83,7 +89,8 @@
     <nav class="navbar navbar-expand-lg main_menu">
         <div class="container">
             <a class="navbar-brand" href="/">
-                <img src="{{ asset('images/logo/logo.png') }}" width="50" height="50" alt="UniFood" class="img-fluid">
+                <img src="{{ asset('images/logo/logo.png') }}" width="50" height="50" alt="UniFood"
+                    class="img-fluid">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -123,7 +130,7 @@
                     </li>
                     <li>
                         <a class="cart_icon"><i class="fas fa-shopping-basket"></i> <span
-                                class="topbar_cart_qty">0</span></a>
+                                class="topbar_cart_qty">{{ count($carts) }}</span></a>
                     </li>
                     <li>
                         <a href="/login"><i class="fas fa-user"></i></a>
@@ -136,14 +143,45 @@
         </div>
     </nav>
 
+
     <div class="wsus__menu_cart_area">
         <div class="wsus__menu_cart_boody">
-
             <div class="wsus__menu_cart_header">
-                <h5>Your shopping cart is empty!</h5>
-                <span class="close_cart"><i class="fal fa-times"></i></span>
+                <h5 class="mini_cart_body_item">Total Item(1)</h5>
+                <span class="close_cart"><i class="fal fa-times" aria-hidden="true"></i></span>
             </div>
+            @forelse ($carts as $cart)
+                <ul class="mini_cart_list">
+                    <li class="min-item mb-5">
+                        <div class="menu_cart_img">
+                            <img src="https://unifood.websolutionus.com/public/uploads/custom-images/hyderabadi-biryani-2023-03-05-01-14-59-9689.png"
+                                alt="menu" class="img-fluid w-100">
+                        </div>
+                        <div class="menu_cart_text">
+                            <a class="title"
+                                href="https://unifood.websolutionus.com/product/hyderabadi-biryani">Hyderabadi Biryani
+                            </a>
+                            <p class="size">Small</p>
 
+
+                            <p class="price mini-price">$130</p>
+                        </div>
+                        <input type="hidden"
+                            class="mini-input-price set-mini-input-price"
+                            value="130">
+                        <span class="del_icon mini-item-remove"><i class="fal fa-times"
+                                aria-hidden="true"></i></span>
+                    </li>
+                </ul>
+            @empty
+                <div class="wsus__menu_cart_header">
+                    <h5>Your shopping cart is empty!</h5>
+                    <span class="close_cart"><i class="fal fa-times"></i></span>
+                </div>
+            @endforelse
+            <p class="subtotal">Sub Total <span class="mini_sub_total">$130</span></p>
+            <a class="cart_view" href="{{ route('cart.index') }}"> view cart</a>
+            <a class="checkout" href="https://unifood.websolutionus.com/">checkout</a>
         </div>
     </div>
 
@@ -177,7 +215,7 @@
     @yield('content')
 
 
-     <!--=============================
+    <!--=============================
         FOOTER START
     ==============================-->
     <footer style="background: url({{ asset('footer_background.jpg') }});">
@@ -187,8 +225,8 @@
                     <div class="col-lg-4 col-sm-8 col-md-6">
                         <div class="wsus__footer_content">
                             <a class="footer_logo" href="index.htm">
-                                <img src="{{ asset('images/logo/footer_logo.png') }}"
-                                    alt="UniFood" class="img-fluid w-100">
+                                <img src="{{ asset('images/logo/footer_logo.png') }}" alt="UniFood"
+                                    class="img-fluid w-100">
                             </a>
                             <span>There are many variations of Lorem Ipsum available, but the majority have
                                 suffered.</span>
@@ -196,8 +234,7 @@
                             </p>
                             <a class="info" href="callto:+1347-430-9510"><i class="fas fa-phone-alt"></i>
                                 +1347-430-9510</a>
-                            <a class="info" href="mailto:example@gmail.com"><i
-                                    class="fas fa-envelope"></i>
+                            <a class="info" href="mailto:example@gmail.com"><i class="fas fa-envelope"></i>
                                 example@gmail.com</a>
                         </div>
                     </div>
@@ -230,9 +267,8 @@
                         <div class="wsus__footer_content">
                             <h3>Subscribe to Newsletter</h3>
                             <form id="subscribe_form">
-                                 <input type="email" placeholder="Email" name="email">
-                                <button id="subscribe_btn" type="submit"><i
-                                        class="fas fa-paper-plane"></i></button>
+                                <input type="email" placeholder="Email" name="email">
+                                <button id="subscribe_btn" type="submit"><i class="fas fa-paper-plane"></i></button>
                             </form>
                             <div class="wsus__footer_social_link">
                                 <h5>Follow us:</h5>
@@ -310,6 +346,31 @@
     <script src="{{ asset('show-password.min.js') }}"></script>
     @include('partials.message')
     @stack('scripts')
-</body>
-</html>
+    <script>
+            function calculate_mini_total(){
+        let mini_sub_total = 0;
+        let mini_total_item = 0;
+        $(".mini-input-price").each(function () {
+            let current_val = $(this).val();
+            mini_sub_total = parseInt(mini_sub_total) + parseInt(current_val);
+            mini_total_item = parseInt(mini_total_item) + parseInt(1);
+        });
 
+        $(".mini_sub_total").html(`$${mini_sub_total}`);
+        $(".topbar_cart_qty").html(mini_total_item);
+        $(".mini_cart_body_item").html(`Total Item(${mini_total_item})`);
+
+        let mini_empty_cart = `<div class="wsus__menu_cart_header">
+                <h5>Your shopping cart is empty!</h5>
+                <span class="close_cart"><i class="fal fa-times"></i></span>
+            </div>
+            `;
+
+        if(mini_total_item == 0){
+            $(".wsus__menu_cart_boody").html(mini_empty_cart)
+        }
+    }
+    </script>
+</body>
+
+</html>

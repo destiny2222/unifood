@@ -88,7 +88,25 @@
                     </ul>
                </div>
           </li>
+          <li class="nav-item">
+               <a class="nav-link menu-arrow" href="#sidebarDelivery" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarDelivery">
+                    <span class="nav-icon">
+                         <iconify-icon icon="solar:box-bold-duotone"></iconify-icon>
+                    </span>
+                    <span class="nav-text"> Delivery Area </span>
+               </a>
+               <div class="collapse" id="sidebarDelivery">
+                    <ul class="nav sub-navbar-nav">
 
+                         <li class="sub-nav-item">
+                              <a class="sub-nav-link" href="{{ route('admin.delivery.area.index') }}">List</a>
+                         </li>
+                         <li class="sub-nav-item">
+                              <a class="sub-nav-link" href="{{ route('admin.delivery.area.create') }}">Create</a>
+                         </li>
+                    </ul>
+               </div>
+          </li>
           {{-- <li class="nav-item">
                <a class="nav-link menu-arrow" href="#sidebarPurchases" data-bs-toggle="collapse" role="button"
                     aria-expanded="false" aria-controls="sidebarPurchases">

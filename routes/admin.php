@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\Auth\LoginController;
+use App\Http\Controllers\Admin\DeliveryAreaController;
 use App\Http\Controllers\Admin\SiteManagementController;
 use App\Http\Controllers\Admin\UserManagementController;
 
@@ -71,13 +72,13 @@ Route::prefix('admin')->name('admin.')->group(function (){
         // Route::put('/home/banner/{id}/update', [SiteManagementController::class, 'bannerUpdate'])->name('home.banner.update');
         // Route::delete('/home/banner/{id}/delete', [SiteManagementController::class, 'bannerDelete'])->name('home.banner.delete');
 
-        // shipping route 
-        // Route::get('/shipping', [SiteManagementController::class, 'shippingIndex'])->name('shipping.index');
-        // Route::get('/shipping/create', [SiteManagementController::class, 'shippingCreate'])->name('shipping.create');
-        // Route::get('/shipping/{id}/edit', [SiteManagementController::class, 'shippingEdit'])->name('shipping.edit');
-        // Route::post('/shipping/store', [SiteManagementController::class, 'shippingStore'])->name('shipping.store');
-        // Route::put('/shipping/{id}/update', [SiteManagementController::class, 'shippingUpdate'])->name('shipping.update');
-        // Route::delete('/shipping/{id}/delete', [SiteManagementController::class, 'shippingDelete'])->name('shipping.delete');
+        // Delivery Area route 
+        Route::get('/delivery-area', [DeliveryAreaController::class, 'index'])->name('delivery.area.index');
+        Route::get('/delivery-area/create', [DeliveryAreaController::class, 'create'])->name('delivery.area.create');
+        Route::post('/delivery-area/store', [DeliveryAreaController::class, 'store'])->name('delivery.area.store');
+        Route::get('/delivery-area/{id}/edit', [DeliveryAreaController::class, 'edit'])->name('delivery.area.edit');
+        Route::put('/delivery-area/{id}/update', [DeliveryAreaController::class, 'update'])->name('delivery.area.update');
+        Route::delete('/delivery-area/{id}/delete', [DeliveryAreaController::class, 'destroy'])->name('delivery.area.delete');
 
         // slider
         // Route::get('/slider', [SiteManagementController::class,'sliderIndex'])->name('slider.index');

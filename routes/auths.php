@@ -5,7 +5,7 @@ use App\Http\Controllers\User\HomeController;
 use App\Http\Controllers\User\CheckoutController;
 use App\Http\Controllers\User\WishListController;
 use App\Http\Controllers\User\ReviewRatingController;
-
+use App\Http\Controllers\PaymentController;
 
 
 
@@ -26,16 +26,16 @@ Route::prefix('dashboard')->group(function (){
         
 
         // cart routes
-        // Route::get('/cart', [CartController::class, 'cart'])->name('cart.index');
-        // Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
-        // Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
-        // Route::delete('/cart/{id}/destroy', [CartController::class, 'destroy'])->name('cart.destroy');
+        Route::get('/cart', [CartController::class, 'cart'])->name('cart.index');
+        Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
+        Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+        Route::delete('/cart/{id}/destroy', [CartController::class, 'destroy'])->name('cart.destroy');
     
         // checkout routes
-        // Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
-        // Route::post('/order/process', [CheckoutController::class, 'processCheckout'])->name('checkout.placeOrder');
-        // Route::get('/order/success', [CheckoutController::class, 'success'])->name('order.success');
-        // Route::get('/order/failed', [CheckoutController::class, 'failed'])->name('order.failed');
+        Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
+        Route::post('/order/process', [CheckoutController::class, 'processCheckout'])->name('checkout.placeOrder');
+        Route::get('/order/success', [CheckoutController::class, 'success'])->name('order.success');
+        Route::get('/order/failed', [CheckoutController::class, 'failed'])->name('order.failed');
 
         // wishlist
         Route::get('/wishlist', [WishListController::class, 'index'])->name('wishlist.index');
@@ -45,6 +45,15 @@ Route::prefix('dashboard')->group(function (){
 
         // review routes
         // Route::post('/reviews', [ReviewRatingController::class, 'reviewstore'])->name('review.store');
+        
+
+        // Route::post('/checkout', [PaymentController::class, 'checkout'])->name('payment.checkout');
+        Route::get('/success', function () {
+             return "Payment Successful!";
+        })->name('payment.success');
+        Route::get('/cancel', function () {
+                return "Payment Canceled!";
+        })->name('payment.cancel');
 
        
 
