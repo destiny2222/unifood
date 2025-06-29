@@ -629,278 +629,40 @@
                                     <h3>wishlist</h3>
                                     <div class="wsus__dashoard_wishlist">
                                         <div class="row">
-                                            <div class="col-xl-4 col-sm-6 col-lg-6">
-                                                <div class="wsus__menu_item">
-                                                    <div class="wsus__menu_item_img">
-                                                        <img src="https://unifood.websolutionus.com/public/uploads/custom-images/hyderabadi-biryani-2023-03-05-01-14-59-9689.png" alt="menu" class="img-fluid w-100">
-                                                        <a class="category" href="https://unifood.websolutionus.com/products?category=burger">Burger</a>
-                                                    </div>
-                                                    <div class="wsus__menu_item_text">
-                                                        <p class="rating">
+                                            @foreach ($wishlists as $wishlist)
+                                                <div class="col-xl-4 col-sm-6 col-lg-6">
+                                                    <div class="wsus__menu_item">
+                                                        <div class="wsus__menu_item_img">
+                                                            <img src="{{ asset('storage/upload/product/single/'.$wishlist->product->images ) }}" alt="menu" class="img-fluid w-100">
+                                                            <a class="category" href="">{{ $wishlist->product->category->title  }}</a>
+                                                        </div>
+                                                        <div class="wsus__menu_item_text">
+                                                            <a class="title" href="{{ route('frontend.product.show', $wishlist->product->slug) }}">{{  $wishlist->product->title }}</a>
+                                                            <h5 class="price">${{ $wishlist->product->price ?? 0 }} @if($wishlist->product->discount)<del>${{ $wishlist->product->discount }}</del>@endif </h5>
+                                                            <ul class="d-flex flex-wrap justify-content-center">
+                                                                <li>
+                                                                    <a href="javascript:;" onclick="event.preventDefault(); document.getElementById('add-cart-{{ $wishlist->product->id  }}').submit()" href="{{ route('wishlist.add.cart') }}">
+                                                                        <i class="fas fa-shopping-basket" aria-hidden="true"></i>
+                                                                    </a>
+                                                                    <form action="{{ route('wishlist.add.cart') }}" id="add-cart-{{ $wishlist->product->id }}" method="post">
+                                                                        @csrf
+                                                                        <input type="hidden" name="product_id" value="{{ $wishlist->product->id }}">
+                                                                        <input type="hidden" name="slug" value="{{ $wishlist->product->slug }}">
+                                                                        <input type="text" value="1" name="quantity" hidden>
+                                                                    </form>
+                                                                </li>
 
-
-                                                            <i class="fas fa-star" aria-hidden="true"></i>
-                                                            <i class="fas fa-star" aria-hidden="true"></i>
-                                                            <i class="fas fa-star" aria-hidden="true"></i>
-                                                            <i class="fas fa-star" aria-hidden="true"></i>
-                                                            <i class="fas fa-star" aria-hidden="true"></i>
-
-                                                            <span>1</span>
-                                                        </p>
-                                                        <a class="title" href="https://unifood.websolutionus.com/product/hyderabadi-biryani">Hyderabadi Biryani</a>
-                                                        <h5 class="price">$130 <del>$150</del> </h5>
-
-                                                        <ul class="d-flex flex-wrap justify-content-center">
-                                                            <li><a href="javascript:;" onclick="load_product_model(1)"><i class="fas fa-shopping-basket" aria-hidden="true"></i></a></li>
-
-                                                            <form id="remove_wishlist_1" action="https://unifood.websolutionus.com/remove-to-wishlist/1" method="POST">
-                                                                <input type="hidden" name="_token" value="9DoTNtSQlXDGrW2LXuvr79771ZJbicckzkn9F9fo" autocomplete="off"> <input type="hidden" name="_method" value="DELETE"> </form>
-
-                                                            <li><a href="javascript:;" onclick="remove_wishlist(1)"><i class="fal fa-heart" aria-hidden="true"></i></a></li>
-
-                                                            <li><a href="https://unifood.websolutionus.com/product/hyderabadi-biryani"><i class="far fa-eye" aria-hidden="true"></i></a></li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-xl-4 col-sm-6 col-lg-6">
-                                                <div class="wsus__menu_item">
-                                                    <div class="wsus__menu_item_img">
-                                                        <img src="https://unifood.websolutionus.com/public/uploads/custom-images/indian-cuisine-pakora-2023-03-05-01-32-04-5856.jpg" alt="menu" class="img-fluid w-100">
-                                                        <a class="category" href="https://unifood.websolutionus.com/products?category=muffin">Muffin</a>
-                                                    </div>
-                                                    <div class="wsus__menu_item_text">
-                                                        <p class="rating">
-
-
-                                                            <i class="far fa-star" aria-hidden="true"></i>
-                                                            <i class="far fa-star" aria-hidden="true"></i>
-                                                            <i class="far fa-star" aria-hidden="true"></i>
-                                                            <i class="far fa-star" aria-hidden="true"></i>
-                                                            <i class="far fa-star" aria-hidden="true"></i>
-
-                                                            <span>0</span>
-                                                        </p>
-                                                        <a class="title" href="https://unifood.websolutionus.com/product/indian-cuisine-pakora">Indian cuisine Pakora</a>
-                                                        <h5 class="price">$100 <del>$120</del> </h5>
-
-                                                        <ul class="d-flex flex-wrap justify-content-center">
-                                                            <li><a href="javascript:;" onclick="load_product_model(3)"><i class="fas fa-shopping-basket" aria-hidden="true"></i></a></li>
-
-                                                            <form id="remove_wishlist_3" action="https://unifood.websolutionus.com/remove-to-wishlist/3" method="POST">
-                                                                <input type="hidden" name="_token" value="9DoTNtSQlXDGrW2LXuvr79771ZJbicckzkn9F9fo" autocomplete="off"> <input type="hidden" name="_method" value="DELETE"> </form>
-
-                                                            <li><a href="javascript:;" onclick="remove_wishlist(3)"><i class="fal fa-heart" aria-hidden="true"></i></a></li>
-
-                                                            <li><a href="https://unifood.websolutionus.com/product/indian-cuisine-pakora"><i class="far fa-eye" aria-hidden="true"></i></a></li>
-                                                        </ul>
+                                                                <form id="remove_wishlist_1" action="" method="POST">
+                                                                    @csrf
+                                                                    @method('delete')
+                                                                    <input type="hidden" name="" value="DELETE"> 
+                                                                </form>
+                                                                <li><a href=""><i class="fa fa-eye" aria-hidden="true"></i></a></li>
+                                                            </ul>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-xl-4 col-sm-6 col-lg-6">
-                                                <div class="wsus__menu_item">
-                                                    <div class="wsus__menu_item_img">
-                                                        <img src="https://unifood.websolutionus.com/public/uploads/custom-images/daria-shevtsova-2023-03-05-02-47-26-3957.png" alt="menu" class="img-fluid w-100">
-                                                        <a class="category" href="https://unifood.websolutionus.com/products?category=burger">Burger</a>
-                                                    </div>
-                                                    <div class="wsus__menu_item_text">
-                                                        <p class="rating">
-
-
-                                                            <i class="far fa-star" aria-hidden="true"></i>
-                                                            <i class="far fa-star" aria-hidden="true"></i>
-                                                            <i class="far fa-star" aria-hidden="true"></i>
-                                                            <i class="far fa-star" aria-hidden="true"></i>
-                                                            <i class="far fa-star" aria-hidden="true"></i>
-
-                                                            <span>0</span>
-                                                        </p>
-                                                        <a class="title" href="https://unifood.websolutionus.com/product/daria-shevtsova">Daria Shevtsova</a>
-                                                        <h5 class="price">$120 <del>$200</del> </h5>
-
-                                                        <ul class="d-flex flex-wrap justify-content-center">
-                                                            <li><a href="javascript:;" onclick="load_product_model(6)"><i class="fas fa-shopping-basket" aria-hidden="true"></i></a></li>
-
-                                                            <form id="remove_wishlist_6" action="https://unifood.websolutionus.com/remove-to-wishlist/6" method="POST">
-                                                                <input type="hidden" name="_token" value="9DoTNtSQlXDGrW2LXuvr79771ZJbicckzkn9F9fo" autocomplete="off"> <input type="hidden" name="_method" value="DELETE"> </form>
-
-                                                            <li><a href="javascript:;" onclick="remove_wishlist(6)"><i class="fal fa-heart" aria-hidden="true"></i></a></li>
-
-                                                            <li><a href="https://unifood.websolutionus.com/product/daria-shevtsova"><i class="far fa-eye" aria-hidden="true"></i></a></li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-xl-4 col-sm-6 col-lg-6">
-                                                <div class="wsus__menu_item">
-                                                    <div class="wsus__menu_item_img">
-                                                        <img src="https://unifood.websolutionus.com/public/uploads/custom-images/spicy-burger-2023-03-05-02-57-08-4535.png" alt="menu" class="img-fluid w-100">
-                                                        <a class="category" href="https://unifood.websolutionus.com/products?category=burger">Burger</a>
-                                                    </div>
-                                                    <div class="wsus__menu_item_text">
-                                                        <p class="rating">
-
-
-                                                            <i class="fas fa-star" aria-hidden="true"></i>
-                                                            <i class="fas fa-star" aria-hidden="true"></i>
-                                                            <i class="fas fa-star" aria-hidden="true"></i>
-                                                            <i class="fas fa-star" aria-hidden="true"></i>
-                                                            <i class="fas fa-star" aria-hidden="true"></i>
-
-                                                            <span>1</span>
-                                                        </p>
-                                                        <a class="title" href="https://unifood.websolutionus.com/product/spicy-burger">Spicy Burger</a>
-                                                        <h5 class="price">$40 <del>$80</del> </h5>
-
-                                                        <ul class="d-flex flex-wrap justify-content-center">
-                                                            <li><a href="javascript:;" onclick="load_product_model(7)"><i class="fas fa-shopping-basket" aria-hidden="true"></i></a></li>
-
-                                                            <form id="remove_wishlist_7" action="https://unifood.websolutionus.com/remove-to-wishlist/7" method="POST">
-                                                                <input type="hidden" name="_token" value="9DoTNtSQlXDGrW2LXuvr79771ZJbicckzkn9F9fo" autocomplete="off"> <input type="hidden" name="_method" value="DELETE"> </form>
-
-                                                            <li><a href="javascript:;" onclick="remove_wishlist(7)"><i class="fal fa-heart" aria-hidden="true"></i></a></li>
-
-                                                            <li><a href="https://unifood.websolutionus.com/product/spicy-burger"><i class="far fa-eye" aria-hidden="true"></i></a></li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-xl-4 col-sm-6 col-lg-6">
-                                                <div class="wsus__menu_item">
-                                                    <div class="wsus__menu_item_img">
-                                                        <img src="https://unifood.websolutionus.com/public/uploads/custom-images/firecracker-shrimp-2023-03-06-12-25-11-9828.png" alt="menu" class="img-fluid w-100">
-                                                        <a class="category" href="https://unifood.websolutionus.com/products?category=chicken">Chicken</a>
-                                                    </div>
-                                                    <div class="wsus__menu_item_text">
-                                                        <p class="rating">
-
-
-                                                            <i class="far fa-star" aria-hidden="true"></i>
-                                                            <i class="far fa-star" aria-hidden="true"></i>
-                                                            <i class="far fa-star" aria-hidden="true"></i>
-                                                            <i class="far fa-star" aria-hidden="true"></i>
-                                                            <i class="far fa-star" aria-hidden="true"></i>
-
-                                                            <span>0</span>
-                                                        </p>
-                                                        <a class="title" href="https://unifood.websolutionus.com/product/firecracker-shrimp">Firecracker Shrimp</a>
-                                                        <h5 class="price">$25 <del>$30</del> </h5>
-
-                                                        <ul class="d-flex flex-wrap justify-content-center">
-                                                            <li><a href="javascript:;" onclick="load_product_model(15)"><i class="fas fa-shopping-basket" aria-hidden="true"></i></a></li>
-
-                                                            <form id="remove_wishlist_15" action="https://unifood.websolutionus.com/remove-to-wishlist/15" method="POST">
-                                                                <input type="hidden" name="_token" value="9DoTNtSQlXDGrW2LXuvr79771ZJbicckzkn9F9fo" autocomplete="off"> <input type="hidden" name="_method" value="DELETE"> </form>
-
-                                                            <li><a href="javascript:;" onclick="remove_wishlist(15)"><i class="fal fa-heart" aria-hidden="true"></i></a></li>
-
-                                                            <li><a href="https://unifood.websolutionus.com/product/firecracker-shrimp"><i class="far fa-eye" aria-hidden="true"></i></a></li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-xl-4 col-sm-6 col-lg-6">
-                                                <div class="wsus__menu_item">
-                                                    <div class="wsus__menu_item_img">
-                                                        <img src="https://unifood.websolutionus.com/public/uploads/custom-images/grilled-octopus-salad-2023-03-06-12-28-49-3466.png" alt="menu" class="img-fluid w-100">
-                                                        <a class="category" href="https://unifood.websolutionus.com/products?category=chicken">Chicken</a>
-                                                    </div>
-                                                    <div class="wsus__menu_item_text">
-                                                        <p class="rating">
-
-
-                                                            <i class="far fa-star" aria-hidden="true"></i>
-                                                            <i class="far fa-star" aria-hidden="true"></i>
-                                                            <i class="far fa-star" aria-hidden="true"></i>
-                                                            <i class="far fa-star" aria-hidden="true"></i>
-                                                            <i class="far fa-star" aria-hidden="true"></i>
-
-                                                            <span>0</span>
-                                                        </p>
-                                                        <a class="title" href="https://unifood.websolutionus.com/product/grilled-octopus-salad">Grilled Octopus Salad</a>
-                                                        <h5 class="price">$70 <del>$75</del> </h5>
-
-                                                        <ul class="d-flex flex-wrap justify-content-center">
-                                                            <li><a href="javascript:;" onclick="load_product_model(16)"><i class="fas fa-shopping-basket" aria-hidden="true"></i></a></li>
-
-                                                            <form id="remove_wishlist_16" action="https://unifood.websolutionus.com/remove-to-wishlist/16" method="POST">
-                                                                <input type="hidden" name="_token" value="9DoTNtSQlXDGrW2LXuvr79771ZJbicckzkn9F9fo" autocomplete="off"> <input type="hidden" name="_method" value="DELETE"> </form>
-
-                                                            <li><a href="javascript:;" onclick="remove_wishlist(16)"><i class="fal fa-heart" aria-hidden="true"></i></a></li>
-
-                                                            <li><a href="https://unifood.websolutionus.com/product/grilled-octopus-salad"><i class="far fa-eye" aria-hidden="true"></i></a></li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-xl-4 col-sm-6 col-lg-6">
-                                                <div class="wsus__menu_item">
-                                                    <div class="wsus__menu_item_img">
-                                                        <img src="https://unifood.websolutionus.com/public/uploads/custom-images/quinoa-stuffed-peppers-2023-03-06-12-52-48-9661.png" alt="menu" class="img-fluid w-100">
-                                                        <a class="category" href="https://unifood.websolutionus.com/products?category=dresserts">Dresserts</a>
-                                                    </div>
-                                                    <div class="wsus__menu_item_text">
-                                                        <p class="rating">
-
-
-                                                            <i class="far fa-star" aria-hidden="true"></i>
-                                                            <i class="far fa-star" aria-hidden="true"></i>
-                                                            <i class="far fa-star" aria-hidden="true"></i>
-                                                            <i class="far fa-star" aria-hidden="true"></i>
-                                                            <i class="far fa-star" aria-hidden="true"></i>
-
-                                                            <span>0</span>
-                                                        </p>
-                                                        <a class="title" href="https://unifood.websolutionus.com/product/quinoa-stuffed-peppers">Quinoa Stuffed Peppers</a>
-                                                        <h5 class="price">$110</h5>
-
-                                                        <ul class="d-flex flex-wrap justify-content-center">
-                                                            <li><a href="javascript:;" onclick="load_product_model(20)"><i class="fas fa-shopping-basket" aria-hidden="true"></i></a></li>
-
-                                                            <form id="remove_wishlist_20" action="https://unifood.websolutionus.com/remove-to-wishlist/20" method="POST">
-                                                                <input type="hidden" name="_token" value="9DoTNtSQlXDGrW2LXuvr79771ZJbicckzkn9F9fo" autocomplete="off"> <input type="hidden" name="_method" value="DELETE"> </form>
-
-                                                            <li><a href="javascript:;" onclick="remove_wishlist(20)"><i class="fal fa-heart" aria-hidden="true"></i></a></li>
-
-                                                            <li><a href="https://unifood.websolutionus.com/product/quinoa-stuffed-peppers"><i class="far fa-eye" aria-hidden="true"></i></a></li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-xl-4 col-sm-6 col-lg-6">
-                                                <div class="wsus__menu_item">
-                                                    <div class="wsus__menu_item_img">
-                                                        <img src="https://unifood.websolutionus.com/public/uploads/custom-images/truffle-fries-2023-03-06-01-06-09-8443.png" alt="menu" class="img-fluid w-100">
-                                                        <a class="category" href="https://unifood.websolutionus.com/products?category=sandwich">Sandwich</a>
-                                                    </div>
-                                                    <div class="wsus__menu_item_text">
-                                                        <p class="rating">
-
-
-                                                            <i class="fas fa-star" aria-hidden="true"></i>
-                                                            <i class="fas fa-star" aria-hidden="true"></i>
-                                                            <i class="fas fa-star" aria-hidden="true"></i>
-                                                            <i class="fas fa-star" aria-hidden="true"></i>
-                                                            <i class="fas fa-star" aria-hidden="true"></i>
-
-                                                            <span>1</span>
-                                                        </p>
-                                                        <a class="title" href="https://unifood.websolutionus.com/product/truffle-fries">Truffle Fries</a>
-                                                        <h5 class="price">$150 <del>$200</del> </h5>
-
-                                                        <ul class="d-flex flex-wrap justify-content-center">
-                                                            <li><a href="javascript:;" onclick="load_product_model(22)"><i class="fas fa-shopping-basket" aria-hidden="true"></i></a></li>
-
-                                                            <form id="remove_wishlist_22" action="https://unifood.websolutionus.com/remove-to-wishlist/22" method="POST">
-                                                                <input type="hidden" name="_token" value="9DoTNtSQlXDGrW2LXuvr79771ZJbicckzkn9F9fo" autocomplete="off"> <input type="hidden" name="_method" value="DELETE"> </form>
-
-                                                            <li><a href="javascript:;" onclick="remove_wishlist(22)"><i class="fal fa-heart" aria-hidden="true"></i></a></li>
-
-                                                            <li><a href="https://unifood.websolutionus.com/product/truffle-fries"><i class="far fa-eye" aria-hidden="true"></i></a></li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>

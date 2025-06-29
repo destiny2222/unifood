@@ -334,8 +334,12 @@
                                 <h5 class="price">${{ $product->price ?? 0 }} @if($product->discount)<del>${{ $product->discount }}</del>@endif </h5>
                                 <ul class="d-flex flex-wrap justify-content-center">
                                     {{-- <li><a href="javascript:;" onclick="load_product_model({{ $product->id }})"><i class="fas fa-shopping-basket"></i></a></li> --}}
-                                    <li><a href="javascript:;"><i class="fal fa-heart"></i></a></li>
-                                    <li><a href="#"><i class="far fa-eye"></i></a></li>
+                                    <li><a href="javascript:;" href="{{ route('wishlist.add') }}" onclick="event.preventDefault(); document.getElementById('wish-{{ $product->id  }}').submit()" href="{{ route('wishlist.add') }}"><i class="fal fa-heart"></i></a></li>
+                                    <form action="{{ route('wishlist.add') }}" id="wish-{{ $product->id  }}" method="post">
+                                        @csrf
+                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    </form>
+                                    <li><a href="{{ route('frontend.product.show', $product->slug) }}"><i class="far fa-eye"></i></a></li>
                                 </ul>
                             </div>
                         </div>

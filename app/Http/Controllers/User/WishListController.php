@@ -33,7 +33,7 @@ class WishListController extends Controller
             $wishlist->user_id = Auth::user()->id;
             $wishlist->product_id = $request->product_id;
             $wishlist->save();
-            return redirect()->route('wishlist.index')->with('success', 'Product added to Wishlist Successful');
+            return back()->with('success', 'Product added to Wishlist Successful');
         }catch(\Exception $exception){
             Log::error($exception->getMessage());
             return back()->with('error', 'An error occurred while adding the product');
@@ -72,7 +72,7 @@ class WishListController extends Controller
             if ($existingWishlist) {
                 $existingWishlist->delete();
             }
-            return redirect()->route('cart.index')->with('success', 'Product added to cart successfully!');
+            return back()->with('success', 'Product added to cart successfully!');
         } catch (\Exception $e) {
             Log::error('Add to Cart Error: ' . $e->getMessage());
             return back()->with('error', 'Something went wrong while adding to cart.');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -13,6 +14,7 @@ class HomeController extends Controller
 {
     public function index(){
         $user  = Auth::user();
+        $wishlist = Wishlist::orderBy('id', 'desc')->get();
         // dd($user);
         // $order = Order::where('user_id', $user->id)->get();
         // completed order
@@ -25,6 +27,7 @@ class HomeController extends Controller
         // $failedOrder = Order::where('user_id', $user->id)->where('order_status', 'failed')->count();
         return view("dash.index", [
             'user'=>$user,
+            'wishlists'=>$wishlist,
         ]);
     }
 
