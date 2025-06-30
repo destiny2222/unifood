@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('address');
             $table->string('address_type');
             $table->foreignId('delivery_area_id')->constrained('delivery_areas')->cascadeOnDelete();
+            $table->foreignUuid('user_id')->constrained('users')->cascadeOnDelete();
             $table->timestamps();
         });
     }

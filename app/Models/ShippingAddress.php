@@ -17,6 +17,7 @@ class ShippingAddress extends Model
         'address',
         'address_type',
         'delivery_area_id',
+        'user_id'
     ];
 
     public function deliveryArea()

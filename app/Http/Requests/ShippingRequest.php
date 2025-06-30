@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Admin;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class DeliveryRequest extends FormRequest
+class ShippingRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,11 +22,14 @@ class DeliveryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'delivery_area_name'=>['required', 'string'],
-            'minimum_delivery_time'=>['required', 'integer'],
-            'status'=>['required', 'boolean'],
-            'maximum_delivery_time'=>['required', 'integer'],
-            'delivery_fee'=>['required', 'numeric'],
+            'first_name'=> ['required', 'string', 'max:255'],
+            'last_name'=> ['required', 'string', 'max:255'],
+            'email'=> ['required', 'string', 'email'],
+            'phone_number'=> ['required'],
+            'address'=> ['required'],
+            'address_type'=> ['required'],
+            'delivery_area_id'=> ['required'],
+            // 'user_id'=>['required']
         ];
     }
 }

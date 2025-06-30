@@ -16,7 +16,7 @@
                             <div class="row">
                                 <div class="mb-4 col-12">
                                     <label>Area Name <span class="text-danger">*</span></label>
-                                    <input type="text" id="name" class="form-control" name="area_name" value="{{ $deliveryArea->area_name }}" required>
+                                    <input type="text" id="name" class="form-control" name="delivery_area_name" value="{{ $deliveryArea->delivery_area_name }}" required>
                                 </div>
 
                                 <div class="mb-4 col-md-6">

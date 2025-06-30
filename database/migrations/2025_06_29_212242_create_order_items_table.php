@@ -17,6 +17,11 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained('products')->cascadeDelete();
             $table->integer('quantity');
             $table->decimal('price', 10, 2);
+            $table->boolean('payment_status')->default(false);
+            $table->string('invoice_number')->nullable();
+            $table->boolean('order_status')->default(false);
+            $table->string('payment_method')->nullable();
+            $table->foreignUuid('user_id')->constrained('users')->cascadeDelete();
             $table->timestamps();
         });
     }

@@ -28,9 +28,9 @@
     <link rel="stylesheet" href="/user/css/style.css">
     <link rel="stylesheet" href="/user/css/responsive.css">
     <link rel="stylesheet" href="/backend/css/bootstrap-datepicker.min.css">
-    <link rel="stylesheet" href="/backend/css/select2.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css">
 
-
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
 
 </head>
 
@@ -146,42 +146,58 @@
 
     <div class="wsus__menu_cart_area">
         <div class="wsus__menu_cart_boody">
-            <div class="wsus__menu_cart_header">
-                <h5 class="mini_cart_body_item">Total Item(1)</h5>
-                <span class="close_cart"><i class="fal fa-times" aria-hidden="true"></i></span>
-            </div>
-            @forelse ($carts as $cart)
+            @if (count($carts) > 0)
+                <div class="wsus__menu_cart_header">
+                    <h5 class="mini_cart_body_item">Total Item({{ count($carts) }})</h5>
+                    <span class="close_cart"><i class="fal fa-times" aria-hidden="true"></i></span>
+                </div>
+            @endif 
+           
                 <ul class="mini_cart_list">
+                    @php
+                        $total = 0;
+                    @endphp
+                    @forelse ($carts as $cartItem)
+                    @php
+                        $subtotal = $cartItem->product->price * $cartItem->quantity;
+                        $total += $subtotal;
+                    @endphp
                     <li class="min-item mb-5">
                         <div class="menu_cart_img">
-                            <img src="https://unifood.websolutionus.com/public/uploads/custom-images/hyderabadi-biryani-2023-03-05-01-14-59-9689.png"
+                            <img src="{{ asset('storage/upload/product/single/'.$cartItem->product->images) }}"
                                 alt="menu" class="img-fluid w-100">
                         </div>
                         <div class="menu_cart_text">
-                            <a class="title"
-                                href="https://unifood.websolutionus.com/product/hyderabadi-biryani">Hyderabadi Biryani
-                            </a>
-                            <p class="size">Small</p>
-
-
-                            <p class="price mini-price">$130</p>
+                            <a class="title"  href="{{ route('frontend.product.show', $cartItem->product->slug) }}">{{ \Str::limit($cartItem->product->title, 50) }}</a>
+                            <div class="d-flex align-items-center" style="column-gap: 10px;">
+                                <span class="quantity">{{ $cartItem->quantity }} x</span>
+                                <p class="price mini-price">${{ number_format($cartItem->product->price, 2) }}</p>
+                            </div>
                         </div>
-                        <input type="hidden"
-                            class="mini-input-price set-mini-input-price"
-                            value="130">
-                        <span class="del_icon mini-item-remove"><i class="fal fa-times"
-                                aria-hidden="true"></i></span>
+                        <input type="hidden" class="mini-input-price set-mini-input-price"  value="{{ $cartItem->product->price }}">
+                        <a class="del_icon mini-item-remove" href="{{ route('cart.destroy',$cartItem->id) }}" 
+                            onclick="event.preventDefault(); document.getElementById('delete-{{ $cartItem->id  }}').submit()" >
+                            <i class="fal fa-times"  aria-hidden="true"></i>
+                        </a>
+                        {{-- <span ></span> --}}
+                        <form action="{{ route('cart.destroy',$cartItem->id ) }}" id="delete-{{ $cartItem->id  }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                        </form>
                     </li>
+                     @empty
+                        <div class="wsus__menu_cart_header">
+                            <h5>Your shopping cart is empty!</h5>
+                            <span class="close_cart"><i class="fal fa-times"></i></span>
+                        </div>
+                    @endforelse
                 </ul>
-            @empty
-                <div class="wsus__menu_cart_header">
-                    <h5>Your shopping cart is empty!</h5>
-                    <span class="close_cart"><i class="fal fa-times"></i></span>
-                </div>
-            @endforelse
-            <p class="subtotal">Sub Total <span class="mini_sub_total">$130</span></p>
-            <a class="cart_view" href="{{ route('cart.index') }}"> view cart</a>
-            <a class="checkout" href="https://unifood.websolutionus.com/">checkout</a>
+           
+            @if(count($carts) > 0)
+                <p class="subtotal">Sub Total <span class="mini_sub_total">${{ number_format($total, 2) }}</span></p>
+                <a class="cart_view" href="{{ route('cart.index') }}"> view cart</a>
+                <a class="checkout" href="{{ route('checkout') }}">checkout</a>
+            @endif
         </div>
     </div>
 
@@ -336,18 +352,39 @@
     <!-- ex zoom js -->
     <script src="/user/js/jquery.exzoom.js"></script>
 
-    <script src="/backend/js/bootstrap-datepicker.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js"></script> 
     <!--main/custom js-->
     <script src="/user/js/main.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.js"></script>
-    <script src="/backend/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js"></script>
     <script src="{{ asset('show-password.min.js') }}"></script>
     @include('partials.message')
     @stack('scripts')
     <script>
-            function calculate_mini_total(){
+    (function($) {
+        "use strict";
+        $(document).ready(function () {
+            
+            $("#setLanguage").on('change', function(e){
+                this.submit();
+            });
+            
+            $(".first_menu_product").click();
+
+            $('.select2').select2();
+            $('.modal_select2').select2({
+                dropdownParent: $("#address_modal")
+            });
+
+            $('.datepicker').datepicker({
+                format: 'yyyy-mm-dd',
+                startDate: '-Infinity'
+            });
+        });
+    })(jQuery);
+
+    function calculate_mini_total(){
         let mini_sub_total = 0;
         let mini_total_item = 0;
         $(".mini-input-price").each(function () {
@@ -370,7 +407,8 @@
             $(".wsus__menu_cart_boody").html(mini_empty_cart)
         }
     }
-    </script>
+
+</script>
 </body>
 
 </html>

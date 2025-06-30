@@ -14,7 +14,7 @@ return new class extends Migration
         // 'area_name', 'minimum_delivery_time', 'status', 'maximum_delivery_time', 'delivery_fee'
         Schema::create('delivery_areas', function (Blueprint $table) {
             $table->id();
-            $table->string('area_name');
+            $table->string('delivery_area_name');
             $table->integer('minimum_delivery_time')->default(0);
             $table->integer('maximum_delivery_time')->default(0);
             $table->integer('delivery_fee');

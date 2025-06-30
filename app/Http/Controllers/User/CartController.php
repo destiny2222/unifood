@@ -47,7 +47,7 @@ class CartController extends Controller
                 ]);
             }
     
-            return back()->with('success', 'Product added to cart successfully!');
+            return redirect()->route('cart.index')->with('success', 'Product added to cart successfully!');
         } catch(\Exception $e) {
             Log::error($e->getMessage());
             return back()->with('error', 'Something went wrong while adding to cart.');

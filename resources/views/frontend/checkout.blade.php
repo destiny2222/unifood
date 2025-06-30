@@ -35,18 +35,16 @@
                                                 aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <form action="#"  method="POST">
+                                            <form action="{{ route('shipping.address.store') }}"  method="POST">
                                                 @csrf
                                                 <div class="row">
                                                     <div class="col-12">
                                                         <div class="wsus__check_single_form">
-                                                            <select name="delivery_area_id" class="modal_select2">
-                                                                <option value="">
-                                                                    Select Delivery Area
-                                                                </option>
-                                                                <option value="1">
-                                                                    Arizona State University West Campus
-                                                                </option>
+                                                            <select name="delivery_area_id" class="modal_select2" required>
+                                                                <option value="">   Select Delivery Area </option>
+                                                                @foreach ($deliveryArea as $delivery)
+                                                                 <option value="{{ $delivery->id }}"> {{ $delivery->delivery_area_name }}  </option>
+                                                                @endforeach
                                                             </select>
                                                         </div>
                                                     </div>
@@ -64,7 +62,7 @@
 
                                                     <div class="col-md-6 col-lg-12 col-xl-6">
                                                         <div class="wsus__check_single_form">
-                                                            <input type="text" placeholder="Phone" name="phone" />
+                                                            <input type="text" placeholder="Phone" name="phone_number" />
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6 col-lg-12 col-xl-6">
@@ -105,78 +103,34 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6">
-                                <div class="wsus__checkout_single_address">
-                                    <div class="form-check">
-                                        <input value="1" data-delivery-charge="25"
-                                            class="form-check-input address_id" type="radio" name="address_id"
-                                            id="home-1" />
-
-                                        <label class="form-check-label" for="home-1">
-                                            <span class="icon"><i class="fas fa-home"></i>Home</span>
-                                            <span class="address">Name : John Doe</span>
-                                            <span class="address">Phone : 125-985-4587</span>
-                                            <span class="address">Delivery area : Metrocenter Mall</span>
-
-                                            <span class="address">Address : Los Angeles, CA, USA</span>
-                                        </label>
+                            @forelse ($shippingAddresses as $shipping)
+                                <div class="col-md-6">
+                                    <div class="wsus__checkout_single_address">
+                                        <div class="form-check">
+                                            <input value="{{ $shipping->id }}"  data-delivery-charge="{{ $shipping->deliveryArea->delivery_fee }}"   class="form-check-input address_id" type="radio" name="address_id"   id="home-{{ $shipping->id }}" />
+                                            <label class="form-check-label" for="home-{{ $shipping->id }}">
+                                                @if ($shipping->address_type == 'Home')
+                                                    <span class="icon"><i class="fas fa-home"></i>{{ $shipping->address_type }}</span>
+                                                @else
+                                                    <span class="icon"><i class="far fa-car-building"></i>{{ $shipping->address_type }}</span>
+                                                @endif
+                                                <span class="address">Name : {{ $shipping->first_name }}  {{ $shipping->last_name }}</span>
+                                                <span class="address">Phone : {{ $shipping->phone_number }}</span>
+                                                <span class="address">Delivery area : {{ $shipping->deliveryArea->delivery_area_name }}</span>
+                                                <span class="address">Address : {{ $shipping->address }}</span>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="wsus__checkout_single_address">
-                                    <div class="form-check">
-                                        <input value="2" data-delivery-charge="15"
-                                            class="form-check-input address_id" type="radio" name="address_id"
-                                            id="home-2" />
-
-                                        <label class="form-check-label" for="home-2">
-                                            <span class="icon"><i class="far fa-car-building"></i>Office</span>
-                                            <span class="address">Name : John Doe</span>
-                                            <span class="address">Phone : 123-343-4444</span>
-                                            <span class="address">Delivery area : Thunderbird Paseo Park</span>
-
-                                            <span class="address">Address : Los Angeles, CA, USA</span>
-                                        </label>
+                            @empty
+                                <div class="col-md-6">
+                                    <div class="wsus__checkout_single_address">
+                                        <div class="form-check">
+                                            <p>Add Shipping Address </p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="wsus__checkout_single_address">
-                                    <div class="form-check">
-                                        <input value="3" data-delivery-charge="15"
-                                            class="form-check-input address_id" type="radio" name="address_id"
-                                            id="home-3" />
-
-                                        <label class="form-check-label" for="home-3">
-                                            <span class="icon"><i class="fas fa-home"></i>Home</span>
-                                            <span class="address">Name : David Rechard</span>
-                                            <span class="address">Phone : 123-874-6548</span>
-                                            <span class="address">Delivery area : Deer Valley Rock Art Center</span>
-
-                                            <span class="address">Address : Los Angeles, CA, USA</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="wsus__checkout_single_address">
-                                    <div class="form-check">
-                                        <input value="4" data-delivery-charge="15"
-                                            class="form-check-input address_id" type="radio" name="address_id"
-                                            id="home-4" />
-
-                                        <label class="form-check-label" for="home-4">
-                                            <span class="icon"><i class="far fa-car-building"></i>Office</span>
-                                            <span class="address">Name : John Abraham</span>
-                                            <span class="address">Phone : 123-874-6548</span>
-                                            <span class="address">Delivery area : Thunderbird Paseo Park</span>
-
-                                            <span class="address">Address : Los Angeles, CA, USA</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
+                            @endforelse
                         </div>
                     </div>
                 </div>
@@ -185,18 +139,29 @@
             <div class="col-lg-4 wow fadeInUp" data-wow-duration="1s">
                 <div id="sticky_sidebar" class="wsus__cart_list_footer_button">
                     <h6>total price</h6>
-                    <p>subtotal: <span>$120</span></p>
+                    <p>subtotal: <span>${{ $totalPrice }}</span></p>
                     <p>discount (-): <span>$0</span></p>
                     <p>delivery (+): <span class="delivery_charge">$0.00</span></p>
                     <p class="total">
-                        <span>Total:</span> <span class="grand_total">$120</span>
+                        <span>Total:</span> <span class="grand_total">${{ $totalPrice }}</span>
                     </p>
-                    <input type="hidden" id="grand_total" value="120" />
-                    <form action="https://unifood.websolutionus.com/apply-coupon-from-checkout">
-                        <input name="coupon" type="text" placeholder="Coupon Code" />
-                        <button type="submit">apply</button>
+                   
+                    <form action="{{ route('stripe.checkout.process') }}" id="checkout_form" method="POST" class="d-none">
+                        @csrf
+                        <input type="hidden" name="total_price" id="total_price_input" value="{{ $totalPrice }}"/>
+                        <input type="hidden" class="shippingAddress_id" name="shipping_addresses_id">
                     </form>
-                    <a class="common_btn" href="javascript:;" id="continue_to_pay">Continue to pay</a>
+                    <a class="common_btn" href="javascript:;" onclick="checkAddressAndSubmit(event)">Continue to pay</a>
+                    <script>
+                        function checkAddressAndSubmit(e) {
+                            e.preventDefault();
+                            if ($("input[name='address_id']").is(":checked")) {
+                                document.getElementById('checkout_form').submit();
+                            } else {
+                                toastr.error("Please select an address");
+                            }
+                        }
+                    </script>
                 </div>
             </div>
         </div>
@@ -207,3 +172,46 @@
     ==============================-->
 
 @endsection
+@push('scripts')
+    <script>
+        (function($) {
+            "use strict";
+            $(document).ready(function () {
+
+                $("input[name='address_id']").on("change", function() {
+                    var delivery_id = $("input[name='address_id']:checked").val();
+                    var deliveryCharge = $("input[name='address_id']:checked").data('delivery-charge');
+                    var subtotal = {{ $totalPrice }};
+
+                    // Update delivery charge display
+                    $(".delivery_charge").html(`$${deliveryCharge}`);
+                    
+                    // Calculate grand total
+                    var grand_total = parseFloat(subtotal) + parseFloat(deliveryCharge);
+                    
+                    // Update grand total display
+                    $(".grand_total").html(`$${grand_total.toFixed(2)}`);
+                    
+                    // Update the visible total price input
+                    $("#total_price_input").val(grand_total.toFixed(2));
+                    
+                    // Update the hidden form input
+                    $("#grand_total").val(grand_total.toFixed(2));
+                    
+                    // Update shipping address ID
+                    $('.shippingAddress_id').val(delivery_id);
+                });
+
+                $("#continue_to_pay").on("click", function(e){
+                    e.preventDefault();
+                    if ($("input[name='address_id']").is(":checked")) {
+                        window.location.href = "https://unifood.websolutionus.com/payment";
+                    } else {
+                        toastr.error("Please select an address")
+                    }
+                });
+
+            });
+        })(jQuery);
+    </script>
+@endpush

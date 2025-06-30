@@ -33,7 +33,7 @@
                                              <td>
                                                  {{ $loop->index + 1 }}
                                              </td>
-                                             <td>{{ $deliveryArea->area_name }}</td>
+                                             <td>{{ $deliveryArea->delivery_area_name }}</td>
                                              <td>
                                                   {{ $deliveryArea->minimum_delivery_time }} - {{ $deliveryArea->maximum_delivery_time }} Minutes
                                              </td>
