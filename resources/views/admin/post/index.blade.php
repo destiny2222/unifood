@@ -22,11 +22,12 @@
                             <table class="table align-middle mb-0 table-hover table-centered">
                                  <thead class="bg-light-subtle">
                                       <tr>
-                                           <th>
-                                               S/N
-                                           </th>
+                                           <th>  S/N </th>
                                            <th>Image</th>
                                            <th>Title</th>
+                                           <th>Category </th>
+                                           <th>Show Homepage</th>
+                                           <th>Status</th>
                                            <th>Description</th>
                                            <th>Action</th>
                                       </tr>
@@ -37,9 +38,26 @@
                                         <td>
                                             {{ $loop->index + 1 }}
                                         </td>
-                                        <td><img src="{{ asset('upload/post/'.$post->image) }}" width="50" height="50" alt=""></td>
+                                        <td><img src="{{ asset('storage/upload/post/'.$post->image) }}" width="50" height="50" alt=""></td>
                                         <td>
                                             {{ $post->title }}
+                                        </td>
+                                        <td>
+                                            {{ $post->category->title }}
+                                        </td>
+                                        <td>
+                                            @if ($post->show_homepage == 1)
+                                                <span class='badge bg-success '>Yes</span>
+                                            @else
+                                                 <span class='badge bg-danger '>No</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($post->status == 1)
+                                                <span class='badge bg-success '>Active</span>
+                                            @else
+                                                 <span class='badge bg-danger '>Inactive</span>
+                                            @endif
                                         </td>
                                         <td>{!! \Str::limit($post->description, 200) !!}</td>
                                         <td>

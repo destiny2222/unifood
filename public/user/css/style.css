@@ -7103,6 +7103,7 @@ CHECKOUT PAGE START
     line-height: 48px;
     font-size: 16px;
     padding-left: 20px;
+    backdrop-filter:blur(20px);
 }
 
 .wsus__check_single_form .select2-container--default .select2-selection--single .select2-selection__arrow {

@@ -48,27 +48,25 @@
                         {!! \Str::limit($product->description, 200)  !!}
                     </p>
 
-                    <form id="add_to_cart_form" action="" method="POST">
-                        <input type="hidden" name="product_id" value="3">
-                        <input type="hidden" name="price" value="0" id="price">
-                        <input type="hidden" name="variant_price" value="0" id="variant_price">
+                    <form id="add_to_cart_form" action="{{ route('cart.add') }}" method="POST">
+                         @csrf
+                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        <input type="hidden" name="slug" value="{{ $product->slug }}">
 
                         <div class="details_quentity">
                             <h5>select quantity</h5>
                             <div class="quentity_btn_area d-flex flex-wrapa align-items-center">
                                 <div class="quentity_btn">
-                                    <button type="button" class="btn btn-danger decrement_qty_detail_page"><i
-                                            class="fal fa-minus"></i></button>
-                                    <input type="text" value="1" name="qty" class="product_qty"
-                                        readonly="">
-                                    <button type="button" class="btn btn-success increment_qty_detail_page"><i
-                                            class="fal fa-plus"></i></button>
+                                    <button type="button" class="btn btn-danger decrement_qty_detail_page"><i class="fal fa-minus"></i></button>
+                                    <input type="text" value="1" name="quantity" class="product_qty" readonly="">
+                                    <button type="button" class="btn btn-success increment_qty_detail_page"><i class="fal fa-plus"></i></button>
                                 </div>
-                                <h3>$ <span class="grand_total">0.00</span></h3>
+
+                                {{-- <h3>$ <span class="grand_total">0.00</span></h3> --}}
                             </div>
                         </div>
                         <ul class="details_button_area d-flex flex-wrap">
-                            <li><a id="add_to_cart" class="common_btn" href="javascript:;">add to cart</a></li>
+                            <li class="me-2"><button type="submit" id="add_to_cart" class="common_btn" href="javascript:;">add to cart</button></li>
                             <li>
                                 <a class="wishlist" href="{{ route('wishlist.add') }}" onclick="event.preventDefault(); document.getElementById('wish-{{ $product->id  }}').submit()" href="{{ route('wishlist.add') }}">
                                     <i class="fal fa-heart"></i>
@@ -110,28 +108,37 @@
                             <div class="wsus__review_area">
                                 <div class="row">
                                     <div class="col-lg-8">
-                                        <h4>0 reviews</h4>
-
+                                        <h4>{{ $product->reviews->where('status', 1)->count() }} reviews</h4>
+                                        @foreach ($product->reviews as $review)
+                                            @if ($review->status == 1)
+                                                <div class="wsus__comment pt-0 mt_20">
+                                                    <div class="wsus__single_comment m-0 border-0">
+                                                        <img src="{{ asset('images/profile/'.$review->user->profile_picture ) }}" alt="review" class="img-fluid">
+                                                        <div class="wsus__single_comm_text">
+                                                            <h3>{{ $review->user->name }} <span>{{ $review->created_at->format('d M Y') }} </span></h3>
+                                                            <p>{{ $review->review }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        @endforeach
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="wsus__post_review">
                                             <h4>write a Review</h4>
-                                            <form id="review_form">
+                                            <form id="review_form" action="{{ route('review.store') }}" method="POST">
+                                                @csrf
                                                 <div class="row">
-                                                    <input type="hidden" name="product_id" value="3">
+                                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
 
-                                                    <input type="hidden" name="rating" value="5"
-                                                        id="product_rating">
+                                                    {{-- <input type="hidden" name="rating" value="5"
+                                                        id="product_rating"> --}}
 
                                                     <div class="col-xl-12">
                                                         <textarea name="review" rows="3" placeholder="Write your review"></textarea>
                                                     </div>
-
-
                                                     <div class="col-12">
-                                                        <a href="../login.html" class="common_btn"
-                                                            type="button">please login first</a>
-
+                                                        <button type="submit" class="common_btn">Submit</button>
                                                     </div>
                                                 </div>
                                             </form>
@@ -195,149 +202,65 @@
         MENU DETAILS END
     ==============================-->
 
+
+
+@endsection
+@push('scripts')
 <script>
     (function($) {
         "use strict";
         $(document).ready(function() {
 
-            $("#review_form").on("submit", function(e) {
-                e.preventDefault();
+            // $("#add_to_cart").on("click", function(e) {
+            //     e.preventDefault();
 
-                var isDemo = "0"
-                if (isDemo == 0) {
-                    toastr.error('This Is Demo Version. You Can Not Change Anything');
-                    return;
-                }
+            //     $.ajax({
+            //         type: 'POST',
+            //         url: "{{ route('cart.add') }}", 
+            //         data: $('#add_to_cart_form').serialize(),
+            //         headers: {
+            //             'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            //         },
+            //         success: function(response) {
+            //             toastr.success("Item added successfully");
+            //             // Optional: update mini cart UI
+            //         },
+            //         error: function(response) {
+            //             toastr.error("Could not add to cart.");
+            //         }
+            //     });
+            // });
 
-                $.ajax({
-                    type: 'post',
-                    data: $('#review_form').serialize(),
-                    url: "https://unifood.websolutionus.com/submit-review",
-                    success: function(response) {
-                        toastr.success("Review added successfully")
-                        $("#review_form").trigger("reset");
-                    },
-                    error: function(response) {
-
-                        if (response.status == 422) {
-                            if (response.responseJSON.errors.rating) toastr.error(
-                                response.responseJSON.errors.rating[0])
-                            if (response.responseJSON.errors.review) toastr.error(
-                                response.responseJSON.errors.review[0])
-                            if (response.responseJSON.errors.product_id) toastr.error(
-                                response.responseJSON.errors.product_id[0])
-
-                            if (!response.responseJSON.errors.rating || !response
-                                .responseJSON.errors.review || !response.responseJSON
-                                .errors.product_id) {
-                                toastr.error(
-                                    "Please complete the recaptcha to submit the form"
-                                    )
-                            }
-                        }
-
-                        if (response.status == 500) {
-                            toastr.error("Server error occured")
-                        }
-
-                        if (response.status == 403) {
-                            toastr.error(response.responseJSON.message)
-                        }
-                    }
-                });
-
-            })
-
-            $("#add_to_cart").on("click", function(e) {
-                e.preventDefault();
-                if ($("input[name='size_variant']").is(":checked")) {
-
-                    $.ajax({
-                        type: 'get',
-                        data: $('#add_to_cart_form').serialize(),
-                        url: "https://unifood.websolutionus.com/add-to-cart",
-                        success: function(response) {
-                            let html_response = `    <div>
-                                    <div class="wsus__menu_cart_header">
-                                        <h5 class="mini_cart_body_item">Total Item(0)</h5>
-                                        <span class="close_cart"><i class="fal fa-times"></i></span>
-                                    </div>
-                                    <ul class="mini_cart_list">
-
-                                    </ul>
-
-                                    <p class="subtotal">Sub Total <span class="mini_sub_total">$0.00</span></p>
-                                    <a class="cart_view" href="https://unifood.websolutionus.com/cart"> view cart</a>
-                                    <a class="checkout" href="https://unifood.websolutionus.com/checkout">checkout</a>
-                                </div>`;
-
-
-                            $(".wsus__menu_cart_boody").html(html_response);
-
-                            $(".mini_cart_list").html(response);
-                            toastr.success("Item added successfully")
-                            calculate_mini_total();
-                        },
-                        error: function(response) {
-                            if (response.status == 500) {
-                                toastr.error("Server error occured")
-                            }
-
-                            if (response.status == 403) {
-                                toastr.error(response.responseJSON.message)
-                            }
-                        }
-                    });
-
-                } else {
-                    toastr.error("Please select a size")
-                }
-            });
-
-            $("input[name='size_variant']").on("change", function() {
-                $("#variant_price").val($(this).data('variant-price'))
-                calculatePrice()
-            })
-
-            $("input[name='optional_items[]']").change(function() {
-                calculatePrice()
-            });
 
             $(".increment_qty_detail_page").on("click", function() {
                 let product_qty = $(".product_qty").val();
-                let new_qty = parseInt(product_qty) + parseInt(1);
+                let new_qty = parseInt(product_qty) + 1;
                 $(".product_qty").val(new_qty);
-                calculatePrice();
+                calculatePrice(); // update total
             })
 
             $(".decrement_qty_detail_page").on("click", function() {
                 let product_qty = $(".product_qty").val();
                 if (product_qty == 1) return;
-                let new_qty = parseInt(product_qty) - parseInt(1);
+                let new_qty = parseInt(product_qty) - 1;
                 $(".product_qty").val(new_qty);
-                calculatePrice();
+                calculatePrice(); // update total
             })
 
         });
+        
     })(jQuery);
 
-    function calculatePrice() {
-        let optional_price = 0;
-        let product_qty = $(".product_qty").val();
-        $("input[name='optional_items[]']:checked").each(function() {
-            let checked_value = $(this).data('optional-item');
-            optional_price = parseInt(optional_price) + parseInt(checked_value);
+    function updateQtyButtons() {
+            let qty = parseInt($(".product_qty").val());
+            $(".decrement_qty_detail_page").prop('disabled', qty <= 1);
+        }
+
+        $(".increment_qty_detail_page, .decrement_qty_detail_page").on("click", function () {
+            updateQtyButtons();
         });
 
-        let variant_price = $("#variant_price").val();
-        let main_price = parseInt(variant_price) * parseInt(product_qty);
-
-        let total = parseInt(main_price) + parseInt(optional_price);
-        $(".grand_total").html(total)
-        $("#price").val(total);
-    }
-
+        updateQtyButtons(); // call on page load
 
 </script>
-
-@endsection
+@endpush

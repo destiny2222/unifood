@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\DeliveryArea;
+use App\Models\ShippingAddress;
 use App\Models\User;
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
@@ -15,6 +17,8 @@ class HomeController extends Controller
     public function index(){
         $user  = Auth::user();
         $wishlist = Wishlist::orderBy('id', 'desc')->get();
+        $shippingAddress = ShippingAddress::where('user_id', $user->id)->get();
+        $deliveryArea = DeliveryArea::orderBy('id', 'desc')->get();
         // dd($user);
         // $order = Order::where('user_id', $user->id)->get();
         // completed order
@@ -28,6 +32,8 @@ class HomeController extends Controller
         return view("dash.index", [
             'user'=>$user,
             'wishlists'=>$wishlist,
+            'shippingAddress'=>$shippingAddress,
+            'deliveryArea' => $deliveryArea,
         ]);
     }
 

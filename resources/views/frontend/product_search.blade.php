@@ -15,25 +15,6 @@
     ==============================-->
 <section class="wsus__search_menu mt_120 xs_mt_90 mb_100 xs_mb_70">
     <div class="container">
-        <form class="wsus__search_menu_form" action="{{ route('frontend.product.search') }}" method="GET">
-            <div class="row">
-                <div class="col-xl-6 col-md-5">
-                      <input type="text" placeholder="Type your keyword" name="search" value="{{ request('search') }}">
-                </div>
-                <div class="col-xl-4 col-md-4">
-                    <select id="select_js2" name="category">
-                        <option value="">Select category</option>
-                        @foreach ($categories as $category)
-                            <option value="{{ $category->title }}">{{ $category->title }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-xl-2 col-md-3">
-                    <button type="submit" class="common_btn">search</button>
-                </div>
-            </div>
-        </form>
-
         <div class="row">
             @foreach ($products as $product)
                 <div class="col-6 col-xl-3 col-sm-6 col-lg-4 wow fadeInUp" data-wow-duration="1s">

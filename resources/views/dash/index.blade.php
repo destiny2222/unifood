@@ -165,97 +165,62 @@
                                     <div class="wsus_dashboard_address">
                                         <div class="wsus_dashboard_existing_address">
                                             <div class="row" id="address_all_list">
-                                                <div class="col-md-6">
-                                                    <div class="wsus__checkout_single_address ">
-                                                        <div class="form-check address-list-1">
-                                                            <label class="form-check-label">
-                                                                <span class="icon"><i class="fas fa-home" aria-hidden="true"></i>Home</span>
-                                                                <span class="address">Name : John Doe</span>
+                                                @foreach ($shippingAddress as $shipping)
+                                                    <div class="col-md-6">
+                                                        <div class="wsus__checkout_single_address ">
+                                                            <div class="form-check address-list-1">
+                                                                <label class="form-check-label">
+                                                                    @if ($shipping->address_type == 'Home')
+                                                                        <span class="icon"><i class="fas fa-home" aria-hidden="true"></i>{{ $shipping->address_type }}</span>
+                                                                    @else
+                                                                        <span class="icon"><i class="far fa-car-building" aria-hidden="true"></i>{{ $shipping->address_type }}</span>
+                                                                    @endif
+                                                                    <span class="address">Name : {{ $shipping->first_name }}  {{ $shipping->last_name }}</span>
+                                                                    <span class="address">Phone : {{ $shipping->phone_number }}</span>
+                                                                    <span class="address">Delivery area : {{ $shipping->deliveryArea->delivery_area_name }}</span>
+                                                                    <span class="address">Address : {{ $shipping->address }}</span>
+                                                                </label>
+                                                            </div>
+                                                            <ul>
+                                                                {{-- <li><a href="{{ route('shipping.address.edit', $shipping->id) }}" class="dash_edit_btn edit_data_attribute"><i class="far fa-edit" aria-hidden="true"></i></a></li> --}}
+                                                                <li>
+                                                                    @php
+                                                                        $shippingData = [
+                                                                            'id' => $shipping->id,
+                                                                            'first_name' => $shipping->first_name,
+                                                                            'last_name' => $shipping->last_name,
+                                                                            'phone_number' => $shipping->phone_number,
+                                                                            'email' => $shipping->email,
+                                                                            'delivery_area_id' => $shipping->delivery_area_id,
+                                                                            'delivery_area_name' => $shipping->deliveryArea->delivery_area_name,
+                                                                            'address' => $shipping->address,
+                                                                            'address_type' => $shipping->address_type
+                                                                        ];
+                                                                    @endphp
+                                                                    <a href="javascript:void(0);"
+                                                                        class="dash_edit_btn edit_data_attribute"
+                                                                        data-address='@json($shippingData)'>
+                                                                        <i class="far fa-edit" aria-hidden="true"></i>
+                                                                    </a>
+                                                                </li>
 
-                                                                <span class="address">Phone : 125-985-4587</span>
 
-                                                                <span class="address">Delivery area : Metrocenter Mall</span>
+                                                                <li><a onclick="delete_address(1)" class="dash_del_icon"><i class="fas fa-trash-alt" aria-hidden="true"></i></a> </li>
 
-                                                                <span class="address">Address : Los Angeles, CA, USA</span>
-                                                            </label>
+                                                                <form id="delete_address_1" action="" method="POST">
+                                                                    @method('DELETE') 
+                                                                    @csrf 
+                                                                </form>
+                                                            </ul>
                                                         </div>
-                                                        <ul>
-                                                            <li><a data-existing-address="{&quot;id&quot;:1,&quot;user_id&quot;:1,&quot;delivery_area_id&quot;:3,&quot;first_name&quot;:&quot;John&quot;,&quot;last_name&quot;:&quot;Doe&quot;,&quot;email&quot;:&quot;user@gmail.com&quot;,&quot;phone&quot;:&quot;125-985-4587&quot;,&quot;address&quot;:&quot;Los Angeles, CA, USA&quot;,&quot;type&quot;:&quot;home&quot;,&quot;default_address&quot;:&quot;Yes&quot;,&quot;latitude&quot;:null,&quot;longitude&quot;:null,&quot;created_at&quot;:&quot;2023-03-05T16:47:09.000000Z&quot;,&quot;updated_at&quot;:&quot;2023-03-05T16:47:09.000000Z&quot;,&quot;delivery_area&quot;:{&quot;id&quot;:3,&quot;area_name&quot;:&quot;Metrocenter Mall&quot;,&quot;delivery_fee&quot;:&quot;25&quot;,&quot;min_time&quot;:&quot;20&quot;,&quot;max_time&quot;:&quot;30&quot;,&quot;status&quot;:1,&quot;created_at&quot;:&quot;2023-03-04T22:55:58.000000Z&quot;,&quot;updated_at&quot;:&quot;2023-03-04T22:55:58.000000Z&quot;}}" class="dash_edit_btn edit_data_attribute-1"><i class="far fa-edit" aria-hidden="true"></i></a></li>
-                                                            <li><a onclick="delete_address(1)" class="dash_del_icon"><i class="fas fa-trash-alt" aria-hidden="true"></i></a>
-                                                            </li>
-
-                                                            <form id="delete_address_1" action="https://unifood.websolutionus.com/address/1" method="POST">
-                                                                <input type="hidden" name="_token" value="9DoTNtSQlXDGrW2LXuvr79771ZJbicckzkn9F9fo" autocomplete="off"> <input type="hidden" name="_method" value="DELETE"> </form>
-                                                        </ul>
                                                     </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="wsus__checkout_single_address ">
-                                                        <div class="form-check address-list-2">
-                                                            <label class="form-check-label">
-                                                                <span class="icon"><i class="far fa-car-building" aria-hidden="true"></i>Office</span>
-                                                                <span class="address">Name : John Doe</span>
-                                                                <span class="address">Phone : 123-343-4444</span>
-                                                                <span class="address">Delivery area : Thunderbird Paseo Park</span>
-                                                                <span class="address">Address : Los Angeles, CA, USA</span>
-                                                            </label>
-                                                        </div>
-                                                        <ul>
-                                                            <li><a data-existing-address="{&quot;id&quot;:2,&quot;user_id&quot;:1,&quot;delivery_area_id&quot;:2,&quot;first_name&quot;:&quot;John&quot;,&quot;last_name&quot;:&quot;Doe&quot;,&quot;email&quot;:&quot;user@gmail.com&quot;,&quot;phone&quot;:&quot;123-343-4444&quot;,&quot;address&quot;:&quot;Los Angeles, CA, USA&quot;,&quot;type&quot;:&quot;office&quot;,&quot;default_address&quot;:&quot;No&quot;,&quot;latitude&quot;:null,&quot;longitude&quot;:null,&quot;created_at&quot;:&quot;2023-03-05T16:47:48.000000Z&quot;,&quot;updated_at&quot;:&quot;2023-03-05T16:47:48.000000Z&quot;,&quot;delivery_area&quot;:{&quot;id&quot;:2,&quot;area_name&quot;:&quot;Thunderbird Paseo Park&quot;,&quot;delivery_fee&quot;:&quot;15&quot;,&quot;min_time&quot;:&quot;10&quot;,&quot;max_time&quot;:&quot;20&quot;,&quot;status&quot;:1,&quot;created_at&quot;:&quot;2023-03-04T22:55:45.000000Z&quot;,&quot;updated_at&quot;:&quot;2023-03-04T22:55:45.000000Z&quot;}}" class="dash_edit_btn edit_data_attribute-2"><i class="far fa-edit" aria-hidden="true"></i></a></li>
-                                                            <li><a onclick="delete_address(2)" class="dash_del_icon"><i class="fas fa-trash-alt" aria-hidden="true"></i></a> </li>
-
-                                                            <form id="delete_address_2" action="https://unifood.websolutionus.com/address/2" method="POST">
-                                                                <input type="hidden" name="_token" value="9DoTNtSQlXDGrW2LXuvr79771ZJbicckzkn9F9fo" autocomplete="off"> <input type="hidden" name="_method" value="DELETE"> </form>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="wsus__checkout_single_address ">
-                                                        <div class="form-check address-list-3">
-                                                            <label class="form-check-label">
-                                                                <span class="icon"><i class="fas fa-home" aria-hidden="true"></i>Home</span>
-                                                                <span class="address">Name : David Rechard</span>
-                                                                <span class="address">Phone : 123-874-6548</span>
-                                                                <span class="address">Delivery area : Deer Valley Rock Art Center</span>
-                                                                <span class="address">Address : Los Angeles, CA, USA</span>
-                                                            </label>
-                                                        </div>
-                                                        <ul>
-                                                            <li><a data-existing-address="{&quot;id&quot;:3,&quot;user_id&quot;:1,&quot;delivery_area_id&quot;:6,&quot;first_name&quot;:&quot;David&quot;,&quot;last_name&quot;:&quot;Rechard&quot;,&quot;email&quot;:&quot;user@gmail.com&quot;,&quot;phone&quot;:&quot;123-874-6548&quot;,&quot;address&quot;:&quot;Los Angeles, CA, USA&quot;,&quot;type&quot;:&quot;home&quot;,&quot;default_address&quot;:&quot;No&quot;,&quot;latitude&quot;:null,&quot;longitude&quot;:null,&quot;created_at&quot;:&quot;2023-03-05T16:48:18.000000Z&quot;,&quot;updated_at&quot;:&quot;2023-03-05T16:48:18.000000Z&quot;,&quot;delivery_area&quot;:{&quot;id&quot;:6,&quot;area_name&quot;:&quot;Deer Valley Rock Art Center&quot;,&quot;delivery_fee&quot;:&quot;15&quot;,&quot;min_time&quot;:&quot;15&quot;,&quot;max_time&quot;:&quot;20&quot;,&quot;status&quot;:1,&quot;created_at&quot;:&quot;2023-03-04T22:57:28.000000Z&quot;,&quot;updated_at&quot;:&quot;2023-03-04T22:57:28.000000Z&quot;}}" class="dash_edit_btn edit_data_attribute-3"><i class="far fa-edit" aria-hidden="true"></i></a></li>
-                                                            <li><a onclick="delete_address(3)" class="dash_del_icon"><i class="fas fa-trash-alt" aria-hidden="true"></i></a>
-                                                            </li>
-
-                                                            <form id="delete_address_3" action="https://unifood.websolutionus.com/address/3" method="POST">
-                                                                <input type="hidden" name="_token" value="9DoTNtSQlXDGrW2LXuvr79771ZJbicckzkn9F9fo" autocomplete="off"> <input type="hidden" name="_method" value="DELETE"> </form>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="wsus__checkout_single_address ">
-                                                        <div class="form-check address-list-4">
-                                                            <label class="form-check-label">
-                                                                <span class="icon"><i class="far fa-car-building" aria-hidden="true"></i>Office</span>
-                                                                <span class="address">Name : John Abraham</span>
-                                                                <span class="address">Phone : 123-874-6548</span>
-                                                                <span class="address">Delivery area : Thunderbird Paseo Park</span>
-                                                                <span class="address">Address : Los Angeles, CA, USA</span>
-                                                            </label>
-                                                        </div>
-                                                        <ul>
-                                                            <li><a data-existing-address="{&quot;id&quot;:4,&quot;user_id&quot;:1,&quot;delivery_area_id&quot;:2,&quot;first_name&quot;:&quot;John&quot;,&quot;last_name&quot;:&quot;Abraham&quot;,&quot;email&quot;:&quot;user@gmail.com&quot;,&quot;phone&quot;:&quot;123-874-6548&quot;,&quot;address&quot;:&quot;Los Angeles, CA, USA&quot;,&quot;type&quot;:&quot;office&quot;,&quot;default_address&quot;:&quot;No&quot;,&quot;latitude&quot;:null,&quot;longitude&quot;:null,&quot;created_at&quot;:&quot;2023-03-05T16:49:24.000000Z&quot;,&quot;updated_at&quot;:&quot;2023-03-05T16:49:24.000000Z&quot;,&quot;delivery_area&quot;:{&quot;id&quot;:2,&quot;area_name&quot;:&quot;Thunderbird Paseo Park&quot;,&quot;delivery_fee&quot;:&quot;15&quot;,&quot;min_time&quot;:&quot;10&quot;,&quot;max_time&quot;:&quot;20&quot;,&quot;status&quot;:1,&quot;created_at&quot;:&quot;2023-03-04T22:55:45.000000Z&quot;,&quot;updated_at&quot;:&quot;2023-03-04T22:55:45.000000Z&quot;}}" class="dash_edit_btn edit_data_attribute-4"><i class="far fa-edit" aria-hidden="true"></i></a></li>
-                                                            <li><a onclick="delete_address(4)" class="dash_del_icon"><i class="fas fa-trash-alt" aria-hidden="true"></i></a>
-                                                            </li>
-
-                                                            <form id="delete_address_4" action="https://unifood.websolutionus.com/address/4" method="POST">
-                                                                <input type="hidden" name="_token" value="9DoTNtSQlXDGrW2LXuvr79771ZJbicckzkn9F9fo" autocomplete="off"> <input type="hidden" name="_method" value="DELETE"> </form>
-                                                        </ul>
-                                                    </div>
-                                                </div>
+                                                @endforeach
+                                                
                                             </div>
                                         </div>
                                         <div class="wsus_dashboard_new_address ">
-                                            <form id="add_new_address_form" method="POST">
-                                                <input type="hidden" name="_token" value="9DoTNtSQlXDGrW2LXuvr79771ZJbicckzkn9F9fo" autocomplete="off">
+                                            <form id="add_new_address_form" method="POST" action='{{ route('shipping.address.store') }}'>
+                                                @csrf
                                                 <div class="row">
                                                     <div class="col-12">
                                                         <h4>add new address</h4>
@@ -263,18 +228,12 @@
 
                                                     <div class="col-12">
                                                         <div class="wsus__check_single_form">
-                                                            <select name="delivery_area_id" class="select2 select2-hidden-accessible" data-select2-id="select2-data-1-nuar" tabindex="-1" aria-hidden="true">
-                                                                <option value="" data-select2-id="select2-data-3-7yi9">Select Delivery Area</option>
-                                                                <option value="1">Arizona State University West Campus</option>
-                                                                <option value="2">Thunderbird Paseo Park</option>
-                                                                <option value="3">Metrocenter Mall</option>
-                                                                <option value="4">Reach 11 Recreation Area</option>
-                                                                <option value="5">Pioneer Community Park</option>
-                                                                <option value="6">Deer Valley Rock Art Center</option>
-                                                                <option value="7">Cave Creek Regional Park</option>
-                                                                <option value="8">Turf Soaring School</option>
+                                                            <select name="delivery_area_id" class="select2"  tabindex="-1" aria-hidden="true">
+                                                                <option value="">   Select Delivery Area </option>
+                                                                @foreach ($deliveryArea as $delivery)
+                                                                 <option value="{{ $delivery->id }}"> {{ $delivery->delivery_area_name }}  </option>
+                                                                @endforeach
                                                             </select>
-                                                            <span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="select2-data-2-w7ft" style="width: auto;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-delivery_area_id-4v-container" aria-controls="select2-delivery_area_id-4v-container"><span class="select2-selection__rendered" id="select2-delivery_area_id-4v-container" role="textbox" aria-readonly="true" title="Select Delivery Area">Select Delivery Area</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
                                                         </div>
                                                     </div>
 
@@ -291,7 +250,7 @@
 
                                                     <div class="col-md-6 col-lg-12 col-xl-6">
                                                         <div class="wsus__check_single_form">
-                                                            <input type="text" placeholder="Phone" name="phone">
+                                                            <input type="text" placeholder="Phone" name="phone_number">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6 col-lg-12 col-xl-6">
@@ -327,34 +286,26 @@
                                                 </div>
                                             </form>
                                         </div>
-                                        <div class="wsus_dashboard_edit_address ">
-                                            <form id="edit_address_form" method="POST">
+                                        <div class="wsus_dashboard_edit_address" >
+                                            <form id="edit_address_form"  method="POST"
+                                                action="{{ route('shipping.address.update', ['id' => '__id__']) }}"
+                                                data-action-template="{{ route('shipping.address.update', ['id' => '__id__']) }}">
+
+                                                <input type="hidden" name="edit_id" class="edit_id">
+                                                @csrf
+                                                @method('PUT')
                                                 <div class="row">
                                                     <div class="col-12">
                                                         <h4>Edit address</h4>
                                                     </div>
-
                                                     <div class="col-12">
                                                         <div class="wsus__check_single_form">
-                                                            <select name="delivery_area_id" class="select2 edit_delivery_area_id select2-hidden-accessible" data-select2-id="select2-data-4-0tia" tabindex="-1" aria-hidden="true">
-                                                                <option value="1" data-select2-id="select2-data-6-y300">Arizona State University West Campus</option>
-                                                                <option value="2">Thunderbird Paseo Park</option>
-                                                                <option value="3">Metrocenter Mall</option>
-                                                                <option value="4">Reach 11 Recreation Area</option>
-                                                                <option value="5">Pioneer Community Park</option>
-                                                                <option value="6">Deer Valley Rock Art Center</option>
-                                                                <option value="7">Cave Creek Regional Park</option>
-                                                                <option value="8">Turf Soaring School</option>
+                                                            <select name="delivery_area_id" class="select2 edit_delivery_area_id" tabindex="-1" aria-hidden="true">
+                                                                <option value="">Select Delivery Area</option>
+                                                                @foreach ($deliveryArea as $delivery)
+                                                                    <option value="{{ $delivery->id }}">{{ $delivery->delivery_area_name }}</option>
+                                                                @endforeach
                                                             </select>
-                                                            <span class="select2 select2-container select2-container--default" dir="ltr" data-select2-id="select2-data-5-0s2e" style="width: auto;">
-                                                                <span class="selection">
-                                                                    <span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-delivery_area_id-m6-container" aria-controls="select2-delivery_area_id-m6-container">
-                                                                        <span class="select2-selection__rendered" id="select2-delivery_area_id-m6-container" role="textbox" aria-readonly="true" title="Arizona State University West Campus">Arizona State University West Campus</span>
-                                                                        <span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span>
-                                                                    </span>
-                                                                </span>
-                                                                <span class="dropdown-wrapper" aria-hidden="true"></span>
-                                                            </span>
                                                         </div>
                                                     </div>
                                                     <input type="hidden" name="edit_id" class="edit_id">
@@ -368,10 +319,9 @@
                                                             <input class="edit_last_name" type="text" placeholder="Last Name *" name="last_name">
                                                         </div>
                                                     </div>
-
                                                     <div class="col-md-6 col-lg-12 col-xl-6">
                                                         <div class="wsus__check_single_form">
-                                                            <input class="edit_phone" type="text" placeholder="Phone" name="phone">
+                                                            <input class="edit_phone" type="text" placeholder="Phone" name="phone_number">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6 col-lg-12 col-xl-6">
@@ -388,15 +338,11 @@
                                                         <div class="wsus__check_single_form check_area">
                                                             <div class="form-check">
                                                                 <input value="home" class="form-check-input edit_address_type home_type" type="radio" name="address_type" id="flexRadioDefault3">
-                                                                <label class="form-check-label" for="flexRadioDefault3">
-                                                                    home
-                                                                </label>
+                                                                <label class="form-check-label" for="flexRadioDefault3">home</label>
                                                             </div>
                                                             <div class="form-check">
                                                                 <input value="office" class="form-check-input edit_address_type office_type" type="radio" name="address_type" id="flexRadioDefault4">
-                                                                <label class="form-check-label" for="flexRadioDefault4">
-                                                                    office
-                                                                </label>
+                                                                <label class="form-check-label" for="flexRadioDefault4">office</label>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -901,7 +847,6 @@
             });
         })(jQuery);
 
-
         function previewThumnailImage(event) {
             var reader = new FileReader();
             reader.onload = function(){
@@ -913,4 +858,78 @@
             $("#upload_user_avatar_form").submit();
         };
     </script>
+    <script>
+        $(document).on('click', '.edit_data_attribute', function () {
+            let data = $(this).data('address');
+
+            // ✅ Fill in form fields
+            $('.edit_id').val(data.id);
+            $('.edit_first_name').val(data.first_name);
+            $('.edit_last_name').val(data.last_name);
+            $('.edit_phone').val(data.phone_number);
+            $('.edit_email').val(data.email);
+            $('.edit_address').val(data.address);
+            $('.edit_delivery_area_id').val(data.delivery_area_id).trigger('change');
+
+            // ✅ Check the appropriate radio button
+            if (data.address_type === 'home') {
+                $('.home_type').prop('checked', true);
+            } else if (data.address_type === 'office') {
+                $('.office_type').prop('checked', true);
+            }
+
+            // ✅ Update the form action URL dynamically
+            let form = $('#edit_address_form');
+            let originalAction = form.data('action-template'); // store this in HTML
+            let updatedAction = originalAction.replace('__id__', data.id);
+            form.attr('action', updatedAction);
+
+            // ✅ Show the edit form
+            $('.wsus_dashboard_new_address').hide();
+            $('.wsus_dashboard_edit_address').show();
+        });
+    </script>
+
+    {{-- <script>
+        $(document).ready(function () {
+            $('#submit_edit_address').on('click', function (e) {
+                e.preventDefault();
+
+                let formData = {
+                    _token: $('input[name="_token"]').val(),
+                    _method: 'PUT',
+                    edit_id: $('.edit_id').val(),
+                    first_name: $('.edit_first_name').val(),
+                    last_name: $('.edit_last_name').val(),
+                    phone_number: $('.edit_phone').val(),
+                    email: $('.edit_email').val(),
+                    address: $('.edit_address').val(),
+                    address_type: $('input[name="address_type"]:checked').val(),
+                    delivery_area_id: $('.edit_delivery_area_id').val()
+                };
+
+                $.ajax({
+                    url: '{{ route("shipping.address.update") }}',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        toastr.success('Address updated successfully.');
+                        $('#address_all_list').load(location.href + " #address_all_list"); 
+                    },
+                    error: function (xhr) {
+                        if (xhr.status === 422) {
+                            let errors = xhr.responseJSON.errors;
+                            let errorMsg = '';
+                            for (let key in errors) {
+                                errorMsg += errors[key][0] + '\n';
+                            }
+                            toastr.error(errorMsg);
+                        } else {
+                            toastr.error('Something went wrong. Please try again.');
+                        }
+                    }
+                });
+            });
+        });
+    </script> --}}
 @endpush

@@ -36,13 +36,13 @@ class Product extends Model
         return Str::slug($this->title);
     }
    
-    public function averageRating()
+    // public function averageRating()
 
-    {
+    // {
 
-        return $this->reviews->avg('rating');
+    //     return $this->reviews->avg('rating');
 
-    }
+    // }
 
     public static function calculateDiscount($price, $discount)
     {
@@ -58,10 +58,10 @@ class Product extends Model
     }
 
 
-    // public function reviews()
-    // {
-    //     return $this->hasMany(ReviewRating::class);
-    // }
+    public function reviews()
+    {
+        return $this->hasMany(ReviewRating::class);
+    }
 
    
 

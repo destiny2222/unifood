@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\User\CommentController;
 use App\Http\Controllers\User\PaymentController;
 use App\Http\Controllers\User\ShippingAddressController;
 use Illuminate\Support\Facades\Route;
@@ -44,8 +45,15 @@ Route::prefix('dashboard')->group(function (){
 
         // shipping address
         Route::post('/shipping-address', [ShippingAddressController::class, 'store'])->name('shipping.address.store');
+        Route::get('/shipping-address', [ShippingAddressController::class, 'edit'])->name('shipping.address.edit');
+        Route::put('/shipping-address/{id}/update', [ShippingAddressController::class, 'update'])->name('shipping.address.update');
+        Route::delete('/shipping-address/{id}', [ShippingAddressController::class, 'destroy'])->name('shipping.address.destroy');
+
+
         // review routes
-        // Route::post('/reviews', [ReviewRatingController::class, 'reviewstore'])->name('review.store');
+        Route::post('/reviews', [ReviewRatingController::class, 'reviewstore'])->name('review.store');
+        
+       
         
 
         // Route::post('/checkout', [PaymentController::class, 'checkout'])->name('payment.checkout');

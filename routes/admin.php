@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\PostCategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\HomeController;
@@ -91,13 +92,21 @@ Route::prefix('admin')->name('admin.')->group(function (){
         // user management
         // Route::get('/customer/list', [UserManagementController::class,'index'])->name('customer.index');
 
-        // Post Controller
-        // Route::get('/post/list', [PostController::class, 'index'])->name('post.index');
-        // Route::get('/post/create', [PostController::class, 'create'])->name('post.create');
-        // Route::post('/post/store', [PostController::class,'store'])->name('post.store');
-        // Route::get('/post/{id}/edit', [PostController::class, 'edit'])->name('post.edit');
-        // Route::put('/post/{id}/update', [PostController::class, 'update'])->name('post.update');
-        // Route::delete('/post/{id}/delete', [PostController::class, 'destroy'])->name('post.delete');
+        // Post Route
+        Route::get('/post/list', [PostController::class, 'index'])->name('post.index');
+        Route::get('/post/create', [PostController::class, 'create'])->name('post.create');
+        Route::post('/post/store', [PostController::class,'store'])->name('post.store');
+        Route::get('/post/{id}/edit', [PostController::class, 'edit'])->name('post.edit');
+        Route::put('/post/{id}/update', [PostController::class, 'update'])->name('post.update');
+        Route::delete('/post/{id}/delete', [PostController::class, 'destroy'])->name('post.delete');
+
+        // Post Category Route
+        Route::get('/post/category/list', [PostCategoryController::class, 'index'])->name('post.category.index');
+        Route::get('/post/category/create', [PostCategoryController::class, 'create'])->name('post.category.create');
+        Route::post('/post/category/store', [PostCategoryController::class,'store'])->name('post.category.store');
+        Route::get('/post/category/{id}/edit', [PostCategoryController::class, 'edit'])->name('post.category.edit');
+        Route::put('/post/category/{id}/update', [PostCategoryController::class, 'update'])->name('post.category.update');
+        Route::delete('/post/category/{id}/delete', [PostCategoryController::class, 'destroy'])->name('post.category.delete');
 
 
         // Faq controller

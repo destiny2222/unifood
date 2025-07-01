@@ -911,61 +911,25 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-xl-4 col-sm-6 col-lg-4 wow fadeInUp" data-wow-duration="1s">
-                        <div class="wsus__single_blog">
-                            <a href="blog/the-secret-to-perfectly-cooked-steaks.html" class="wsus__single_blog_img">
-                                <img src="{{ asset('images/blog/blog-02.jpg') }}" alt="blog"
-                                    class="img-fluid w-100">
-                            </a>
-                            <div class="wsus__single_blog_text">
-                                <a class="category" href="blogs-1.html?category=chicken">Chicken</a>
-                                <ul class="d-flex flex-wrap mt_15">
-                                    <li><i class="fas fa-user"></i>by admin</li>
-                                    <li><i class="fas fa-calendar-alt"></i> 05 Mar 2023</li>
-                                    <li><i class="fas fa-comments"></i> 0comment</li>
-                                </ul>
-                                <a class="title" href="blog/the-secret-to-perfectly-cooked-steaks.html">The Secret
-                                    to Perfectly Cooked Steaks</a>
+                    @foreach ($blogs as $blog)
+                        <div class="col-xl-4 col-sm-6 col-lg-4 wow fadeInUp" data-wow-duration="1s">
+                            <div class="wsus__single_blog">
+                                <a href="{{ route('frontend.blog.show', $blog->slug) }}" class="wsus__single_blog_img">
+                                    <img src="{{ asset('storage/upload/post/'.$blog->image ) }}" alt="blog" class="img-fluid w-100">
+                                </a>
+                                <div class="wsus__single_blog_text">
+                                    <a class="category" href="{{ route('frontend.blog.show', $blog->slug) }}">{{ $blog->category->title }}</a>
+                                    <ul class="d-flex flex-wrap mt_15">
+                                        <li><i class="fas fa-user"></i>by admin</li>
+                                        <li><i class="fas fa-calendar-alt"></i> {{ $blog->created_at->format('d M Y') }}</li>
+                                        <li><i class="fas fa-comments"></i> {{ count($blog->comments) }} comment</li>
+                                    </ul>
+                                    <a class="title" href="{{ route('frontend.blog.show', $blog->slug) }}">{{  $blog->title }}</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-xl-4 col-sm-6 col-lg-4 wow fadeInUp" data-wow-duration="1s">
-                        <div class="wsus__single_blog">
-                            <a href="blog/why-our-pasta-is-worth-the-visit.html" class="wsus__single_blog_img">
-                                <img src="{{ asset('images/blog/blog-01.jpg') }}" alt="blog"
-                                    class="img-fluid w-100">
-                            </a>
-                            <div class="wsus__single_blog_text">
-                                <a class="category" href="blogs-1.html?category=chicken">Chicken</a>
-                                <ul class="d-flex flex-wrap mt_15">
-                                    <li><i class="fas fa-user"></i>by admin</li>
-                                    <li><i class="fas fa-calendar-alt"></i> 05 Mar 2023</li>
-                                    <li><i class="fas fa-comments"></i> 0comment</li>
-                                </ul>
-                                <a class="title" href="blog/why-our-pasta-is-worth-the-visit.html">Why Our Pasta is
-                                    Worth the Visit</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-sm-6 col-lg-4 wow fadeInUp" data-wow-duration="1s">
-                        <div class="wsus__single_blog">
-                            <a href="blog/the-science-of-pairing-wine-and-cheese.html"
-                                class="wsus__single_blog_img">
-                                <img src="{{ asset('images/blog/blog-03.jpg') }}" alt="blog"
-                                    class="img-fluid w-100">
-                            </a>
-                            <div class="wsus__single_blog_text">
-                                <a class="category" href="blogs-2.html?category=fresh-food">Fresh Food</a>
-                                <ul class="d-flex flex-wrap mt_15">
-                                    <li><i class="fas fa-user"></i>by admin</li>
-                                    <li><i class="fas fa-calendar-alt"></i> 05 Mar 2023</li>
-                                    <li><i class="fas fa-comments"></i> 0comment</li>
-                                </ul>
-                                <a class="title" href="blog/the-science-of-pairing-wine-and-cheese.html">The
-                                    Science of Pairing Wine and Cheese</a>
-                            </div>
-                        </div>
-                    </div>
+                    @endforeach
+                    
                 </div>
             </div>
         </div>
@@ -979,57 +943,7 @@
     <!--=============================
         BRAND START
     ==============================-->
-    <section class="wsus__brand"
-        style="background: url({{ asset('images/breadcrumb_image.jpg') }});">
-        <div class="wsus__brand_overlay">
-            <div class="container">
-                <div class="row brand_slider wow fadeInUp" data-wow-duration="1s">
-                    <div class="col-xl-2">
-                        <a class="wsus__single_brand" href="javascript:;">
-                            <img src="/custom-images/partner-2023-03-05-04-35-57-4275.png" alt="brand"
-                                class="img-fluid w-100">
-                        </a>
-
-                    </div>
-                    <div class="col-xl-2">
-                        <a class="wsus__single_brand" href="javascript:;">
-                            <img src="/custom-images/partner-2023-03-05-04-36-05-2512.png" alt="brand"
-                                class="img-fluid w-100">
-                        </a>
-
-                    </div>
-                    <div class="col-xl-2">
-                        <a class="wsus__single_brand" href="javascript:;">
-                            <img src="/custom-images/partner-2023-03-05-04-36-15-7213.png" alt="brand"
-                                class="img-fluid w-100">
-                        </a>
-
-                    </div>
-                    <div class="col-xl-2">
-                        <a class="wsus__single_brand" href="javascript:;">
-                            <img src="/custom-images/partner-2023-03-05-04-36-24-3552.png" alt="brand"
-                                class="img-fluid w-100">
-                        </a>
-
-                    </div>
-                    <div class="col-xl-2">
-                        <a class="wsus__single_brand" href="javascript:;">
-                            <img src="/custom-images/partner-2023-03-05-04-36-34-1671.png" alt="brand"
-                                class="img-fluid w-100">
-                        </a>
-
-                    </div>
-                    <div class="col-xl-2">
-                        <a class="wsus__single_brand" href="javascript:;">
-                            <img src="/custom-images/partner-2023-03-05-04-36-42-1713.png" alt="brand"
-                                class="img-fluid w-100">
-                        </a>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+     @include('partials.brand')
     <!--=============================
         BRAND END
     ==============================-->

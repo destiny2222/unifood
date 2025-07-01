@@ -11,7 +11,7 @@
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densityDpi=device-dpi">
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title> {{ config('app.name') }} - Welcome to Our Restaurant Management </title>
     <meta name="description" content="MightyOlu Grocery - Welcome to Our Restaurant Management">
 
@@ -111,7 +111,7 @@
                         <a class="nav-link" href="/product">Products</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Blogs</a>
+                        <a class="nav-link" href="/blog">Blogs</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">contact us</a>
@@ -121,7 +121,7 @@
                     <li>
                         <a href="javascript:;" class="menu_search"><i class="far fa-search"></i></a>
                         <div class="wsus__search_form">
-                            <form action="https://unifood.websolutionus.com/products">
+                            <form action="">
                                 <span class="close_search"><i class="far fa-times"></i></span>
                                 <input name="search" type="text" placeholder="Type your keyword">
                                 <button type="submit">search</button>
@@ -136,8 +136,11 @@
                         <a href="/login"><i class="fas fa-user"></i></a>
                     </li>
                     <li>
-                        <a class="common_btn" href="#">reservation</a>
+                        <a class="common_btn" href="/login">Login</a>
                     </li>
+                    {{-- <li>
+                        <a class="common_btn" href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop">reservation</a>
+                    </li> --}}
                 </ul>
             </div>
         </div>
@@ -200,7 +203,53 @@
             @endif
         </div>
     </div>
-
+    <div class="wsus__reservation">
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Book a Table</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form class="wsus__reservation_form" method="POST" action="">
+                                @csrf                                                                                               
+                                <input class="reservation_input datepicker" type="text" autocomplete="off" name="reserve_date" required="" placeholder="Select date">
+                                <select class="reservation_input" id="select_js" required="" name="reserve_time">
+                                    <option value="">Select Time</option>
+                                    <option value="12:00 AM - 01:00 AM">12:00 AM - 01:00 AM</option>
+                                    <option value="01:00 AM - 02:00 AM">01:00 AM - 02:00 AM</option>
+                                    <option value="02:00 AM - 03:00 AM">02:00 AM - 03:00 AM</option>
+                                    <option value="03:00 AM - 04:00 AM">03:00 AM - 04:00 AM</option>
+                                    <option value="04:00 AM - 05:00 AM">04:00 AM - 05:00 AM</option>
+                                    <option value="05:00 AM - 06:00 AM">05:00 AM - 06:00 AM</option>
+                                    <option value="06:00 AM - 07:00 AM">06:00 AM - 07:00 AM</option>
+                                    <option value="07:00 AM - 08:00 AM">07:00 AM - 08:00 AM</option>
+                                    <option value="08:00 AM - 09:00 AM">08:00 AM - 09:00 AM</option>
+                                    <option value="09:00 AM - 10:00 AM">09:00 AM - 10:00 AM</option>
+                                    <option value="10:00 AM - 11:00 AM">10:00 AM - 11:00 AM</option>
+                                    <option value="11:00 AM - 12:00 PM">11:00 AM - 12:00 PM</option>
+                                    <option value="12:00 PM - 01:00 PM">12:00 PM - 01:00 PM</option>
+                                    <option value="01:00 PM - 02:00 PM">01:00 PM - 02:00 PM</option>
+                                    <option value="02:00 PM - 03:00 PM">02:00 PM - 03:00 PM</option>
+                                    <option value="03:00 PM - 04:00 PM">03:00 PM - 04:00 PM</option>
+                                    <option value="04:00 PM - 05:00 PM">04:00 PM - 05:00 PM</option>
+                                    <option value="05:00 PM - 06:00 PM">05:00 PM - 06:00 PM</option>
+                                    <option value="06:00 PM - 07:00 PM">06:00 PM - 07:00 PM</option>
+                                    <option value="07:00 PM - 08:00 PM">07:00 PM - 08:00 PM</option>
+                                    <option value="08:00 PM - 09:00 PM">08:00 PM - 09:00 PM</option>
+                                    <option value="09:00 PM - 10:00 PM">09:00 PM - 10:00 PM</option>
+                                    <option value="10:00 PM - 11:00 PM">10:00 PM - 11:00 PM</option>
+                                    <option value="11:00 PM - 12:00 AM">11:00 PM - 12:00 AM</option>
+                                </select>
+                                <input class="reservation_input" type="number" placeholder="Number of person" name="person" required="">
+                                <button type="submit">Send Request</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     <!--=============================
         MENU END
     ==============================-->
@@ -383,31 +432,6 @@
             });
         });
     })(jQuery);
-
-    function calculate_mini_total(){
-        let mini_sub_total = 0;
-        let mini_total_item = 0;
-        $(".mini-input-price").each(function () {
-            let current_val = $(this).val();
-            mini_sub_total = parseInt(mini_sub_total) + parseInt(current_val);
-            mini_total_item = parseInt(mini_total_item) + parseInt(1);
-        });
-
-        $(".mini_sub_total").html(`$${mini_sub_total}`);
-        $(".topbar_cart_qty").html(mini_total_item);
-        $(".mini_cart_body_item").html(`Total Item(${mini_total_item})`);
-
-        let mini_empty_cart = `<div class="wsus__menu_cart_header">
-                <h5>Your shopping cart is empty!</h5>
-                <span class="close_cart"><i class="fal fa-times"></i></span>
-            </div>
-            `;
-
-        if(mini_total_item == 0){
-            $(".wsus__menu_cart_boody").html(mini_empty_cart)
-        }
-    }
-
 </script>
 </body>
 

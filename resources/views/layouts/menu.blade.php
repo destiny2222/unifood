@@ -107,6 +107,36 @@
                     </ul>
                </div>
           </li>
+          <li class="nav-item">
+               <a class="nav-link menu-arrow" href="#sidebarBlog" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarBlog">
+                    <span class="nav-icon">
+                         <iconify-icon icon="solar:box-bold-duotone"></iconify-icon>
+                    </span>
+                    <span class="nav-text"> Blog </span>
+               </a>
+               <div class="collapse" id="sidebarBlog">
+                    <ul class="nav sub-navbar-nav">
+
+                         <li class="sub-nav-item">
+                              <a class="sub-nav-link" href="{{ route('admin.post.category.index') }}">Categories</a>
+                         </li>
+                         <li class="sub-nav-item">
+                              <a class="sub-nav-link" href="{{ route('admin.post.index') }}">BLogs</a>
+                         </li>
+                         <li class="sub-nav-item">
+                              <a class="sub-nav-link" href="#">Comments</a>
+                         </li>
+                    </ul>
+               </div>
+          </li>
+          <li class="nav-item ">
+               <a class="nav-link " href="">
+                    <span class="nav-icon">
+                         <iconify-icon icon="solar:chat-square-like-bold-duotone"></iconify-icon>
+                    </span>
+                    <span class="nav-text"> Reviews </span>
+               </a>
+          </li>
           {{-- <li class="nav-item">
                <a class="nav-link menu-arrow" href="#sidebarPurchases" data-bs-toggle="collapse" role="button"
                     aria-expanded="false" aria-controls="sidebarPurchases">
