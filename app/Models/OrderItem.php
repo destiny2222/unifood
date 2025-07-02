@@ -21,12 +21,17 @@ class OrderItem extends Model
         'user_id',
     ];
 
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
     public function product(){
         return $this->belongsTo(Product::class);
     }
 
-    public function order(){
-        return $this->belongsTo(ShippingAddress::class);
+
+    public function shippingAddress(){
+        return $this->belongsTo(ShippingAddress::class, 'shipping_addresses_id');
     }
 
     public static function generateInvoiceNumber()

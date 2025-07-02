@@ -21,10 +21,10 @@
                         <div class="wsus__menu_item">
                             <div class="wsus__menu_item_img">
                                 <img src="{{ asset('storage/upload/product/single/'.$product->images ?? 'images/hyderabadi-biryani.png') }}"  alt="menu" class="img-fluid w-100">
-                                <a class="category" href="{{ route('frontend.product.show', $product->slug) }}">Sandwich</a>
+                                <a class="category" href="{{ route('frontend.product.show', $product->slug) }}">{{ $product->category->title }}</a>
                             </div>
                             <div class="wsus__menu_item_text">
-                                <a class="title" href="{{ route('frontend.product.show', $product->slug) }}">Truffle Fries</a>
+                                <a class="title" href="{{ route('frontend.product.show', $product->slug) }}">{{ $product->title }}</a>
                                 <h5 class="price">${{ $product->price ?? 0 }} @if($product->discount)<del>${{ $product->discount }}</del>@endif </h5>
                                 <ul class="d-flex flex-wrap justify-content-center">
                                     <li><a href="{{ route('cart.add') }}" onclick="event.preventDefault(); document.getElementById('cart-{{ $product->id  }}').submit()"><i class="fas fa-shopping-basket"></i></a></li>

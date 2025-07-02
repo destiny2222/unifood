@@ -1,22 +1,10 @@
 @extends('layouts.main')
 @section('content')
+@section('title', 'Register')
     <!--=============================
             BREADCRUMB START
         ==============================-->
-    <section class="wsus__breadcrumb"
-        style="background: url({{ asset('images/breadcrumb_image.jpg') }});">
-        <div class="wsus__breadcrumb_overlay">
-            <div class="container">
-                <div class="wsus__breadcrumb_text">
-                    <h1>Register</h1>
-                    <ul>
-                        <li><a href="/">Home</a></li>
-                        <li><a href="#">Register</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
+        @include('partials.breadcrumb')
     <!--=============================
             BREADCRUMB END
         ==============================-->

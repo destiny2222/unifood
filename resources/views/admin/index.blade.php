@@ -10,7 +10,7 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
                             <h4 class="card-title mb-2">Total Products</h4>
-                            {{-- <p class="text-muted fw-medium fs-22 mb-0">{{ $totalProduct }}</p> --}}
+                            <p class="text-muted fw-medium fs-22 mb-0">{{ $totalProduct }}</p>
                         </div>
                         <div>
                             <div class="avatar-md bg-primary bg-opacity-10 rounded">
@@ -27,7 +27,7 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
                             <h4 class="card-title mb-2">Total Customers</h4>
-                            {{-- <p class="text-muted fw-medium fs-22 mb-0">{{ $totalCustomer }}</p> --}}
+                            <p class="text-muted fw-medium fs-22 mb-0">{{ $totalCustomer }}</p>
                         </div>
                         <div>
                             <div class="avatar-md bg-primary bg-opacity-10 rounded">
@@ -44,7 +44,7 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
                             <h4 class="card-title mb-2">Total Categories</h4>
-                            {{-- <p class="text-muted fw-medium fs-22 mb-0">{{ $totalCategories }}</p> --}}
+                            <p class="text-muted fw-medium fs-22 mb-0">{{ $totalCategories }}</p>
                         </div>
                         <div>
                             <div class="avatar-md bg-primary bg-opacity-10 rounded">
@@ -61,7 +61,7 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
                             <h4 class="card-title mb-2">Total Order</h4>
-                            {{-- <p class="text-muted fw-medium fs-22 mb-0">{{ $totalOrder }}</p> --}}
+                            <p class="text-muted fw-medium fs-22 mb-0">{{ $totalOrder }}</p>
                         </div>
                         <div>
                             <div class="avatar-md bg-primary bg-opacity-10 rounded">
@@ -78,7 +78,7 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
                             <h4 class="card-title mb-2">Pending Orders</h4>
-                            {{-- <p class="text-muted fw-medium fs-22 mb-0">{{ $PendingOrder }}</p> --}}
+                            <p class="text-muted fw-medium fs-22 mb-0">{{ $PendingOrder }}</p>
                         </div>
                         <div>
                             <div class="avatar-md bg-primary bg-opacity-10 rounded">
@@ -95,7 +95,7 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
                             <h4 class="card-title mb-2">Delivered Orders</h4>
-                            {{-- <p class="text-muted fw-medium fs-22 mb-0">{{ $totalDeliveredOrder }}</p> --}}
+                            <p class="text-muted fw-medium fs-22 mb-0">{{ $totalDeliveredOrder }}</p>
                         </div>
                         <div>
                             <div class="avatar-md bg-primary bg-opacity-10 rounded">
@@ -112,7 +112,7 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
                             <h4 class="card-title mb-2">Canceled Orders</h4>
-                            {{-- <p class="text-muted fw-medium fs-22 mb-0">{{ $CancelOrder }}</p> --}}
+                            <p class="text-muted fw-medium fs-22 mb-0">{{ $CancelOrder }}</p>
                         </div>
                         <div>
                             <div class="avatar-md bg-primary bg-opacity-10 rounded">
@@ -129,7 +129,7 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
                             <h4 class="card-title mb-2">Total Product Sale</h4>
-                            {{-- <p class="text-muted fw-medium fs-22 mb-0">{{ $totalProductSale }}</p> --}}
+                            <p class="text-muted fw-medium fs-22 mb-0">{{ $totalProductSale }}</p>
                         </div>
                         <div>
                             <div class="avatar-md bg-primary bg-opacity-10 rounded">
@@ -147,7 +147,7 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
                             <h4 class="card-title mb-2">This Month Sale</h4>
-                            {{-- <p class="text-muted fw-medium fs-22 mb-0">{{ $MonthProductSales }}</p> --}}
+                            <p class="text-muted fw-medium fs-22 mb-0">{{ $MonthProductSales }}</p>
                         </div>
                         <div>
                             <div class="avatar-md bg-primary bg-opacity-10 rounded">
@@ -165,7 +165,7 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
                             <h4 class="card-title mb-2">This Year Product Sale</h4>
-                            {{-- <p class="text-muted fw-medium fs-22 mb-0">{{ $YearProductSales }}</p> --}}
+                            <p class="text-muted fw-medium fs-22 mb-0">{{ $YearProductSales }}</p>
                         </div>
                         <div>
                             <div class="avatar-md bg-primary bg-opacity-10 rounded">
@@ -183,7 +183,7 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
                             <h4 class="card-title mb-2">Total Earning</h4>
-                            {{-- <p class="text-muted fw-medium fs-22 mb-0">{{ $totalEarnings }}</p> --}}
+                            <p class="text-muted fw-medium fs-22 mb-0">{{ $totalEarnings }}</p>
                         </div>
                         <div>
                             <div class="avatar-md bg-primary bg-opacity-10 rounded">
@@ -200,7 +200,7 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
                             <h4 class="card-title mb-2">Today Pending Earning</h4>
-                            {{-- <p class="text-muted fw-medium fs-22 mb-0">{{ $todayPendingEarnings }}</p> --}}
+                            <p class="text-muted fw-medium fs-22 mb-0">{{ $todayPendingEarnings }}</p>
                         </div>
                         <div>
                             <div class="avatar-md bg-primary bg-opacity-10 rounded">
@@ -217,7 +217,7 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
                             <h4 class="card-title mb-2">This Month Earning</h4>
-                            {{-- <p class="text-muted fw-medium fs-22 mb-0">{{ $thisMonthEarnings }}</p> --}}
+                            <p class="text-muted fw-medium fs-22 mb-0">{{ $thisMonthEarnings }}</p>
                         </div>
                         <div>
                             <div class="avatar-md bg-primary bg-opacity-10 rounded">
@@ -234,7 +234,7 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
                             <h4 class="card-title mb-2">This Year Earning</h4>
-                            {{-- <p class="text-muted fw-medium fs-22 mb-0">{{ $thisYearEarnings }}</p> --}}
+                            <p class="text-muted fw-medium fs-22 mb-0">{{ $thisYearEarnings }}</p>
                         </div>
                         <div>
                             <div class="avatar-md bg-primary bg-opacity-10 rounded">

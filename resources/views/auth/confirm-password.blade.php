@@ -1,52 +1,69 @@
-<section class=" auth">
-    <div class="container">
-        <div class="pb-3 row justify-content-center">
+@extends('layouts.main')
+@section('title', 'Reset Password')
+@section('content')
 
-            <div class="col-12 col-md-6 col-lg-6 col-sm-10 col-xl-6">
-                
-                
-                <div class="bg-white shadow card login-page roundedd border-1 ">
-                    <div class="card-body">
-                        <p class="text-sm text-center text-primary"> This is a secure area. Please confirm your password before continuing.</h4>
-                        <form method="POST" action="{{ route('password.confirm') }}"  class="mt-4 login-form">
-                             @csrf
-                            <div class="row">
-                                <div class="col-lg-12 mb-4">
-                                    <div class="form-group">
-                                        <label>Enter Password <span class="text-danger">*</span></label>
-                                        <div class="position-relative">
-                                            <i data-feather="key" class="fea icon-sm icons"></i>
-                                            <input type="password" class="pl-5 form-control" name="password" required autocomplete="current-password" autofocus >
+<!--=============================
+        BREADCRUMB START
+    ==============================-->
+@include('partials.breadcrumb')
+    <!--=============================
+        BREADCRUMB END
+    ==============================-->
+
+
+     <!--=========================
+        SIGNIN START
+    ==========================-->
+    <section class="wsus__signin" style="background: url({{ asset('images/banner.jpg') }});">
+        <div class="wsus__signin_overlay pt_125 xs_pt_95 pb_100 xs_pb_70">
+            <div class="container">
+                <div class="row wow fadeInUp" data-wow-duration="1s">
+                    <div class="col-xxl-5 col-xl-6 col-md-9 col-lg-7 m-auto">
+                        @if ($errors->any())
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li class="text-danger">{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        @endif
+                        <div class="wsus__login_area">
+                            <h2>Confirm password</h2>
+                            <p>This is a secure area. Please confirm your password before continuing.</p>
+                            <form method="POST" action="{{ route('password.confirm') }}" class="mt-4 login-form">
+                                @csrf
+                                <div class="row">
+                                    <div class="col-lg-12 mb-4">
+                                        <label>Password <span class="text-danger">*</span></label>
+                                        <div class="position-relative" id="Password-toggle">
+                                            <input type="password"  name="password" required autocomplete="current-password" autofocus>
+                                            <a href="javascript:void(0);" class="" id="Password-toggle-btn" style="top: 20%;">
+                                              <i class="fal fa-eye-slash" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+
+                                        @if ($errors->has('password'))
+                                            <span class="help-block text-danger">
+                                                <strong>{{ $errors->first('password') }}</strong>
+                                            </span>
+                                        @endif
+                                    </div>
+                                    <!--end col-->
+                                    <div class="col-xl-12">
+                                        <div class="wsus__login_imput">
+                                            <button type="submit" class="common_btn">Confirm</button>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-12 mb-4">
-                                    @if ($errors->any())
-                                        <ul>
-                                            @foreach ($errors->all() as $error)
-                                                <li class="text-danger">{{ $error }}</li>
-                                            @endforeach
-                                        </ul>
-                                    @endif
-                                </div>
-                                <!--end col-->
-
-                                <div class="mb-0 col-lg-12">
-                                    <button class="btn btn-primary btn-block pad" type="submit">Confirm</button>
-                                </div>
-                                
-                            </div>
-                            <!--end row-->
-                        </form>
+                            </form>
+                        </div>
                     </div>
                 </div>
-                <!---->
             </div>
-            <!--end col-->
         </div>
-        <!--end row-->
-    </div>
-    <!--end container-->
-</section>
-<!--end section-->
+    </section>
+    <!--=========================
+        SIGNIN END
+    ==========================-->
+
+@endsection
 

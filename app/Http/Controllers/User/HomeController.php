@@ -4,6 +4,8 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\DeliveryArea;
+use App\Models\OrderItem;
+use App\Models\ReviewRating;
 use App\Models\ShippingAddress;
 use App\Models\User;
 use App\Models\Wishlist;
@@ -19,21 +21,18 @@ class HomeController extends Controller
         $wishlist = Wishlist::orderBy('id', 'desc')->get();
         $shippingAddress = ShippingAddress::where('user_id', $user->id)->get();
         $deliveryArea = DeliveryArea::orderBy('id', 'desc')->get();
-        // dd($user);
-        // $order = Order::where('user_id', $user->id)->get();
-        // completed order
-        // $completedOrder = Order::where('user_id', $user->id)->where('order_status', 'completed')->count();
-        // // processing order
-        // $processedOrder = Order::where('user_id', $user->id)->where('order_status', 'processing')->count();
-        // // pending orders
-        // $pendingOrder = Order::where('user_id', $user->id)->where('order_status', 'pending')->count();
-        // // failed orders
-        // $failedOrder = Order::where('user_id', $user->id)->where('order_status', 'failed')->count();
+        $review = ReviewRating::where('user_id', $user->id)->get();
+        $order = OrderItem::where('user_id', $user->id)->get();
         return view("dash.index", [
             'user'=>$user,
             'wishlists'=>$wishlist,
             'shippingAddress'=>$shippingAddress,
             'deliveryArea' => $deliveryArea,
+            'reviews'=>$review,
+            'orders'=>$order,
+            'countOrder'=> $order->count(),
+            'completeOrder'=> $order->where('order_status', 3)->count(),
+            'cancelOrder'=> $order->where('order_status', 4)->count(),
         ]);
     }
 
@@ -94,4 +93,6 @@ class HomeController extends Controller
             return redirect()->back()->with('error', 'Something went wrong');
         }
     }
+
+    
 }

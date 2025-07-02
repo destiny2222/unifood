@@ -26,7 +26,7 @@
      <link href="/backend/css/app.min.css" rel="stylesheet" type="text/css" />
 
      <!-- Theme Config js (Require in all Page) -->
-     <script src="/backend/js/config.js"></script>
+     <script  src="/backend/js/config.js"></script>
 </head>
 
 <body>

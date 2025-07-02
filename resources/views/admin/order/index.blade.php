@@ -30,7 +30,7 @@
                                         <th>Order ID</th>
                                         <th>Created at</th>
                                         <th>Customer</th>
-                                        <th>Total</th>
+                                        <th>Amount</th>
                                         <th>Payment Status</th>
                                         <th>Items</th>
                                         <th>Order Status</th>
@@ -45,15 +45,15 @@
                                         </td>
                                         <td>{{ $orderItem->created_at->format('d-m-Y') }}</td>
                                         <td>
-                                            <a href="#!" class="link-primary fw-medium">{{ $orderItem->order->user->name }}</a>
+                                            <a href="#!" class="link-success fw-medium">{{ $orderItem->user->name }}</a>
                                         </td>
                                         <td> &#8358;{{ number_format($orderItem->price, 2) }} </td>
                                         <td> 
-                                            @if ($orderItem->order->payment_status == 'paid')
+                                            @if ($orderItem->payment_status == 1)
                                              <span class="badge bg-success text-light  px-2 py-1 fs-13">Paid</span>
-                                            @elseif ($orderItem->order->payment_status == 'processing')
+                                            @elseif ($orderItem->payment_status == 2)
                                              <span class="badge bg-light text-dark  px-2 py-1 fs-13">Processing</span>
-                                            @elseif ($orderItem->order->payment_status == 'unpaid')
+                                            @elseif ($orderItem->payment_status == 3)
                                              <span class="badge bg-light text-dark  px-2 py-1 fs-13">Unpaid</span>
                                             @else
                                              <span class="badge bg-light text-dark  px-2 py-1 fs-13">Pending</span>
@@ -61,20 +61,22 @@
                                         </td>
                                         <td> {{ $orderItem->quantity }} </td>
                                         <td> 
-                                             @if ($orderItem->order->order_status == 'delivered')
-                                              <span class="badge px-2 bg-success px-2 py-1 fs-13" text-capitalized="">Delivered</span>
-                                             @elseif ($orderItem->order->order_status == 'processing')
-                                              <span class="badge px-2 bg-info px-2 py-1 fs-13" text-capitalized="">Out for Delivery</span>
-                                             @elseif ($orderItem->order->order_status == 'cancelled')
-                                              <span class="badge px-2 bg-danger px-2 py-1 fs-13" text-capitalized="">Cancelled</span>
-                                             @elseif ($orderItem->order->order_status == 'pending')
-                                              <span class="badge px-2 bg-danger px-2 py-1 fs-13" text-capitalized="">Pending</span> 
+                                            @if ($orderItem->order_status == 1)
+                                             <span class="badge px-2 border border-warning text-warning px-2 py-1 fs-13" text-capitalized="">In Progress</span>
+                                             @elseif ($orderItem->order_status == 2)
+                                             <span class="badge px-2 border border-info text-info px-2 py-1 fs-13" text-capitalized="">Delivered</span>
+                                             @elseif ($orderItem->order_status == 3)
+                                              <span class="badge px-2 border border-success text-success  px-2 py-1 fs-13" text-capitalized="">Completed</span>
+                                             @elseif ($orderItem->order_status == 4)
+                                              <span class="badge px-2 border border-danger text-danger px-2 py-1 fs-13" text-capitalized="">Declined</span>
+                                             @elseif ($orderItem->order_status == 0)
+                                              <span class="badge px-2 border border-danger text-danger px-2 py-1 fs-13" text-capitalized="">Pending</span> 
                                              @endif
                                         </td>
                                         <td>
                                             <div class="d-flex gap-2">
-                                                {{-- <a href="#!" class="btn btn-light btn-sm"><iconify-icon icon="solar:eye-broken" class="align-middle fs-18"></iconify-icon></a> --}}
-                                                <a href="#!" data-bs-toggle="modal" data-bs-target="#topModal-{{$orderItem->order->id}}" class="btn btn-soft-primary btn-sm"><iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18"></iconify-icon></a>
+                                                <a href="{{ route('admin.order.show', $orderItem->id) }}" class="btn btn-light btn-sm"><iconify-icon icon="solar:eye-broken" class="align-middle fs-18"></iconify-icon></a>
+                                                <a href="#!" data-bs-toggle="modal" data-bs-target="#topModal-{{$orderItem->id}}" class="btn btn-soft-primary btn-sm"><iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18"></iconify-icon></a>
                                                 <a href="{{ route('admin.order.delete',$orderItem->id) }}" onclick="return('Are you sure you want to delete this item?') event.preventDefault(); document.getElementById('delete-form-{{$orderItem->id}}').submit();" class="btn btn-soft-danger btn-sm"><iconify-icon icon="solar:trash-bin-minimalistic-2-broken" class="align-middle fs-18"></iconify-icon></a>
                                                 <form  class="d-none" action="{{ route('admin.order.delete',$orderItem->id) }}" method="post" id="delete-form-{{$orderItem->id}}">
                                                     @csrf

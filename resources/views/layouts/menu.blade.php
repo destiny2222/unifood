@@ -38,14 +38,14 @@
                </a>
           </li>
 
-          {{-- <li class="nav-item">
+          <li class="nav-item">
                <a  class="nav-link " href="{{ route('admin.customer.index') }}">
                     <span class="nav-icon">
                          <iconify-icon icon="solar:users-group-two-rounded-bold-duotone"></iconify-icon>
                     </span>
                     <span class="nav-text"> Customers Lists</span>
                </a>
-          </li> --}}
+          </li>
 
           <li class="menu-title">General</li>
 
@@ -129,8 +129,24 @@
                     </ul>
                </div>
           </li>
-          <li class="nav-item ">
-               <a class="nav-link " href="">
+          <li class="nav-item">
+               <a class="nav-link menu-arrow" href="#sidebarOrders" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarOrders">
+                    <span class="nav-icon">
+                         <iconify-icon icon="solar:bag-smile-bold-duotone"></iconify-icon>
+                    </span>
+                    <span class="nav-text"> Orders </span>
+               </a>
+               <div class="collapse" id="sidebarOrders">
+                    <ul class="nav sub-navbar-nav">
+
+                         <li class="sub-nav-item">
+                              <a class="sub-nav-link" href="{{ route('admin.order.list') }}">List</a>
+                         </li>
+                    </ul>
+               </div>
+          </li>
+          <li class="nav-item">
+               <a class="nav-link" href="{{ route('admin.review.index') }}">
                     <span class="nav-icon">
                          <iconify-icon icon="solar:chat-square-like-bold-duotone"></iconify-icon>
                     </span>

@@ -34,10 +34,26 @@
                                 <div class="share d-flex flex-wrap align-items-center">
                                     <span>share:</span>
                                     <ul class="d-flex flex-wrap">
-                                        <li><a href="https://www.facebook.com/sharer/sharer.php?u=https://unifood.websolutionus.com/blog/mastering-the-perfect-burger-tips-and-tricks&t=Mastering the Perfect Burger: Tips and Tricks"><i class="fab fa-facebook-f"></i></a></li>
-                                        <li><a href="https://twitter.com/share?text=Mastering the Perfect Burger: Tips and Tricks&url=https://unifood.websolutionus.com/blog/mastering-the-perfect-burger-tips-and-tricks"><i class="fab fa-linkedin-in"></i></a></li>
-                                        <li><a href="https://www.linkedin.com/shareArticle?mini=true&url=https://unifood.websolutionus.com/blog/mastering-the-perfect-burger-tips-and-tricks&title=Mastering the Perfect Burger: Tips and Tricks"><i class="fab fa-twitter"></i></a></li>
-                                        <li><a href="https://www.pinterest.com/pin/create/button/?description=Mastering the Perfect Burger: Tips and Tricks&media=&url=https://unifood.websolutionus.com/blog/mastering-the-perfect-burger-tips-and-tricks"><i class="fab fa-pinterest-p"></i></a></li>
+                                        <li>
+                                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(request()->fullUrl()) }}&t={{ urlencode($post->title) }}" target="_blank">
+                                                <i class="fab fa-facebook-f"></i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="https://twitter.com/share?text={{ urlencode($post->title) }}&url={{ urlencode(request()->fullUrl()) }}" target="_blank">
+                                                <i class="fab fa-twitter"></i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode(request()->fullUrl()) }}&title={{ urlencode($post->title) }}" target="_blank">
+                                                <i class="fab fa-linkedin-in"></i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="https://www.pinterest.com/pin/create/button/?description={{ urlencode($post->title) }}&media={{ asset('storage/upload/post/'.$post->image) }}&url={{ urlencode(request()->fullUrl()) }}" target="_blank">
+                                                <i class="fab fa-pinterest-p"></i>
+                                            </a>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>

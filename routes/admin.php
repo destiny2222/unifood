@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\PostCategoryController;
+use App\Http\Controllers\Admin\ReviewController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\HomeController;
@@ -52,13 +53,15 @@ Route::prefix('admin')->name('admin.')->group(function (){
         Route::delete('/product/{id}/delete', [ProductController::class, 'destroy'])->name('product.delete');
 
         // order list
-        // Route::get('order/list', [OrderController::class , 'index'])->name('order.list');   
-        // Route::get('/order/pending', [OrderController::class, 'pendingOrder'])->name('order.pending');  
-        // Route::get('/order/progress', [OrderController::class,  'processingOrder'])->name('order.progress');
-        // Route::get('/order/delivered', [OrderController::class, 'deliveredOrder'])->name('order.delivered');
-        // Route::get('/order/cancel', [OrderController::class, 'cancelledOrder'])->name('order.cancel');
-        // Route::put('/order/{id}/update', [OrderController::class, 'update'])->name('order.update');
-        // Route::delete('/order/{id}/delete', [OrderController::class, 'destroy'])->name('order.delete');
+        Route::get('order/list', [OrderController::class , 'index'])->name('order.list');   
+        Route::get('order-show/{id}', [OrderController::class, 'show'])->name('order.show');
+        Route::get('/order/pending', [OrderController::class, 'pendingOrder'])->name('order.pending');  
+        Route::get('/order/progress', [OrderController::class,  'processingOrder'])->name('order.progress');
+        Route::get('/order/delivered', [OrderController::class, 'deliveredOrder'])->name('order.delivered');
+        Route::get('/order/cancel', [OrderController::class, 'cancelledOrder'])->name('order.cancel');
+        Route::put('/order/{id}/update', [OrderController::class, 'update'])->name('order.update');
+        Route::delete('/order/{id}/delete', [OrderController::class, 'destroy'])->name('order.delete');
+        
 
         // site management
         // Route::get('/home-page', [SiteManagementController::class, 'index'])->name('home.page');
@@ -90,7 +93,7 @@ Route::prefix('admin')->name('admin.')->group(function (){
         // Route::delete('/slider/{id}/delete', [SiteManagementController::class,'sliderDelete'])->name('slider.delete');
 
         // user management
-        // Route::get('/customer/list', [UserManagementController::class,'index'])->name('customer.index');
+        Route::get('/customer/list', [UserManagementController::class,'index'])->name('customer.index');
 
         // Post Route
         Route::get('/post/list', [PostController::class, 'index'])->name('post.index');
@@ -108,6 +111,11 @@ Route::prefix('admin')->name('admin.')->group(function (){
         Route::put('/post/category/{id}/update', [PostCategoryController::class, 'update'])->name('post.category.update');
         Route::delete('/post/category/{id}/delete', [PostCategoryController::class, 'destroy'])->name('post.category.delete');
 
+        // Review route
+        Route::get('/review/list', [ReviewController::class, 'index'])->name('review.index');
+        Route::put('/review/{id}/update', [ReviewController::class, 'update'])->name('review.update');
+        Route::delete('/review/{id}/delete', [ReviewController::class, 'destroy'])->name('review.delete');
+
 
         // Faq controller
         // Route::get('/faq/list', [FaqController::class, 'index'])->name('faq.index');
@@ -124,9 +132,9 @@ Route::prefix('admin')->name('admin.')->group(function (){
 
 
         // update profile and change profile
-        // Route::put('/profile/{id}/update', [HomeController::class, 'update'])->name('update.profile');
+        Route::put('/profile/{id}/update', [HomeController::class, 'update'])->name('update.profile');
         // change password
-        // Route::post('/change-password/update', [HomeController::class, 'updatePassword'])->name('change.password.update');
+        Route::post('/change-password/update', [HomeController::class, 'updatePassword'])->name('change.password.update');
 
     });
     

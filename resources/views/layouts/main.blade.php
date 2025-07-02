@@ -104,7 +104,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="#">About Us</a>
+                        <a class="nav-link" href="/about">About Us</a>
                     </li>
 
                     <li class="nav-item">
@@ -114,14 +114,14 @@
                         <a class="nav-link" href="/blog">Blogs</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">contact us</a>
+                        <a class="nav-link" href="/contact">contact us</a>
                     </li>
                 </ul>
                 <ul class="menu_icon d-flex flex-wrap">
                     <li>
                         <a href="javascript:;" class="menu_search"><i class="far fa-search"></i></a>
                         <div class="wsus__search_form">
-                            <form action="">
+                            <form action="{{ route('search') }}" method="GET">
                                 <span class="close_search"><i class="far fa-times"></i></span>
                                 <input name="search" type="text" placeholder="Type your keyword">
                                 <button type="submit">search</button>
@@ -308,10 +308,13 @@
                             <h3>Important Link</h3>
                             <ul>
                                 <li><a href="/">Home</a></li>
-                                <li><a href="#">About Us</a></li>
-                                <li><a href="#">Contact Us</a></li>
-                                <li><a href="#">Our Chef</a></li>
-                                <li><a href="#">Dashboard</a></li>
+                                <li><a href="/about">About Us</a></li>
+                                <li><a href="/contact">Contact Us</a></li>
+                                @auth
+                                    <li><a href="/dashboard">Dashboard</a></li>
+                                @else
+                                    <li><a href="/login">Dashboard</a></li>
+                                @endauth
 
                             </ul>
                         </div>
@@ -320,11 +323,10 @@
                         <div class="wsus__footer_content">
                             <h3>Help Link</h3>
                             <ul>
-                                <li><a href="#">Our Blogs</a></li>
+                                <li><a href="/blog">Our Blogs</a></li>
                                 <li><a href="#">Testimonial</a></li>
-                                <li><a href="#">FAQ</a></li>
                                 <li><a href="#">Privacy and Policy</a></li>
-                                <li><a href="#">Terms anc Conditions</a></li>
+                                <li><a href="#">Terms and Conditions</a></li>
                             </ul>
                         </div>
                     </div>
@@ -357,13 +359,13 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="wsus__footer_bottom_text d-flex flex-wrap justify-content-between">
-                            <p>©2024 websolutionus All rights reserved</p>
-                            <ul class="d-flex flex-wrap">
+                            <p class="text-center">&copy;{{ date('Y') }} <a href="https://dexnovate.com" target="_blank">Dexnovate</a> All rights reserved</p>
+                            {{-- <ul class="d-flex flex-wrap">
                                 <li><a href="#">FAQ</a></li>
-                                <li><a href="#">Payment</a></li>
+                                <li><a href="#">Cart</a></li>
                                 <li><a href="#">Checkout</a></li>
                                 <li><a href="#">Dashboard</a></li>
-                            </ul>
+                            </ul> --}}
                         </div>
                     </div>
                 </div>

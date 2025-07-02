@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use App\Models\Category;
+use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\User;
 use Carbon\Carbon;
@@ -17,71 +18,68 @@ class HomeController extends Controller
 {
     public function index()
     {
-        // order model
-        // $order = Order::orderBy('id', 'desc')->first();
+
         // product model
-        // $product = Product::orderBy('id', 'desc')->first();
+        $product = Product::orderBy('id', 'desc')->first();
 
-        // $totalOrder = Order::where('payment_status', 'paid')->count();
-        // $PendingOrder = Order::where('payment_status', 'processing')->count();
-        // $totalDeliveredOrder = Order::where('order_status', 'delivered')->count();
-        // $CancelOrder = Order::where('order_status', 'cancelled')->count();
+        $totalOrder = OrderItem::where('payment_status', 1)->count();
+        $PendingOrder = OrderItem::where('payment_status', 2)->count();
+        $totalDeliveredOrder = OrderItem::where('order_status',  2)->count();
+        $CancelOrder = OrderItem::where('order_status',  4)->count();
 
-        // $totalProductSale = $product ? OrderItem::where('product_id', $product->id)->count() : 0;
+        $totalProductSale = $product ? OrderItem::where('product_id', $product->id)->count() : 0;
 
         // // Today's Product Orders
-        // $todayProductOrders = $product ? OrderItem::where('product_id', $product->id)
-        //     ->whereDate('created_at', Carbon::today())
-        //     ->count() : 0;
+        $todayProductOrders = $product ? OrderItem::where('product_id', $product->id)
+            ->whereDate('created_at', Carbon::today())
+            ->count() : 0;
 
         // // This Month's Product Sales
-        // $thisMonthProductSales = $product ? OrderItem::where('product_id', $product->id)
-        //     ->whereYear('created_at', Carbon::now()->year)
-        //     ->whereMonth('created_at', Carbon::now()->month)
-        //     ->count() : 0;
+        $thisMonthProductSales = $product ? OrderItem::where('product_id', $product->id)
+            ->whereYear('created_at', Carbon::now()->year)
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->count() : 0;
 
         // // This Year's Product Sales
-        // $thisYearProductSales = $product ? OrderItem::where('product_id', $product->id)
-        //     ->whereYear('created_at', Carbon::now()->year)
-        //     ->count() : 0;
+        $thisYearProductSales = $product ? OrderItem::where('product_id', $product->id)
+            ->whereYear('created_at', Carbon::now()->year)
+            ->count() : 0;
 
         // // Total Earnings for the Product
-        // $totalEarnings = $product ? OrderItem::where('product_id', $product->id)
-        //     ->sum('price') : 0;
+        $totalEarnings = $product ? OrderItem::where('product_id', $product->id)
+            ->sum('price') : 0;
 
         // // This Month's Earnings
-        // $thisMonthEarnings = $product ? OrderItem::where('product_id', $product->id)
-        //     ->whereYear('created_at', Carbon::now()->year)
-        //     ->whereMonth('created_at', Carbon::now()->month)
-        //     ->sum('price') : 0;
+        $thisMonthEarnings = $product ? OrderItem::where('product_id', $product->id)
+            ->whereYear('created_at', Carbon::now()->year)
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->sum('price') : 0;
 
         // // This Year's Earnings
-        // $thisYearEarnings = $product ? OrderItem::where('product_id', $product->id)
-        //     ->whereYear('created_at', Carbon::now()->year)
-        //     ->sum('price') : 0;
+        $thisYearEarnings = $product ? OrderItem::where('product_id', $product->id)
+            ->whereYear('created_at', Carbon::now()->year)
+            ->sum('price') : 0;
 
         // // pending earnings
-        // $pendingStatus = 'unpaid';
-        // $todayPendingEarnings = $product ? OrderItem::where('product_id', $product->id)
-        //     ->whereHas('order', function ($query) use ($pendingStatus) {
-        //         $query->where('payment_status', $pendingStatus);
-        //     })
-        //     ->whereDate('created_at', Carbon::today())
-        //     ->sum('price') : 0;
+         $pendingStatus = 0; // or the appropriate value for unpaid in your payment_status column
+        $todayPendingEarnings = $product ? OrderItem::where('product_id', $product->id)
+            ->where('payment_status', $pendingStatus)
+            ->whereDate('created_at', Carbon::today())
+            ->sum('price') : 0;
 
         return view("admin.index", [
-            // 'totalOrder' => $totalOrder,
-            // 'totalDeliveredOrder' => $totalDeliveredOrder,
-            // 'PendingOrder' => $PendingOrder,
-            // 'CancelOrder' => $CancelOrder,
-            // 'totalProductSale' => $totalProductSale,
-            // 'TodayProductOrders' => $todayProductOrders,
-            // 'MonthProductSales' => $thisMonthProductSales,
-            // 'YearProductSales' => $thisYearProductSales,
-            // 'totalEarnings' => $totalEarnings,
-            // 'thisMonthEarnings' => $thisMonthEarnings,
-            // 'thisYearEarnings' => $thisYearEarnings,
-            // 'todayPendingEarnings' => $todayPendingEarnings,
+            'totalOrder' => $totalOrder,
+            'totalDeliveredOrder' => $totalDeliveredOrder,
+            'PendingOrder' => $PendingOrder,
+            'CancelOrder' => $CancelOrder,
+            'totalProductSale' => $totalProductSale,
+            'TodayProductOrders' => $todayProductOrders,
+            'MonthProductSales' => $thisMonthProductSales,
+            'YearProductSales' => $thisYearProductSales,
+            'totalEarnings' => $totalEarnings,
+            'thisMonthEarnings' => $thisMonthEarnings,
+            'thisYearEarnings' => $thisYearEarnings,
+            'todayPendingEarnings' => $todayPendingEarnings,
             'totalProduct' => Product::count(),
             'totalCustomer' => User::count(),
             'totalCategories' => Category::count(),

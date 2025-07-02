@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\CartController;
 use App\Http\Controllers\User\HomeController;
 use App\Http\Controllers\User\CheckoutController;
+use App\Http\Controllers\User\OrderController;
 use App\Http\Controllers\User\WishListController;
 use App\Http\Controllers\User\ReviewRatingController;
 
@@ -23,7 +24,7 @@ Route::prefix('dashboard')->group(function (){
         
 
         // order route list
-        // Route::get('/order/list', [HomeController::class, 'orderHistory'])->name('orders.index');
+        Route::get('/order/{id}/edit', [OrderController::class, 'edit'])->name('order.edit');
         // Route::get('/order/{id}/invoice', [HomeController::class, 'invoice'])->name('invoice.index');
         
 

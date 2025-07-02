@@ -54,7 +54,7 @@
 
                             <button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false" tabindex="-1"><span><i class="fas fa-user-lock" aria-hidden="true"></i></span> Change Password </button>
 
-                            <button class="nav-link" id="v-pills-reservation-tab" data-bs-toggle="pill" data-bs-target="#v-pills-reservation" type="button" role="tab" aria-controls="v-pills-reservation" aria-selected="false" tabindex="-1"><span><i class="fas fa-user-lock" aria-hidden="true"></i></span> Reservations </button>
+                            {{-- <button class="nav-link" id="v-pills-reservation-tab" data-bs-toggle="pill" data-bs-target="#v-pills-reservation" type="button" role="tab" aria-controls="v-pills-reservation" aria-selected="false" tabindex="-1"><span><i class="fas fa-user-lock" aria-hidden="true"></i></span> Reservations </button> --}}
 
                             <a onclick="return confirm('Are you sure ?')" href="" class="nav-link">
                                 <span> <i class="fas fa-trash" aria-hidden="true"></i></span>
@@ -87,19 +87,19 @@
                                             <div class="col-xl-4 col-sm-6 col-md-4">
                                                 <div class="wsus__dsahboard_overview_item">
                                                     <span class="icon"><i class="far fa-shopping-basket" aria-hidden="true"></i></span>
-                                                    <h4>Total order <span>(0)</span></h4>
+                                                    <h4>Total order <span>({{ $countOrder }})</span></h4>
                                                 </div>
                                             </div>
                                             <div class="col-xl-4 col-sm-6 col-md-4">
                                                 <div class="wsus__dsahboard_overview_item green">
                                                     <span class="icon"><i class="far fa-shopping-basket" aria-hidden="true"></i></span>
-                                                    <h4>Completed <span>(0)</span></h4>
+                                                    <h4>Completed <span>({{ $completeOrder }})</span></h4>
                                                 </div>
                                             </div>
                                             <div class="col-xl-4 col-sm-6 col-md-4">
                                                 <div class="wsus__dsahboard_overview_item red">
                                                     <span class="icon"><i class="far fa-shopping-basket" aria-hidden="true"></i></span>
-                                                    <h4>Cancel <span>(0)</span></h4>
+                                                    <h4>Cancel <span>({{ $cancelOrder }})</span></h4>
                                                 </div>
                                             </div>
                                         </div>
@@ -371,201 +371,44 @@
                                                         <th>Amount</th>
                                                         <th>Action</th>
                                                     </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <h5>#1214241772</h5>
-                                                        </td>
-                                                        <td>
-                                                            <p>16 Apr 2024</p>
-                                                        </td>
-                                                        <td>
-                                                            <span class="cancel">Pending</span>
-                                                        </td>
-                                                        <td>
-                                                            <h5>$195</h5>
-                                                        </td>
-                                                        <td><a class="view_invoice" data-order-id="23">View Details</a></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <h5>#107887705</h5>
-                                                        </td>
-                                                        <td>
-                                                            <p>07 Mar 2023</p>
-                                                        </td>
-                                                        <td>
-
-                                                            <span class="cancel">Pending</span>
-
-                                                        </td>
-                                                        <td>
-                                                            <h5>$375</h5>
-                                                        </td>
-                                                        <td><a class="view_invoice" data-order-id="12">View Details</a></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <h5>#301211793</h5>
-                                                        </td>
-                                                        <td>
-                                                            <p>06 Mar 2023</p>
-                                                        </td>
-                                                        <td>
-
-                                                            <span class="cancel">Pending</span>
-
-                                                        </td>
-                                                        <td>
-                                                            <h5>$890</h5>
-                                                        </td>
-                                                        <td><a class="view_invoice" data-order-id="10">View Details</a></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <h5>#724479377</h5>
-                                                        </td>
-                                                        <td>
-                                                            <p>05 Mar 2023</p>
-                                                        </td>
-                                                        <td>
-
-                                                            <span class="complete">Completed</span>
-
-                                                        </td>
-                                                        <td>
-                                                            <h5>$420</h5>
-                                                        </td>
-                                                        <td><a class="view_invoice" data-order-id="9">View Details</a></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <h5>#560337900</h5>
-                                                        </td>
-                                                        <td>
-                                                            <p>05 Mar 2023</p>
-                                                        </td>
-                                                        <td>
-
-                                                            <span class="cancel">Declined</span>
-
-                                                        </td>
-                                                        <td>
-                                                            <h5>$270</h5>
-                                                        </td>
-                                                        <td><a class="view_invoice" data-order-id="8">View Details</a></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <h5>#1583060974</h5>
-                                                        </td>
-                                                        <td>
-                                                            <p>05 Mar 2023</p>
-                                                        </td>
-                                                        <td>
-
-                                                            <span class="complete">Processing</span>
-
-                                                        </td>
-                                                        <td>
-                                                            <h5>$350</h5>
-                                                        </td>
-                                                        <td><a class="view_invoice" data-order-id="7">View Details</a></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <h5>#1107267602</h5>
-                                                        </td>
-                                                        <td>
-                                                            <p>05 Mar 2023</p>
-                                                        </td>
-                                                        <td>
-
-                                                            <span class="complete">On the way</span>
-
-                                                        </td>
-                                                        <td>
-                                                            <h5>$315</h5>
-                                                        </td>
-                                                        <td><a class="view_invoice" data-order-id="6">View Details</a></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <h5>#917890010</h5>
-                                                        </td>
-                                                        <td>
-                                                            <p>05 Mar 2023</p>
-                                                        </td>
-                                                        <td>
-
-                                                            <span class="complete">Completed</span>
-
-                                                        </td>
-                                                        <td>
-                                                            <h5>$205</h5>
-                                                        </td>
-                                                        <td><a class="view_invoice" data-order-id="5">View Details</a></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <h5>#1402351631</h5>
-                                                        </td>
-                                                        <td>
-                                                            <p>05 Mar 2023</p>
-                                                        </td>
-                                                        <td>
-
-                                                            <span class="complete">Completed</span>
-
-                                                        </td>
-                                                        <td>
-                                                            <h5>$315</h5>
-                                                        </td>
-                                                        <td><a class="view_invoice" data-order-id="4">View Details</a></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <h5>#958913600</h5>
-                                                        </td>
-                                                        <td>
-                                                            <p>05 Mar 2023</p>
-                                                        </td>
-                                                        <td>
-
-                                                            <span class="cancel">Pending</span>
-
-                                                        </td>
-                                                        <td>
-                                                            <h5>$225</h5>
-                                                        </td>
-                                                        <td><a class="view_invoice" data-order-id="3">View Details</a></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <h5>#479428556</h5>
-                                                        </td>
-                                                        <td>
-                                                            <p>05 Mar 2023</p>
-                                                        </td>
-                                                        <td>
-
-                                                            <span class="complete">Completed</span>
-
-                                                        </td>
-                                                        <td>
-                                                            <h5>$310</h5>
-                                                        </td>
-                                                        <td><a class="view_invoice" data-order-id="2">View Details</a></td>
-                                                    </tr>
+                                                    @foreach ($orders as $order)
+                                                        <tr>
+                                                            <td>
+                                                                <h5>#{{ $order->invoice_number }}</h5>
+                                                            </td>
+                                                            <td>
+                                                                <p>{{ $order->created_at->format('d M Y') }}</p>
+                                                            </td>
+                                                            <td>
+                                                                @if ($order->order_status == 1)
+                                                                 <span class="complete">Processing</span>
+                                                                @elseif ($order->order_status == 2)
+                                                                 <span class="complete">Delivered</span>
+                                                                @elseif ($order->order_status == 3)
+                                                                 <span class="complete">Completed</span>
+                                                                @elseif ($order->order_status == 4)
+                                                                 <span class="cancel">Declined</span>
+                                                                @elseif ($order->order_status == 0)
+                                                                 <span class="cancel">Pending</span> 
+                                                                @endif
+                                                                
+                                                            </td>
+                                                            <td>
+                                                                <h5>
+                                                                    ${{($order->price * $order->quantity) + ($order->shippingAddress->deliveryArea->delivery_fee ?? 0) }}
+                                                                </h5>
+                                                            </td>
+                                                            <td><a class="view_invoice" data-order-id="{{ $order->id }}"> View Details </a></td>
+                                                        </tr>
+                                                    @endforeach
+                                                    
                                                 </tbody>
                                             </table>
                                         </div>
                                     </div>
                                     <div class="wsus__invoice">
                                         <a class="go_back"><i class="fas fa-long-arrow-alt-left" aria-hidden="true"></i> go back</a>
-                                        <div id="load_order_details">
-
-                                        </div>
-
+                                        @include('partials.order_details')
                                     </div>
                                 </div>
                             </div>
@@ -619,74 +462,23 @@
                                     <h3>reviews</h3>
                                     <div class="wsus__review_area">
                                         <div class="wsus__comment pt-0 mt_20">
-                                            <div class="wsus__single_comment m-0 border-0">
-                                                <img src="https://unifood.websolutionus.com/public/uploads/custom-images/pulled-pork-sliders-2023-03-06-01-02-22-7233.png" alt="review" class="img-fluid">
-                                                <div class="wsus__single_comm_text">
-                                                    <h3><a href="https://unifood.websolutionus.com/product/pulled-pork-sliders">Pulled Pork Sliders</a> <span>06 Mar 2023 </span>
-                                                    </h3>
-                                                    <span class="rating">
-                                                        <i class="fas fa-star" aria-hidden="true"></i>
-                                                        <i class="fas fa-star" aria-hidden="true"></i>
-                                                        <i class="fas fa-star" aria-hidden="true"></i>
-                                                        <i class="fas fa-star" aria-hidden="true"></i>
-                                                        <i class="fas fa-star" aria-hidden="true"></i>
-                                                    </span>
-                                                    <p>Pizza is a savory dish of Italian origin consisting of a usually round, flattened base of leavened wheat-based dough topped with tomatoes</p>
-                                                    <span class="status active">active</span>
-
+                                            @foreach ($reviews as $review)
+                                                <div class="wsus__single_comment m-0 border-0">
+                                                    <img src="{{ asset('storage/upload/product/single/'.$review->product->images) }}" alt="review" class="img-fluid">
+                                                    <div class="wsus__single_comm_text">
+                                                        <h3><a href="{{ route('frontend.product.show', $review->product->slug ) }}">{{ $review->product->title }}</a> <span>{{ $review->created_at->format('d M Y') }}</span></h3>
+                                                        </h3>
+                                                        <p>{{ $review->review }}</p>
+                                                        @if ($review->status == 1)
+                                                            <span class="status active">active</span>
+                                                        @else
+                                                            <span class="status danger">pending</span>
+                                                        @endif
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="wsus__single_comment m-0 border-0">
-                                                <img src="https://unifood.websolutionus.com/public/uploads/custom-images/truffle-fries-2023-03-06-01-06-09-8443.png" alt="review" class="img-fluid">
-                                                <div class="wsus__single_comm_text">
-                                                    <h3><a href="https://unifood.websolutionus.com/product/truffle-fries">Truffle Fries</a> <span>06 Mar 2023 </span>
-                                                    </h3>
-                                                    <span class="rating">
-                                                        <i class="fas fa-star" aria-hidden="true"></i>
-                                                        <i class="fas fa-star" aria-hidden="true"></i>
-                                                        <i class="fas fa-star" aria-hidden="true"></i>
-                                                        <i class="fas fa-star" aria-hidden="true"></i>
-                                                        <i class="fas fa-star" aria-hidden="true"></i>
-                                                    </span>
-                                                    <p>Pizza is a savory dish of Italian origin consisting of a usually round, flattened base of leavened wheat-based dough topped with tomatoes</p>
-                                                    <span class="status active">active</span>
-
-                                                </div>
-                                            </div>
-                                            <div class="wsus__single_comment m-0 border-0">
-                                                <img src="https://unifood.websolutionus.com/public/uploads/custom-images/spicy-burger-2023-03-05-02-57-08-4535.png" alt="review" class="img-fluid">
-                                                <div class="wsus__single_comm_text">
-                                                    <h3><a href="https://unifood.websolutionus.com/product/spicy-burger">Spicy Burger</a> <span>05 Mar 2023 </span>
-                                                    </h3>
-                                                    <span class="rating">
-                                                        <i class="fas fa-star" aria-hidden="true"></i>
-                                                        <i class="fas fa-star" aria-hidden="true"></i>
-                                                        <i class="fas fa-star" aria-hidden="true"></i>
-                                                        <i class="fas fa-star" aria-hidden="true"></i>
-                                                        <i class="fas fa-star" aria-hidden="true"></i>
-                                                    </span>
-                                                    <p>Vim et alterum ornatus vivendum, ut mea solum repudiare. His etiam delenit tibique no, ad harum omnes scribentur qui, ne wisi detracto his. Ei movet accusam pri</p>
-                                                    <span class="status active">active</span>
-
-                                                </div>
-                                            </div>
-                                            <div class="wsus__single_comment m-0 border-0">
-                                                <img src="https://unifood.websolutionus.com/public/uploads/custom-images/hyderabadi-biryani-2023-03-05-01-14-59-9689.png" alt="review" class="img-fluid">
-                                                <div class="wsus__single_comm_text">
-                                                    <h3><a href="https://unifood.websolutionus.com/product/hyderabadi-biryani">Hyderabadi Biryani</a> <span>05 Mar 2023 </span>
-                                                    </h3>
-                                                    <span class="rating">
-                                                        <i class="fas fa-star" aria-hidden="true"></i>
-                                                        <i class="fas fa-star" aria-hidden="true"></i>
-                                                        <i class="fas fa-star" aria-hidden="true"></i>
-                                                        <i class="fas fa-star" aria-hidden="true"></i>
-                                                        <i class="fas fa-star" aria-hidden="true"></i>
-                                                    </span>
-                                                    <p>Vim et alterum ornatus vivendum, ut mea solum repudiare. His etiam delenit tibique no, ad harum omnes scribentur qui, ne wisi detracto his.</p>
-                                                    <span class="status active">active</span>
-
-                                                </div>
-                                            </div>
+                                            @endforeach
+                                            
+                                            
                                         </div>
                                     </div>
                                 </div>
@@ -890,46 +682,29 @@
         });
     </script>
 
-    {{-- <script>
-        $(document).ready(function () {
-            $('#submit_edit_address').on('click', function (e) {
-                e.preventDefault();
-
-                let formData = {
-                    _token: $('input[name="_token"]').val(),
-                    _method: 'PUT',
-                    edit_id: $('.edit_id').val(),
-                    first_name: $('.edit_first_name').val(),
-                    last_name: $('.edit_last_name').val(),
-                    phone_number: $('.edit_phone').val(),
-                    email: $('.edit_email').val(),
-                    address: $('.edit_address').val(),
-                    address_type: $('input[name="address_type"]:checked').val(),
-                    delivery_area_id: $('.edit_delivery_area_id').val()
-                };
-
-                $.ajax({
-                    url: '{{ route("shipping.address.update") }}',
-                    type: 'POST',
-                    data: formData,
-                    success: function (response) {
-                        toastr.success('Address updated successfully.');
-                        $('#address_all_list').load(location.href + " #address_all_list"); 
-                    },
-                    error: function (xhr) {
-                        if (xhr.status === 422) {
-                            let errors = xhr.responseJSON.errors;
-                            let errorMsg = '';
-                            for (let key in errors) {
-                                errorMsg += errors[key][0] + '\n';
-                            }
-                            toastr.error(errorMsg);
-                        } else {
-                            toastr.error('Something went wrong. Please try again.');
+    <script>
+        (function($) {
+            "use strict";
+            $(document).ready(function () {
+                $(".view_invoice").on("click", function(){
+                    let order_id = $(this).data('order-id');
+                    $("#load_order_details").html('')
+                    $.ajax({
+                        type: 'get',
+                        url: "{{ url('dashboard/order') }}/" + order_id + "/edit",
+                        success: function (response) {
+                            $("#load_order_details").html(response);
+                        },
+                        error: function(response) {
+                            toastr.error("Server error occurred");
                         }
-                    }
-                });
+                    });
+
+                })
+
+
             });
-        });
-    </script> --}}
+        })(jQuery);
+    </script>
+
 @endpush

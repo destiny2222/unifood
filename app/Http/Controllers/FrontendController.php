@@ -14,7 +14,7 @@ class FrontendController extends Controller
 {
     public function index(){
         $Product = Product::orderBy('id', 'DESC')->get()->take(8);
-        $category = Category::orderBy('id', 'DESC')->get()->take(5);
+        $category = Category::orderBy('id', 'asc')->get()->take(6);
         $blog = Post::where('show_homepage' , 1)->get();
         return view('frontend.index', [
             'products' => $Product,
@@ -35,7 +35,7 @@ class FrontendController extends Controller
 
     public function product(){
         $categories = Category::orderBy('id', 'desc')->get();
-        $product = Product::orderBy('id', 'desc')->paginate(12);
+        $product = Product::paginate(12);
         return view('frontend.product', [
             'categories' => $categories,
             'products' => $product,
@@ -84,17 +84,11 @@ public function searchProduct(Request $request)
         $query->whereHas('category', function($q) use ($request) {
             $q->where('title', $request->category);
         });
-        
-        // Option 2: If you store category title directly in products table
-        // $query->where('category', $request->category);
-        
-        // Option 3: If you have category_id and want to search by ID
-        // $query->where('category_id', $request->category);
     }
 
     // Execute the query and get results
-    $products = $query->get(); // or ->paginate(12)
-    dd($products);
+    $products = $query->paginate(12); // or ->paginate(12)
+    
     
     return view('frontend.product_search', compact('products'));
 }
@@ -124,7 +118,7 @@ public function searchProduct(Request $request)
             if (!$search) {
                 return redirect()->route('frontend.index')->with('error', 'Your request was not found.');
             }
-        return view('frontend.search', compact('products'));
+        return view('frontend.product_search', compact('products'));
     }
 
     public function commentStore(Request $request, Post $post){

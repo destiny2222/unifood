@@ -308,9 +308,9 @@
             <div class="row wow fadeInUp" data-wow-duration="1s">
                 <div class="col-12">
                     <div class="menu_filter d-flex flex-wrap justify-content-center">
-                        <button class="first_menu_product active" data-filter="*">All</button>
+                        {{-- <button class="first_menu_product " data-filter="*">All</button> --}}
                         @foreach ($categories as $index => $category)
-                            <button class="{{ $index == 0 ? 'first_menu_product' : '' }}" data-filter=".category_{{ $category->id }}">
+                            <button class="{{ $index == 0 ? 'first_menu_product active' : '' }}" data-filter=".category_{{ $category->id }}">
                                 {{ $category->title }}
                             </button>
                         @endforeach
