@@ -25,8 +25,9 @@
                                            <th>
                                                S/N
                                            </th>
-                                           <th>Title</th>
-                                           <th>Description</th>
+                                           <th>Question</th>
+                                           <th>Answer</th>
+                                           <th>Status</th>
                                            <th>Action</th>
                                       </tr>
                                  </thead>
@@ -37,9 +38,16 @@
                                             {{ $loop->index + 1 }}
                                         </td>
                                         <td>
-                                            {{ $faq->title }}
+                                            {{ $faq->question }}
                                         </td>
-                                        <td>{!! $faq->description !!}</td>
+                                        <td>{!! $faq->answer !!}</td>
+                                        <td>
+                                            @if ($faq->status == 1)
+                                                <span class="badge border border-success text-success">Active</span>
+                                            @else
+                                                <span class="badge border border-danger text-danger">Inactive</span>
+                                            @endif
+                                        </td>
                                         <td>
                                             <div class="d-flex gap-2">
                                                 <a href="{{ route('admin.faq.edit', $faq->id)  }}" class="btn btn-soft-primary btn-sm"><iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18"></iconify-icon></a>

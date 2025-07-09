@@ -3,13 +3,16 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use App\Models\Cart;
 use App\Models\OrderItem;
+use App\Notifications\OrderNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Config;
 use Stripe\Stripe;
+use Illuminate\Support\Facades\Notification;
 use Stripe\Checkout\Session;
 
 class PaymentController extends Controller
@@ -72,7 +75,11 @@ class PaymentController extends Controller
                     ->update([
                         'payment_status' => 1,
                     ]);
-
+                // notify administrator that a user made a transaction
+                $admins = Admin::all();
+                if ($admins->isNotEmpty()) {
+                    Notification::send($admins, new OrderNotification($orderItemIds, Auth::user()));
+                }
                 // Clear the user's cart after successful payment
                 Cart::where('user_id', $session->metadata->user_id)->delete();
                 $successMessage = "Payment successful! Your order has been confirmed.";

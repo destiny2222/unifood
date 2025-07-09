@@ -12,17 +12,17 @@
                 <img src="{{ asset('images/shape/slider-foreground2.png') }}" alt="shape"   class="img-fluid w-100">
             </span>
             <div class="row banner_slider">
-                <div class="col-12">
+                @foreach ($sliders as $slider)
+                    <div class="col-12">
                     <div class="wsus__banner_slider">
                         <div class=" container">
                             <div class="row">
                                 <div class="col-xl-5 col-md-5 col-lg-5">
                                     <div class="wsus__banner_img wow fadeInLeft" data-wow-duration="1s">
                                         <div class="img">
-                                            <img src="{{ asset('website-images/slider-01.png') }}"
-                                                alt="food item" class="img-fluid w-100">
+                                            <img src="{{ asset('upload/slider/'.$slider->image) }}" alt="food item" class="img-fluid w-100">
                                             <span style="background: url(/user/images/offer_shapes.png);">
-                                                35% off
+                                                {{ $slider->offer_text }}
                                             </span>
                                         </div>
                                     </div>
@@ -30,12 +30,11 @@
 
                                 <div class="col-xl-5 col-md-7 col-lg-6">
                                     <div class="wsus__banner_text wow fadeInRight" data-wow-duration="1s">
-                                        <h1>Special Deals Today</h1>
-                                        <h3>Fast Food &amp; Restaurants</h3>
-                                        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ipsum fugit minima
-                                            et debitis ut distinctio optio qui voluptate natus.</p>
+                                        <h1>{{ $slider->title_one }}</h1>
+                                        <h3>{{ $slider->title_two }}</h3>
+                                        <p>{!! $slider->description !!}</p>
                                         <ul class="d-flex flex-wrap">
-                                            <li><a class="common_btn" href="product/fried-chicken.html">Shop now</a>
+                                            <li><a class="common_btn" href="{{ $slider->link }}">Shop now</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -44,70 +43,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12">
-                    <div class="wsus__banner_slider">
-                        <div class=" container">
-                            <div class="row">
-                                <div class="col-xl-5 col-md-5 col-lg-5">
-                                    <div class="wsus__banner_img wow fadeInLeft" data-wow-duration="1s">
-                                        <div class="img">
-                                            <img src="{{ asset('website-images/slider-02.png') }}"
-                                                alt="food item" class="img-fluid w-100">
-                                            <span style="background: url(/user/images/offer_shapes.png);">
-                                                25% Off
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-xl-5 col-md-7 col-lg-6">
-                                    <div class="wsus__banner_text wow fadeInRight" data-wow-duration="1s">
-                                        <h1>Delicious Food Options</h1>
-                                        <h3>Satisfy Your Cravings</h3>
-                                        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ipsum fugit minima
-                                            et debitis ut distinctio optio qui voluptate natus.</p>
-                                        <ul class="d-flex flex-wrap">
-                                            <li><a class="common_btn" href="product/daria-shevtsova.html">Shop now</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="wsus__banner_slider">
-                        <div class=" container">
-                            <div class="row">
-                                <div class="col-xl-5 col-md-5 col-lg-5">
-                                    <div class="wsus__banner_img wow fadeInLeft" data-wow-duration="1s">
-                                        <div class="img">
-                                            <img src="{{ asset('website-images/slider-03.png') }}"
-                                                alt="food item" class="img-fluid w-100">
-                                            <span style="background: url(/user/images/offer_shapes.png);">
-                                                20% off
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-xl-5 col-md-7 col-lg-6">
-                                    <div class="wsus__banner_text wow fadeInRight" data-wow-duration="1s">
-                                        <h1>Mouth-Watering Dishes</h1>
-                                        <h3>Try Something New</h3>
-                                        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ipsum fugit minima
-                                            et debitis ut distinctio optio qui voluptate natus.</p>
-                                        <ul class="d-flex flex-wrap">
-                                            <li><a class="common_btn" href="product/onion-rings.html">Shop now</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </section>
@@ -122,39 +58,19 @@
     <section class="wsus__why_choose">
         <div class="container">
             <div class="row">
-                <div class="col-xl-4 col-md-6 col-lg-4">
-                    <div class="wsus__choose_single d-flex flex-wrap align-items-center justify-content-between">
-                        <div class="icon icon_1">
-                            <i class="fal fa-badge-percent"></i>
-                        </div>
-                        <div class="text">
-                            <h3>Discount Voucher</h3>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit est</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-4 col-md-6 col-lg-4">
-                    <div class="wsus__choose_single d-flex flex-wrap align-items-center justify-content-between">
-                        <div class="icon icon_1">
-                            <i class="fas fa-burger-soda"></i>
-                        </div>
-                        <div class="text">
-                            <h3>Fresh Healthy Foods</h3>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit est</p>
+                @foreach ($services as $service)
+                    <div class="col-xl-4 col-md-6 col-lg-4">
+                        <div class="wsus__choose_single d-flex flex-wrap align-items-center justify-content-between">
+                            <div class="icon icon_1">
+                               <i class=" {{ $service->icon }}"></i>
+                            </div>
+                            <div class="text">
+                                <h3>{{ $service->title }}</h3>
+                                <p>{!! $service->description !!}</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-xl-4 col-md-6 col-lg-4">
-                    <div class="wsus__choose_single d-flex flex-wrap align-items-center justify-content-between">
-                        <div class="icon icon_1">
-                            <i class="far fa-hat-chef"></i>
-                        </div>
-                        <div class="text">
-                            <h3>Fast Serve On Table</h3>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit est</p>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </section>
@@ -168,111 +84,50 @@
     ==============================-->
     <section class="wsus__offer_item mt_95 xs_mt_65">
         <span class="banner_shape_3">
-            <img src="{{ asset('images/shape/today_special_image.png') }}" alt="shape"
-                class="img-fluid w-100">
+            <img src="{{ asset('images/shape/today_special_image.png') }}" alt="shape" class="img-fluid w-100">
         </span>
         <div class="container">
             <div class="row wow fadeInUp" data-wow-duration="1s">
                 <div class="col-md-8 col-lg-7 col-xl-6 m-auto text-center">
                     <div class="wsus__section_heading mb_50">
-                        <h4>Daily Offer</h4>
-                        <h2>Up To 75% Off For This Day</h2>
+                        <h4>What's Cooking Today?</h4>
+                        <h2>Discover fresh ingredients</h2>
                         <span>
                             <img src="/user/images/heading_shapes.png" alt="shapes" class="img-fluid w-100">
                         </span>
-                        <p>Objectively pontificate quality models before intuitive information. Dramatically
-                            recaptiualize multifunctional.</p>
+                        <p>Prefect for your next meal - whether it's a quick bite or a family feast.</p>
                     </div>
                 </div>
             </div>
             <div class="row offer_item_slider wow fadeInUp" data-wow-duration="1s">
-                <div class="col-xl-4">
-                    <div class="wsus__offer_item_single"
-                        style="background: url({{ asset('images/dal-makhani.jpg')   }});">
+                @foreach ($dailyOffers as $dailyOffer)
+                    @php
+                        // Calculate percentage off
+                        $original = $dailyOffer->price;
+                        $discount = $dailyOffer->discount;
+                        $percentageOff = $original > 0 ? round((($original - $discount) / $original) * 100) : 0;
+                    @endphp
 
-                        <span>17% off</span>
+                    <div class="col-xl-4">
+                        <div class="wsus__offer_item_single"
+                            style="background: url({{ asset('images/dal-makhani.jpg') }});">
 
-                        <a class="title" href="product/dal-makhani-paneer.html">Dal Makhani Paneer</a>
-                        <p>Nec in rebum primis causae. Affert iisque ex pri, vis utinam vivendo definitionem ad, nostrum
-                            omnesque per et. Omnium antiopam cotidieque cu sit.</p>
-                        <ul class="d-flex flex-wrap">
-                            <li><a href="javascript:;" onclick="load_product_model(2)"><i
-                                        class="fas fa-shopping-basket"></i></a></li>
+                            <span>{{ $percentageOff }}% off</span>
 
-                            <li><a href="javascript:;" onclick="before_auth_wishlist(2)"><i
-                                        class="fal fa-heart"></i></a></li>
-
-
-                            <li><a href="product/dal-makhani-paneer.html"><i class="far fa-eye"></i></a></li>
-                        </ul>
+                            <a class="title" href="product/dal-makhani-paneer.html">
+                                {{ \Str::limit($dailyOffer->title,  50, '...') }}
+                            </a>
+                            <p>{!! \Str::limit($dailyOffer->description, 50, '...') !!}</p>
+                            <ul class="d-flex flex-wrap">
+                                <li><a href="javascript:;"><i class="fas fa-shopping-basket"></i></a></li>
+                                <li><a href="javascript:;"><i class="fal fa-heart"></i></a></li>
+                                <li><a href="product/dal-makhani-paneer.html"><i class="far fa-eye"></i></a></li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-                <div class="col-xl-4">
-                    <div class="wsus__offer_item_single"
-                        style="background: url({{ asset('images/indian-cuisine-pakora.jpg')  }});">
+                @endforeach
 
-                        <span>17% off</span>
-
-                        <a class="title" href="product/indian-cuisine-pakora.html">Indian cuisine Pakora</a>
-                        <p>Per ex vero nonumy. Ius eu doming nominavi mediocrem, aliquid efficiantur no vim, sanctus
-                            admodum mnesarchum ad pro. No sea invidunt partiendo. No postea numquam ocurreret duo, unum
-                            abhorreant cu nam, fugit fastidii percipitur nam id.</p>
-                        <ul class="d-flex flex-wrap">
-                            <li><a href="javascript:;" onclick="load_product_model(3)"><i
-                                        class="fas fa-shopping-basket"></i></a></li>
-
-                            <li><a href="javascript:;" onclick="before_auth_wishlist(3)"><i
-                                        class="fal fa-heart"></i></a></li>
-
-
-                            <li><a href="product/indian-cuisine-pakora.html"><i class="far fa-eye"></i></a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-xl-4">
-                    <div class="wsus__offer_item_single"
-                        style="background: url({{ asset('images/beef-masala-salad.jpg') }});">
-
-                        <span>13% off</span>
-
-                        <a class="title" href="product/beef-masala-salad.html">Beef Masala Salad</a>
-                        <p>In vim natum soleat nostro, pri in eloquentiam contentiones. Eu sit sapientem reprehendunt,
-                            omnis aliquid eu eos. No quot illum veniam est, ne pro iudico saperet mnesarchum.</p>
-                        <ul class="d-flex flex-wrap">
-                            <li><a href="javascript:;" onclick="load_product_model(4)"><i
-                                        class="fas fa-shopping-basket"></i></a></li>
-
-                            <li><a href="javascript:;" onclick="before_auth_wishlist(4)"><i
-                                        class="fal fa-heart"></i></a></li>
-
-
-                            <li><a href="product/beef-masala-salad.html"><i class="far fa-eye"></i></a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-xl-4">
-                    <div class="wsus__offer_item_single"
-                        style="background: url({{ asset('images/chicken-nuggets.jpg') }});">
-
-                        <span>40% off</span>
-
-                        <a class="title" href="product/chicken-nuggets.html">Chicken Nuggets</a>
-                        <p>Sint dignissim consectetuer nec et, per ad probatus referrentur, vel cu consequat sententiae.
-                            Ad duis fugit dictas mea, et cum stet oratio cetero. Ne pri omittam fastidii. No per harum
-                            dicant neglegentur, sea ei esse volumus adolescens.</p>
-                        <ul class="d-flex flex-wrap">
-                            <li><a href="javascript:;" onclick="load_product_model(5)"><i
-                                        class="fas fa-shopping-basket"></i></a></li>
-
-                            <li><a href="javascript:;" onclick="before_auth_wishlist(5)"><i
-                                        class="fal fa-heart"></i></a></li>
-
-
-                            <li><a href="product/chicken-nuggets.html"><i class="far fa-eye"></i></a></li>
-                        </ul>
-                    </div>
-                </div>
-
+                
             </div>
         </div>
     </section>
@@ -299,8 +154,7 @@
                         <span>
                             <img src="/user/images/heading_shapes.png" alt="shapes" class="img-fluid w-100">
                         </span>
-                        <p>Objectively pontificate quality models before intuitive information. Dramatically
-                            recaptiualize multifunctional.</p>
+                        <p>Explore Our Best-Selling Food Items Chosen by food lovers, made to satisfy every craving.</p>
                     </div>
                 </div>
             </div>
@@ -369,42 +223,16 @@
     <section class="wsus__add_slider mt_100 xs_mt_70">
         <div class="container">
             <div class="row add_slider wow fadeInUp" data-wow-duration="1s">
-                <div class="col-xl-4">
-                    <a href="product/onion-rings.html" class="wsus__add_slider_single"
-                        style="background: url(custom-images/advertisement-2023-03-05-04-00-30-5264.png);">
-                        <div class="text">
-                            <h3>Fried Chicken</h3>
-                            <p>Lorem ipsum dolor sit amet consectetur.</p>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-xl-4">
-                    <a href="product/fried-chicken.html" class="wsus__add_slider_single"
-                        style="background: url(custom-images/advertisement-2023-03-05-04-01-56-2034.png);">
-                        <div class="text">
-                            <h3>Spicy Burger</h3>
-                            <p>Lorem ipsum dolor sit amet consectetur.</p>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-xl-4">
-                    <a href="product/spicy-burger.html" class="wsus__add_slider_single"
-                        style="background: url(custom-images/advertisement-2023-03-05-04-03-43-9191.png);">
-                        <div class="text">
-                            <h3>New Year</h3>
-                            <p>Lorem ipsum dolor sit amet consectetur.</p>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-xl-4">
-                    <a href="product/mozzarella-sticks.html" class="wsus__add_slider_single"
-                        style="background: url(custom-images/advertisement-2023-03-05-04-06-17-9213.png);">
-                        <div class="text">
-                            <h3>Black Firday</h3>
-                            <p>Lorem ipsum dolor sit amet consectetur.</p>
-                        </div>
-                    </a>
-                </div>
+                @foreach ($advertisements as $advertisement)
+                    <div class="col-xl-4">
+                        <a href="#!" class="wsus__add_slider_single"  style="background: url({{ asset('upload/advertisement/'.$advertisement->image) }});">
+                            <div class="text">
+                                <h3>{{ $advertisement->title }}</h3>
+                                <p>{!! $advertisement->description !!}</p>
+                            </div>
+                        </a>
+                    </div>
+                @endforeach
             </div>
         </div>
     </section>
@@ -413,172 +241,6 @@
     ==============================-->
 
 
-    <!--=============================
-        TEAM START
-    ==============================-->
-    <section class="wsus__team pt_95 xs_pt_65 pb_150 xs_pb_120" style="background: url({{ asset('chefs_bg.jpg') }});">
-        <span class="banner_shape_1">
-            <img src="{{ asset('images/shape/chef_left_image.png') }}" alt="shape"
-                class="img-fluid w-100">
-        </span>
-        <span class="banner_shape_2">
-            <img src="{{ asset('images/shape/chef_right_image.png') }}" alt="shape"
-                class="img-fluid w-100">
-        </span>
-        <div class="container">
-            <div class="row wow fadeInUp" data-wow-duration="1s">
-                <div class="col-md-8 col-lg-7 col-xl-6 m-auto text-center">
-                    <div class="wsus__section_heading mb_25">
-                        <h4>Our Team</h4>
-                        <h2>Meet Our Expert Chefs</h2>
-                        <span>
-                            <img src="/user/images/heading_shapes.png" alt="shapes" class="img-fluid w-100">
-                        </span>
-                        <p>Objectively pontificate quality models before intuitive information. Dramatically
-                            recaptiualize multifunctional.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row team_slider">
-                <div class="col-xl-3 wow fadeInUp" data-wow-duration="1s">
-                    <div class="wsus__single_team">
-                        <div class="wsus__single_team_img">
-                            <img src="/custom-images/olivia-ava-20230305042302.jpg" alt="team"
-                                class="img-fluid w-100">
-                        </div>
-                        <div class="wsus__single_team_text">
-                            <h4>Olivia Ava</h4>
-                            <p>Senior Chef</p>
-                            <ul class="d-flex flex-wrap justify-content-center">
-                                <li><a href="https://www.facebook.com"><i class="fab fa-facebook-f"></i></a></li>
-
-                                <li><a href="https://www.linkedin.com"><i class="fab fa-linkedin-in"></i></a></li>
-
-                                <li><a href="https://www.twitter.com"><i class="fab fa-twitter"></i></a></li>
-
-                                <li><a href="https://www.instagram.com"><i class="fab fa-instagram"></i></a></li>
-
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 wow fadeInUp" data-wow-duration="1s">
-                    <div class="wsus__single_team">
-                        <div class="wsus__single_team_img">
-                            <img src="/custom-images/john-doe-20230305042351.jpg" alt="team"
-                                class="img-fluid w-100">
-                        </div>
-                        <div class="wsus__single_team_text">
-                            <h4>John Doe</h4>
-                            <p>Senior Chef</p>
-                            <ul class="d-flex flex-wrap justify-content-center">
-                                <li><a href="https://www.facebook.com"><i class="fab fa-facebook-f"></i></a></li>
-
-                                <li><a href="https://www.linkedin.com"><i class="fab fa-linkedin-in"></i></a></li>
-
-                                <li><a href="https://www.twitter.com"><i class="fab fa-twitter"></i></a></li>
-
-                                <li><a href="https://www.instagram.com"><i class="fab fa-instagram"></i></a></li>
-
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 wow fadeInUp" data-wow-duration="1s">
-                    <div class="wsus__single_team">
-                        <div class="wsus__single_team_img">
-                            <img src="/custom-images/sophia-charle-20230305042513.jpg" alt="team"
-                                class="img-fluid w-100">
-                        </div>
-                        <div class="wsus__single_team_text">
-                            <h4>Sophia Charle</h4>
-                            <p>Intern Chef</p>
-                            <ul class="d-flex flex-wrap justify-content-center">
-                                <li><a href="https://www.facebook.com"><i class="fab fa-facebook-f"></i></a></li>
-
-                                <li><a href="https://www.linkedin.com"><i class="fab fa-linkedin-in"></i></a></li>
-
-                                <li><a href="https://www.twitter.com"><i class="fab fa-twitter"></i></a></li>
-
-                                <li><a href="https://www.instagram.com"><i class="fab fa-instagram"></i></a></li>
-
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 wow fadeInUp" data-wow-duration="1s">
-                    <div class="wsus__single_team">
-                        <div class="wsus__single_team_img">
-                            <img src="/custom-images/david-richard-20230305042547.jpg" alt="team"
-                                class="img-fluid w-100">
-                        </div>
-                        <div class="wsus__single_team_text">
-                            <h4>David Richard</h4>
-                            <p>Junior Chef</p>
-                            <ul class="d-flex flex-wrap justify-content-center">
-                                <li><a href="https://www.facebook.com"><i class="fab fa-facebook-f"></i></a></li>
-
-                                <li><a href="https://www.linkedin.com"><i class="fab fa-linkedin-in"></i></a></li>
-
-                                <li><a href="https://www.twitter.com"><i class="fab fa-twitter"></i></a></li>
-
-                                <li><a href="https://www.instagram.com"><i class="fab fa-instagram"></i></a></li>
-
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 wow fadeInUp" data-wow-duration="1s">
-                    <div class="wsus__single_team">
-                        <div class="wsus__single_team_img">
-                            <img src="/custom-images/flora-ocean-20230305042650.jpg" alt="team"
-                                class="img-fluid w-100">
-                        </div>
-                        <div class="wsus__single_team_text">
-                            <h4>Flora Ocean</h4>
-                            <p>Web Developer</p>
-                            <ul class="d-flex flex-wrap justify-content-center">
-                                <li><a href="https://www.facebook.com"><i class="fab fa-facebook-f"></i></a></li>
-
-                                <li><a href="https://www.linkedin.com"><i class="fab fa-linkedin-in"></i></a></li>
-
-                                <li><a href="https://www.twitter.com"><i class="fab fa-twitter"></i></a></li>
-
-                                <li><a href="https://www.instagram.com"><i class="fab fa-instagram"></i></a></li>
-
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 wow fadeInUp" data-wow-duration="1s">
-                    <div class="wsus__single_team">
-                        <div class="wsus__single_team_img">
-                            <img src="/custom-images/freyja-mylah-20230305042759.jpg" alt="team"
-                                class="img-fluid w-100">
-                        </div>
-                        <div class="wsus__single_team_text">
-                            <h4>Freyja Mylah</h4>
-                            <p>Graphic Designer</p>
-                            <ul class="d-flex flex-wrap justify-content-center">
-                                <li><a href="https://www.facebook.com"><i class="fab fa-facebook-f"></i></a></li>
-
-                                <li><a href="https://www.linkedin.com"><i class="fab fa-linkedin-in"></i></a></li>
-
-                                <li><a href="https://www.twitter.com"><i class="fab fa-twitter"></i></a></li>
-
-                                <li><a href="https://www.instagram.com"><i class="fab fa-instagram"></i></a></li>
-
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!--=============================
-        TEAM END
-    ==============================-->
 
 
     <!--=============================
@@ -588,27 +250,24 @@
     <section class="wsus__download mt_100 xs_mt_70">
         <div class="container">
             <div class="wsus__download_bg"
-                style="background: url({{ asset('app_background_one.jpg') }});">
+                style="background: url({{ asset('upload/appsection/'.$appSection->background_image ?? '' ) }});">
                 <div class="wsus__download_overlay">
                     <div class="row justify-content-between">
                         <div class="col-xl-5 col-lg-6 wow fadeInUp" data-wow-duration="1s">
                             <div class="wsus__download_text">
                                 <div class="wsus__section_heading mb_25">
-                                    <h2>Download Our Mobile Apps</h2>
-                                    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cumque assumenda
-                                        tenetur, provident earum consequatur, ut voluptas laboriosam fuga error aut
-                                        eaque architecto quo pariatur. Vel dolore omnis quisquam. Lorem ipsum dolor, sit
-                                        amet consectetur adipisicing elit Cumque.</p>
+                                    <h2>{{ $appSection->title ?? '' }}</h2>
+                                    <p>{!! $appSection->description ?? '' !!}</p>
                                 </div>
                                 <ul class="d-flex flex-wrap">
                                     <li>
-                                        <a href="https://play.google.com/">
+                                        <a href="{{ $appSection->play_store_link ?? '' }}">
                                             <i class="fab fa-google-play"></i>
                                             <p> <span>download from</span> google play </p>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="https://www.apple.com/app-store/">
+                                        <a href="{{ $appSection->app_store_link ?? '' }}">
                                             <i class="fab fa-apple"></i>
                                             <p> <span>download from</span> apple store </p>
                                         </a>
@@ -618,8 +277,7 @@
                         </div>
                         <div class="col-xl-6 col-lg-6 wow fadeInUp" data-wow-duration="1s">
                             <div class="wsus__download_img">
-                                <img src="/images/app-image.png"
-                                    alt="download" class="img-fluid w-100">
+                                <img src="{{ asset('upload/appsection/image/'.$appSection->app_image ?? '') }}"  alt="download" class="img-fluid w-100">
                             </div>
                         </div>
                     </div>
@@ -640,42 +298,18 @@
         <div class="wsus__counter_overlay pt_100 xs_pt_70 pb_100 xs_pb_70">
             <div class="container">
                 <div class="row">
-                    <div class="col-xl-3 col-sm-6 col-lg-3 wow fadeInUp" data-wow-duration="1s">
-                        <div class="wsus__single_counter">
-                            <i class="fas fa-burger-soda"></i>
-                            <div class="text">
-                                <h2 class="counter">1200</h2>
-                                <p>Customer Serve</p>
+                    @foreach ($counters as $counter)
+                        <div class="col-xl-3 col-sm-6 col-lg-3 wow fadeInUp" data-wow-duration="1s">
+                            <div class="wsus__single_counter">
+                                <i class="fas fa-burger-soda"></i>
+                                <div class="text">
+                                    <h2 class="counter">{{ $counter->quantity }}</h2>
+                                    <p>{{ $counter->title }}</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-xl-3 col-sm-6 col-lg-3 wow fadeInUp" data-wow-duration="1s">
-                        <div class="wsus__single_counter">
-                            <i class="fal fa-hat-chef"></i>
-                            <div class="text">
-                                <h2 class="counter">1150</h2>
-                                <p>Experience Chef</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-sm-6 col-lg-3 wow fadeInUp" data-wow-duration="1s">
-                        <div class="wsus__single_counter">
-                            <i class="far fa-handshake"></i>
-                            <div class="text">
-                                <h2 class="counter">1250</h2>
-                                <p>Happy Customer</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-sm-6 col-lg-3 wow fadeInUp" data-wow-duration="1s">
-                        <div class="wsus__single_counter">
-                            <i class="far fa-trophy"></i>
-                            <div class="text">
-                                <h2 class="counter">1300</h2>
-                                <p>Winning Award</p>
-                            </div>
-                        </div>
-                    </div>
+                    @endforeach
+                    
                 </div>
             </div>
         </div>
@@ -699,187 +333,41 @@
                         <span>
                             <img src="/user/images/heading_shapes.png" alt="shapes" class="img-fluid w-100">
                         </span>
-                        <p>Objectively pontificate quality models before intuitive information. Dramatically
-                            recaptiualize multifunctional.</p>
+                        <p>see what people love about shopping with us.</p>
                     </div>
                 </div>
             </div>
 
             <div class="row testi_slider">
-                <div class="col-xl-4 wow fadeInUp" data-wow-duration="1s">
-                    <div class="wsus__single_testimonial">
-                        <div class="wsus__testimonial_header d-flex flex-wrap align-items-center">
-                            <div class="img">
-                                <img src="/custom-images/elia-navy-20230305045641.jpg" alt="clients"
-                                    class="img-fluid w-100">
+                @foreach ($testimonials as $testimonial)
+                    <div class="col-xl-4 wow fadeInUp" data-wow-duration="1s">
+                        <div class="wsus__single_testimonial">
+                            <div class="wsus__testimonial_header d-flex flex-wrap align-items-center">
+                                <div class="img">
+                                    <img src="{{ asset('upload/testimonial/'.$testimonial->existing_image ) }}" alt="clients"
+                                        class="img-fluid w-100">
+                                </div>
+                                <div class="text">
+                                    <h4>{{ $testimonial->name }}</h4>
+                                    <p>{{ $testimonial->designation }}</p>
+                                </div>
                             </div>
-                            <div class="text">
-                                <h4>Elia Navy</h4>
-                                <p>Web Developer</p>
+                            <div class="wsus__single_testimonial_body">
+                                <p class="feedback">{!! $testimonial->description !!}</p>
+                                <span class="rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </span>
                             </div>
-                        </div>
-                        <div class="wsus__single_testimonial_body">
-                            <p class="feedback">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut accusamus
-                                praesentium quaerat nihil magnam a porro eaque numquam</p>
-                            <span class="rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </span>
-                        </div>
-                        <div class="wsus__testimonial_product">
-                            <img src="/custom-images/testimonial-product-20230305045641.png" alt="product"
-                                class="img-fluid w-100">
+                            <div class="wsus__testimonial_product">
+                                <img src="{{ asset('upload/testimonial/product/'.$testimonial->product_image) }}" alt="product" class="img-fluid w-100">
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-xl-4 wow fadeInUp" data-wow-duration="1s">
-                    <div class="wsus__single_testimonial">
-                        <div class="wsus__testimonial_header d-flex flex-wrap align-items-center">
-                            <div class="img">
-                                <img src="/custom-images/john-abraham-20230305045819.jpg" alt="clients"
-                                    class="img-fluid w-100">
-                            </div>
-                            <div class="text">
-                                <h4>John Abraham</h4>
-                                <p>MBBS, FCPS, FRCS</p>
-                            </div>
-                        </div>
-                        <div class="wsus__single_testimonial_body">
-                            <p class="feedback">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut accusamus
-                                praesentium quaerat nihil magnam a porro eaque numquam</p>
-                            <span class="rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="far fa-star"></i>
-                            </span>
-                        </div>
-                        <div class="wsus__testimonial_product">
-                            <img src="/custom-images/testimonial-product-20230305045819.png" alt="product"
-                                class="img-fluid w-100">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-4 wow fadeInUp" data-wow-duration="1s">
-                    <div class="wsus__single_testimonial">
-                        <div class="wsus__testimonial_header d-flex flex-wrap align-items-center">
-                            <div class="img">
-                                <img src="/custom-images/jose-larry-20230305050016.jpg" alt="clients"
-                                    class="img-fluid w-100">
-                            </div>
-                            <div class="text">
-                                <h4>Jose Larry</h4>
-                                <p>Web Designer</p>
-                            </div>
-                        </div>
-                        <div class="wsus__single_testimonial_body">
-                            <p class="feedback">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut accusamus
-                                praesentium quaerat nihil magnam a porro eaque numquam</p>
-                            <span class="rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </span>
-                        </div>
-                        <div class="wsus__testimonial_product">
-                            <img src="/custom-images/testimonial-product-20230305050016.png" alt="product"
-                                class="img-fluid w-100">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-4 wow fadeInUp" data-wow-duration="1s">
-                    <div class="wsus__single_testimonial">
-                        <div class="wsus__testimonial_header d-flex flex-wrap align-items-center">
-                            <div class="img">
-                                <img src="/custom-images/david-richard-20230305050113.jpg" alt="clients"
-                                    class="img-fluid w-100">
-                            </div>
-                            <div class="text">
-                                <h4>David Richard</h4>
-                                <p>Graphic Designer</p>
-                            </div>
-                        </div>
-                        <div class="wsus__single_testimonial_body">
-                            <p class="feedback">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut accusamus
-                                praesentium quaerat nihil magnam a porro eaque numquam</p>
-                            <span class="rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="far fa-star"></i>
-                                <i class="far fa-star"></i>
-                            </span>
-                        </div>
-                        <div class="wsus__testimonial_product">
-                            <img src="/custom-images/testimonial-product-20230305050113.png" alt="product"
-                                class="img-fluid w-100">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-4 wow fadeInUp" data-wow-duration="1s">
-                    <div class="wsus__single_testimonial">
-                        <div class="wsus__testimonial_header d-flex flex-wrap align-items-center">
-                            <div class="img">
-                                <img src="/custom-images/david-simmons-20230305050400.jpg" alt="clients"
-                                    class="img-fluid w-100">
-                            </div>
-                            <div class="text">
-                                <h4>David Simmons</h4>
-                                <p>MBBS, FCPS, FRCS</p>
-                            </div>
-                        </div>
-                        <div class="wsus__single_testimonial_body">
-                            <p class="feedback">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut accusamus
-                                praesentium quaerat nihil magnam a porro eaque numquam</p>
-                            <span class="rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="far fa-star"></i>
-                            </span>
-                        </div>
-                        <div class="wsus__testimonial_product">
-                            <img src="/custom-images/testimonial-product-20230305050400.png" alt="product"
-                                class="img-fluid w-100">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-4 wow fadeInUp" data-wow-duration="1s">
-                    <div class="wsus__single_testimonial">
-                        <div class="wsus__testimonial_header d-flex flex-wrap align-items-center">
-                            <div class="img">
-                                <img src="/custom-images/mary-patricia-20230305050436.jpg" alt="clients"
-                                    class="img-fluid w-100">
-                            </div>
-                            <div class="text">
-                                <h4>Mary Patricia</h4>
-                                <p>Senior Chef</p>
-                            </div>
-                        </div>
-                        <div class="wsus__single_testimonial_body">
-                            <p class="feedback">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut accusamus
-                                praesentium quaerat nihil magnam a porro eaque numquam</p>
-                            <span class="rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </span>
-                        </div>
-                        <div class="wsus__testimonial_product">
-                            <img src="/custom-images/testimonial-product-20230305050436.png" alt="product"
-                                class="img-fluid w-100">
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </section>
@@ -904,8 +392,7 @@
                             <span>
                                 <img src="/user/images/heading_shapes.png" alt="shapes" class="img-fluid w-100">
                             </span>
-                            <p>Objectively pontificate quality models before intuitive information. Dramatically
-                                recaptiualize multifunctional.</p>
+                            <p>Explore what's new in the world of food and flavor.</p>
                         </div>
                     </div>
                 </div>

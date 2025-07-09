@@ -15,6 +15,7 @@ class Product extends Model
         'badge',
         'price',
         'discount',
+        'today_special',
         'images',
         'status',
         'category_id',

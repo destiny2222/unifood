@@ -51,6 +51,8 @@ class CheckoutController extends Controller
                 return back()->with('error', 'Your cart is empty.');
             }
 
+            // if()
+
             
             // Generate a unique invoice number 
             $invoiceNumber = OrderItem::generateInvoiceNumber();

@@ -153,7 +153,7 @@
                     <span class="nav-text"> Reviews </span>
                </a>
           </li>
-          {{-- <li class="nav-item">
+          <li class="nav-item">
                <a class="nav-link menu-arrow" href="#sidebarPurchases" data-bs-toggle="collapse" role="button"
                     aria-expanded="false" aria-controls="sidebarPurchases">
                     <span class="nav-icon">
@@ -164,30 +164,51 @@
                <div class="collapse" id="sidebarPurchases">
                     <ul class="nav sub-navbar-nav">
                          <li class="sub-nav-item">
-                              <a class="sub-nav-link" href="{{ route('admin.home.page') }}">Home Page</a>
+                              <a class="sub-nav-link" href="{{ route('admin.advertisement.index') }}">Advertisement</a>
+                         </li>
+                         <li class="sub-nav-item">
+                              <a class="sub-nav-link" href="{{ route('admin.app-section.index') }}">App Section</a>
+                         </li>
+                         <li class="sub-nav-item">
+                              <a class="sub-nav-link" href="{{ route('admin.contact.index') }}">Contact Us</a>
+                         </li>
+                         <li class="sub-nav-item">
+                              <a class="sub-nav-link" href="{{ route('admin.counter.index') }}">Counter</a>
+                         </li>
+                         <li class="sub-nav-item">
+                              <a class="sub-nav-link" href="{{ route('admin.faq.index') }}">Faq</a>
+                         </li>
+                         <li class="sub-nav-item">
+                              <a class="sub-nav-link" href="{{ route('admin.testimonial.index') }}">Testimonial</a>
                          </li>
                          <li class="sub-nav-item">
                               <a class="sub-nav-link" href="{{ route('admin.slider.index') }}">Slider</a>
                          </li>
                          <li class="sub-nav-item">
-                              <a class="sub-nav-link" href="{{ route('admin.shipping.index') }}">Shipping</a>
+                              <a class="sub-nav-link" href="{{ route('admin.partner.index') }}">Partner</a>
                          </li>
                          <li class="sub-nav-item">
-                              <a class="sub-nav-link" href="{{ route('admin.faq.index') }}">FAQ</a>
+                              <a class="sub-nav-link" href="{{ route('admin.service.index') }}">Service</a>
                          </li>
                          <li class="sub-nav-item">
-                              <a class="sub-nav-link" href="{{ route('admin.post.index') }}">Post</a>
+                              <a class="sub-nav-link" href="{{ route('admin.about.index') }}">About Us</a>
+                         </li>
+                         <li class="sub-nav-item">
+                              <a class="sub-nav-link" href="{{ route('admin.policy.index') }}">Privacy Policy</a>
+                         </li>
+                         <li class="sub-nav-item">
+                              <a class="sub-nav-link" href="{{ route('admin.terms.index') }}">Terms And Conditions</a>
                          </li>
                     </ul>
                </div>
-          </li> --}}
-          {{-- <li class="nav-item">
+          </li>
+          <li class="nav-item">
                <a class="nav-link" href="{{ route('admin.settings.index') }}">
                     <span class="nav-icon">
                          <iconify-icon icon="solar:settings-bold-duotone"></iconify-icon>
                     </span>
                     <span class="nav-text"> Settings </span>
                </a>
-          </li> --}}
+          </li>
      </ul>
 </div>

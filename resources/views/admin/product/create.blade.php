@@ -75,9 +75,16 @@
                             </div>
                             <div class="col-lg-4">
                                 <label for="product-stock" class="form-label">Status</label>
-                                <select name="status" class="form-control" id="choices-multiple-remove-button" data-choices data-choices-removeItem">
+                                <select name="status" class="form-control" id="choices-multiple-remove-button">
                                     <option value="1">Active</option>
                                     <option value="0">Inactive</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4">
+                                <label>Today Special <span class="text-danger">*</span></label>
+                                <select name="today_special" class="form-control">
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
                                 </select>
                             </div>
                         </div>

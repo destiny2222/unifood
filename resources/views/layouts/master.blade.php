@@ -93,17 +93,6 @@
      <script>
           // Initialize CKEditor
           ClassicEditor
-              .create(document.querySelector('textarea'))
-              .then(editor => {
-                  console.log('Editor was initialized', editor);
-              })
-              .catch(error => {
-                  console.error('Error during initialization of the editor', error);
-              });
-      </script>
-     {{-- <script>
-          // Initialize CKEditor
-          ClassicEditor
               .create(document.querySelector('#description'))
               .then(editor => {
                   console.log('Editor was initialized', editor);
@@ -111,7 +100,18 @@
               .catch(error => {
                   console.error('Error during initialization of the editor', error);
               });
-      </script> --}}
+      </script>
+     <script>
+          // Initialize CKEditor
+          ClassicEditor
+              .create(document.querySelector('#meta-description'))
+              .then(editor => {
+                  console.log('Editor was initialized', editor);
+              })
+              .catch(error => {
+                  console.error('Error during initialization of the editor', error);
+              });
+      </script>
       @stack('scripts')
 </body>
 </html>

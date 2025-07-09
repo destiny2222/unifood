@@ -38,6 +38,14 @@
         .break-all {
             word-break: break-all;
         }
+        .order-details {
+            margin-top: 20px;
+            text-align: left;
+        }
+        .order-details ul {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
     </style>
 </head>
 <body>
@@ -50,6 +58,22 @@
             <h1>Reset Your Password</h1>
             <p>Click the link below to reset your password:</p>
             <p><a href="{{ $actionUrl }}" class="break-all">{{ $actionUrl }}</a></p>
+        @elseif ($actionText === 'New Order Notification')
+            <h1>New Order Notification</h1>
+            <p>A new order has been placed by {{ $userName ?? 'a user' }}.</p>
+            @if (isset($orderDetails) && !empty($orderDetails))
+                <div class="order-details">
+                    <p><strong>Order Details:</strong></p>
+                    <ul>
+                        @foreach ($orderDetails as $detail)
+                            <li>Product: {{ $detail['product_name'] }}, Quantity: {{ $detail['quantity'] }}, Price: ${{ $detail['price'] }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @else
+                <p>No order details available.</p>
+            @endif
+            <a href="{{ $actionUrl }}" class="button">View Orders</a>
         @else
             <h1>{{ $actionText ?? 'Notification' }}</h1>
             <p><a href="{{ $actionUrl }}" class="break-all">{{ $actionUrl }}</a></p>

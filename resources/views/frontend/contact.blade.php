@@ -18,59 +18,57 @@
         <div class="row">
             <div class="col-xl-4 col-md-6 col-lg-4 wow fadeInUp" data-wow-duration="1s">
                 <div class="wsus__contact_info"
-                    style="background: url({{ asset('images/contact-us.jpg') }});">
-                    <span><i class="fal fa-phone-alt"></i></span>
+                    style="background: url({{ asset('upload/contact/'.$contact->existing_image ?? '') }});">
+                    <span><i class="fa fa-phone-alt"></i></span>
                     <h3>call</h3>
-                    <p>+1347-430-9510<br>
-                        +1347-430-9510</p>
+                    <p>{{ $contact->phone ?? '' }}</p>
                 </div>
             </div>
             <div class="col-xl-4 col-md-6 col-lg-4 wow fadeInUp" data-wow-duration="1s">
                 <div class="wsus__contact_info"
-                    style="background: url({{ asset('images/contact-us.jpg') }});">
-                    <span><i class="fal fa-envelope"></i></span>
+                    style="background: url({{ asset('upload/contact/'.$contact->existing_image ?? '') }});">
+                    <span><i class="fa fa-envelope"></i></span>
                     <h3>Email</h3>
-                    <p>example@gmail.com<br>
-                        example@gmail.com</p>
+                    <p>{{ $contact->email ?? '' }}</p>
                 </div>
             </div>
             <div class="col-xl-4 col-md-6 col-lg-4 wow fadeInUp" data-wow-duration="1s">
                 <div class="wsus__contact_info"
-                    style="background: url({{ asset('images/contact-us.jpg') }});">
+                    style="background: url({{ asset('upload/contact/'.$contact->existing_image ?? '') }});">
                     <span><i class="fas fa-street-view"></i></span>
                     <h3>Location</h3>
-                    <p>7232 Broadway Suite 308, Jackson Heights, 11372, NY, United States</p>
+                    <p>{{ $contact->address ?? '' }}</p>
                 </div>
             </div>
         </div>
         <div class="wsus__contact_form_area mt_100 xs_mt_70">
             <div class="row">
                 <div class="col-xl-7 wow fadeInUp" data-wow-duration="1s">
-                    <form class="wsus__contact_form" method="POST"  action="">
-                        <h3>Feel free to contact us</h3>
+                    <form class="wsus__contact_form" method="POST"  action="{{ route('frontend.contact.store') }}">
                         @csrf
+                        <h3>Feel free to contact us</h3>
                         <div class="row">
                             <div class="col-xl-12 col-lg-6">
                                 <div class="wsus__contact_form_input">
-                                    <span><i class="fal fa-user-alt"></i></span>
+                                    <span><i class="fa fa-user-alt"></i></span>
                                     <input type="text" name="name" placeholder="Name">
                                 </div>
                             </div>
                             <div class="col-xl-6 col-lg-6">
                                 <div class="wsus__contact_form_input">
-                                    <span><i class="fal fa-envelope"></i></span>
+                                    <span><i class="fa fa-envelope"></i></span>
                                     <input type="email" name="email" placeholder="Email">
                                 </div>
                             </div>
                             <div class="col-xl-6 col-lg-6">
                                 <div class="wsus__contact_form_input">
-                                    <span><i class="fal fa-phone-alt"></i></span>
+                                    <span><i class="fa fa-phone-alt"></i></span>
                                     <input type="text" name="phone" placeholder="Phone">
                                 </div>
                             </div>
                             <div class="col-xl-12 col-lg-6">
                                 <div class="wsus__contact_form_input">
-                                    <span><i class="fal fa-book"></i></span>
+                                    <span><i class="fa fa-book"></i></span>
                                     <input type="text" placeholder="Subject" name="subject">
                                 </div>
                             </div>

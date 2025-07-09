@@ -17,7 +17,7 @@
 
     <link rel="icon" type="image/png" href="/images/logo/favicon.png">
     <link rel="stylesheet" href="/user/css/all.min.css">
-    <link rel="stylesheet" href="/user/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/user/css/spacing.css">
     <link rel="stylesheet" href="/user/css/slick.css">
     <link rel="stylesheet" href="/user/css/nice-select.css">
@@ -50,10 +50,10 @@
             <div class="row">
                 <div class="col-xl-6 col-md-6 d-none d-md-block">
                     <ul class="wsus__topbar_info d-flex flex-wrap">
-                        <li><a href="mailto:example@gmail.com"><i class="fas fa-envelope"></i>
-                                example@gmail.com</a>
+                        <li><a href="mailto:inquiry@mightyolu.com "><i class="fas fa-envelope"></i>
+                                inquiry@mightyolu.com </a>
                         </li>
-                        <li><a href="callto:+1347-430-9510"><i class="fas fa-phone-alt"></i> +1347-430-9510</a></li>
+                        <li><a href="callto:07867986338"><i class="fas fa-phone-alt"></i> 07867986338</a></li>
                     </ul>
                 </div>
                 <div class="col-xl-6 col-md-6">
@@ -68,10 +68,9 @@
                             </form>
                         </div>
                         <ul class="topbar_icon d-flex flex-wrap">
-                            <li><a href="https://www.facebook.com/"><i class="fab fa-facebook-f"></i></a></li>
-                            <li><a href="https://www.twitter.com/"><i class="fab fa-twitter"></i></a></li>
-                            <li><a href="https://www.linkedin.com/"><i class="fab fa-linkedin-in"></i></a></li>
-                            <li><a href="https://www.instagram.com/"><i class="fab fa-instagram"></i></a></li>
+                            <li><a href="https://www.facebook.com/@MightyOlu"><i class="fab fa-facebook-f"></i></a></li>
+                            <li><a href="https://www.tiktok.com/@MightyOlu"><i class="fab fa-tiktok"></i></a></li>
+                            <li><a href="https://www.instagram.com/@MightyOlu"><i class="fab fa-instagram"></i></a></li>
                         </ul>
                     </div>
                 </div>
@@ -133,7 +132,11 @@
                                 class="topbar_cart_qty">{{ count($carts) }}</span></a>
                     </li>
                     <li>
-                        <a href="/login"><i class="fas fa-user"></i></a>
+                        @auth
+                            <a href="/dashboard"><i class="fas fa-user"></i></a>
+                        @else
+                            <a href="/login"><i class="fas fa-user"></i></a>
+                        @endauth
                     </li>
                     <li>
                         <a class="common_btn" href="/login">Login</a>
@@ -297,10 +300,10 @@
                                 suffered.</span>
                             <p class="info"><i class="far fa-map-marker-alt"></i> 7232 Broadway 308, United States
                             </p>
-                            <a class="info" href="callto:+1347-430-9510"><i class="fas fa-phone-alt"></i>
-                                +1347-430-9510</a>
-                            <a class="info" href="mailto:example@gmail.com"><i class="fas fa-envelope"></i>
-                                example@gmail.com</a>
+                            <a class="info" href="callto:07867986338"><i class="fas fa-phone-alt"></i>
+                                07867986338</a>
+                            <a class="info" href="mailto:inquiry@mightyolu.com "><i class="fas fa-envelope"></i>
+                                inquiry@mightyolu.com </a>
                         </div>
                     </div>
                     <div class="col-lg-2 col-sm-4 col-md-6">
@@ -324,29 +327,26 @@
                             <h3>Help Link</h3>
                             <ul>
                                 <li><a href="/blog">Our Blogs</a></li>
-                                <li><a href="#">Testimonial</a></li>
-                                <li><a href="#">Privacy and Policy</a></li>
-                                <li><a href="#">Terms and Conditions</a></li>
+                                <li><a href="/faq">FAQ</a></li>
+                                <li><a href="{{ route('frontend.privacy-policy') }}">Privacy and Policy</a></li>
+                                <li><a href="{{ route('frontend.terms-and-condition') }}">Terms and Conditions</a></li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-lg-4 col-sm-8 col-md-6 order-lg-4">
                         <div class="wsus__footer_content">
                             <h3>Subscribe to Newsletter</h3>
-                            <form id="subscribe_form">
-                                <input type="email" placeholder="Email" name="email">
+                            <form id="subscribe_form" action="{{ route('subscribe') }}">
+                                @csrf
+                                <input type="email" name="email" required placeholder="Enter your email">
                                 <button id="subscribe_btn" type="submit"><i class="fas fa-paper-plane"></i></button>
                             </form>
                             <div class="wsus__footer_social_link">
                                 <h5>Follow us:</h5>
                                 <ul class="d-flex flex-wrap">
-                                    <li><a href="https://www.facebook.com/"><i class="fab fa-facebook-f"></i></a>
-                                    </li>
-                                    <li><a href="https://www.twitter.com/"><i class="fab fa-twitter"></i></a></li>
-                                    <li><a href="https://www.linkedin.com/"><i class="fab fa-linkedin-in"></i></a>
-                                    </li>
-                                    <li><a href="https://www.instagram.com/"><i class="fab fa-instagram"></i></a>
-                                    </li>
+                                    <li><a href="https://www.facebook.com/@MightyOlu"><i class="fab fa-facebook-f"></i></a></li>
+                                    <li><a href="https://www.tiktok.com/@MightyOlu"><i class="fab fa-tiktok"></i></a></li>
+                                    <li><a href="https://www.instagram.com/@MightyOlu"><i class="fab fa-instagram"></i></a></li>
                                 </ul>
                             </div>
                         </div>
@@ -380,7 +380,7 @@
     <!--jquery library js-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!--bootstrap js-->
-    <script src="/user/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <!--font-awesome js-->
     <script src="/user/js/Font-Awesome.js"></script>
     <!-- slick slider -->

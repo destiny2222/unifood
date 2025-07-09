@@ -16,3 +16,9 @@ Route::get('/contact', [FrontendController::class, 'contact'])->name('frontend.c
 Route::post('/posts/{post}/comments', [FrontendController::class, 'commentStore'])->name('comments.store');
 Route::get('/products/search', [FrontendController::class, 'searchProduct'])->name('frontend.product.search');
 Route::get('/search', [FrontendController::class, 'searchEngine'])->name('search');
+Route::get('terms-and-condition', [FrontendController::class, 'terms'])->name('frontend.terms-and-condition');
+Route::get('privacy-policy', [FrontendController::class, 'privacy'])->name('frontend.privacy-policy');
+Route::get('/faq', [FrontendController::class, 'faq'])->name('frontend.faq');
+Route::post('/contact/store', [FrontendController::class, 'contactStore'])->name('frontend.contact.store');
+
+Route::post('/subscribe', [FrontendController::class, 'subscribe'])->name('subscribe');

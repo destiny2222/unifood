@@ -37,7 +37,7 @@
                                             {{ $loop->index + 1 }}
                                         </td>
                                         <td>
-                                            <img src="{{ asset('profile/'.$user->image) }}" width="50px" height="50px" alt="">
+                                            <img src="{{ asset('images/profile/'.$user->profile_picture) }}" width="50px" height="50px" alt="">
                                         </td>
                                         <td>
                                             {{ $user->name }}

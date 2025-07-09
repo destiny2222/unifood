@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('heading', 'Home Slide List')
+@section('heading', 'Home Testimonial List')
 @section('content')
 <!-- Start Container Fluid -->
 <div class="container-xxl">
@@ -11,9 +11,9 @@
                     <div class=" d-flex justify-content-between">
                         <h4 class="card-title d-flex align-items-center gap-1">
                             <iconify-icon icon="solar:settings-bold-duotone" class="text-primary fs-20"></iconify-icon>
-                            slider List
+                            Testimonial List
                         </h4>
-                        <a href="{{ route('admin.slider.create') }}" class="btn btn-primary">Add  Slide</a>
+                        <a href="{{ route('admin.testimonial.create') }}" class="btn btn-primary">Add  Testimonial</a>
                     </div>
                 </div>
                 <div class="card-body">
@@ -26,33 +26,43 @@
                                                S/N
                                            </th>
                                            <th>Image</th>
-                                           <th>Title</th>
-                                           <th>Subtitle</th>
+                                           <th>Name</th>
+                                           <th>Designation</th>
+                                           <th>Status</th>
                                            <th>Description</th>
                                            <th>Action</th>
                                       </tr>
                                  </thead>
                                  <tbody>
-                                    @foreach ($sliders as $slide)
+                                    @foreach ($testimonials as $testimonial)
                                     <tr>
                                         <td>
                                             {{ $loop->index + 1 }}
                                         </td>
                                         <td>
-                                            <img src="{{ asset('upload/slider/'.$slide->image) }}" width="50px" height="50px" alt="">
+                                            <img src="{{ asset('upload/testimonial/'.$testimonial->existing_image) }}" width="50px" height="50px" alt="">
                                         </td>
                                         <td>
-                                            {{ $slide->title }}
+                                            {{ $testimonial->name }}
                                         </td>
-                                        <td>{{ $slide->sub_title }}</td>
                                         <td>
-                                            {!! $slide->description !!}
+                                            {{ $testimonial->designation }}
+                                        </td>
+                                        <td>
+                                            @if ($testimonial->status == 1)
+                                                <span class="badge bg-success">Active</span>
+                                            @else
+                                                <span class="badge bg-danger">Inactive</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            {!! $testimonial->description !!}
                                         </td>
                                         <td>
                                             <div class="d-flex gap-2">
-                                                <a href="{{ route('admin.slider.edit', $slide->id)  }}" class="btn btn-soft-primary btn-sm"><iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18"></iconify-icon></a>
-                                                <a href="{{ route('admin.slider.delete',$slide->id) }}" class="btn btn-soft-danger btn-sm" onclick="event.preventDefault(); document.getElementById('delete-{{ $slide->id }}').submit() "><iconify-icon icon="solar:trash-bin-minimalistic-2-broken" class="align-middle fs-18"></iconify-icon></a>
-                                                <form action="{{ route('admin.slider.delete',$slide->id) }}" class="d-none" id="delete-{{ $slide->id }}" method="post">
+                                                <a href="{{ route('admin.testimonial.edit', $testimonial->id)  }}" class="btn btn-soft-primary btn-sm"><iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18"></iconify-icon></a>
+                                                <a href="{{ route('admin.testimonial.delete',$testimonial->id) }}" class="btn btn-soft-danger btn-sm" onclick="event.preventDefault(); document.getElementById('delete-{{ $testimonial->id }}').submit() "><iconify-icon icon="solar:trash-bin-minimalistic-2-broken" class="align-middle fs-18"></iconify-icon></a>
+                                                <form action="{{ route('admin.testimonial.delete',$testimonial->id) }}" class="d-none" id="delete-{{ $testimonial->id }}" method="post">
                                                     @csrf
                                                     @method('delete')
                                                 </form>

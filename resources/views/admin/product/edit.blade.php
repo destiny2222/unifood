@@ -77,6 +77,13 @@
                                     <option value="0" {{ $product->status == 0 ? 'selected' : ''}}>Inactive</option>
                                 </select>
                             </div>
+                            <div class="col-lg-4">
+                                <label>Today Special <span class="text-danger">*</span></label>
+                                <select name="today_special" class="form-control">
+                                    <option value="0" {{ ($product->status == 1) ? 'selected' : ''}}>No</option>
+                                    <option value="1" {{ $product->status == 0 ? 'selected' : ''}}>Yes</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -20,13 +20,40 @@
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label for="meta-name" class="form-label"> Title</label>
-                                    <input type="text" id="meta-name" name="title"   class="form-control" placeholder="Title">
+                                    <input type="text" id="meta-name" name="title_one"   class="form-control" placeholder="Title">
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label for="meta-name" class="form-label">Subtitle</label>
-                                    <input type="text" id="meta-name" name="sub_title"   class="form-control" placeholder="Title">
+                                    <input type="text" id="meta-name" name="title_two"   class="form-control" placeholder="Title">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label for="meta-name" class="form-label"> Offer text </label>
+                                    <input type="text" id="meta-name" name="offer_text"   class="form-control" placeholder="Title">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label for="meta-name" class="form-label">Button link</label>
+                                    <input type="text" id="meta-name" name="link"   class="form-control" placeholder="Title">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label for="meta-name" class="form-label">Serial</label>
+                                    <input type="text" id="meta-name" name="serial"   class="form-control" placeholder="Title">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label for="product-stock" class="form-label">Status</label>
+                                    <select name="status" class="form-control" id="choices-multiple-remove-button">
+                                        <option value="1" >Active</option>
+                                        <option value="0" >Inactive</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-lg-12">

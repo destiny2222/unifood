@@ -31,6 +31,7 @@ class UpdateRequest extends FormRequest
             'images' => ['array', 'nullable'],
             'images.*' => ['image', 'nullable', 'mimes:jpeg,png,jpg,gif,svg'],
             'status'=>['nullable', 'boolean'],
+            'today_special'=>['nullable', 'boolean'],
         ];
     }
 }

@@ -1,6 +1,10 @@
 <?php
 
+use App\Http\Controllers\Admin\PageController;
+use App\Http\Controllers\Admin\PluginController;
 use App\Http\Controllers\Admin\PostCategoryController;
+use App\Http\Controllers\Admin\SliderController;
+use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\ReviewController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\FaqController;
@@ -11,7 +15,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\DeliveryAreaController;
-use App\Http\Controllers\Admin\SiteManagementController;
+use App\Http\Controllers\Admin\PartnerController;
 use App\Http\Controllers\Admin\UserManagementController;
 
 
@@ -85,15 +89,60 @@ Route::prefix('admin')->name('admin.')->group(function (){
         Route::delete('/delivery-area/{id}/delete', [DeliveryAreaController::class, 'destroy'])->name('delivery.area.delete');
 
         // slider
-        // Route::get('/slider', [SiteManagementController::class,'sliderIndex'])->name('slider.index');
-        // Route::get('/slider/create', [SiteManagementController::class,'sliderCreate'])->name('slider.create');
-        // Route::get('/slider/{id}/edit', [SiteManagementController::class,'sliderEdit'])->name('slider.edit');
-        // Route::post('/slider/store', [SiteManagementController::class,'sliderStore'])->name('slider.store');
-        // Route::put('/slider/{id}/update', [SiteManagementController::class,'sliderUpdate'])->name('slider.update');
-        // Route::delete('/slider/{id}/delete', [SiteManagementController::class,'sliderDelete'])->name('slider.delete');
+        Route::get('/slider', [SliderController::class,'index'])->name('slider.index');
+        Route::get('/slider/create', [SliderController::class,'create'])->name('slider.create');
+        Route::get('/slider/{id}/edit', [SliderController::class,'edit'])->name('slider.edit');
+        Route::post('/slider/store', [SliderController::class,'store'])->name('slider.store');
+        Route::put('/slider/{id}/update', [SliderController::class,'update'])->name('slider.update');
+        Route::delete('/slider/{id}/delete', [SliderController::class,'destroy'])->name('slider.delete');
+
+        // Advertisement route
+        Route::get('/advertisement', [PageController::class,'advertisementPage'])->name('advertisement.index');
+        Route::get('/advertisement/create', [PageController::class,'advertisementCreate'])->name('advertisement.create');
+        Route::post('/advertisement/store', [PageController::class,'advertisementStore'])->name('advertisement.store');
+        Route::get('/advertisement/{id}/edit', [PageController::class,'advertisementEdit'])->name('advertisement.edit');
+        Route::put('/advertisement/{id}/update', [PageController::class,'advertisementUpdate'])->name('advertisement.update');
+        Route::delete('/advertisement/{id}/delete', [PageController::class,'advertisementDelete'])->name('advertisement.delete');
+
+        // App Section route
+        Route::get('/app-section', [PageController::class,'AppSectionPage'])->name('app-section.index');
+        Route::post('/app-section/store', [PageController::class,'AppSectionStore'])->name('app-section.store');
+
+        // Contact route
+        Route::get('/contact', [PageController::class,'contactPage'])->name('contact.index');
+        Route::post('/contact/store', [PageController::class,'contactStore'])->name('contact.store');
+
+        // Counter route
+        Route::get('/counter', [PageController::class,'counterPage'])->name('counter.index');
+        Route::get('/counter/create', [PageController::class,'counterCreate'])->name('counter.create');
+        Route::post('/counter/store', [PageController::class,'counterStore'])->name('counter.store');
+        Route::delete('/counter/{id}/delete', [PageController::class,'counterDelete'])->name('counter.delete');
+        Route::get('/counter/{id}/edit', [PageController::class,'counterEdit'])->name('counter.edit');
+        Route::put('/counter/{id}/update', [PageController::class,'counterUpdate'])->name('counter.update');
+
+
+        // Service route
+        Route::get('/service', [PageController::class,'servicePage'])->name('service.index');
+        Route::get('/service/create', [PageController::class,'serviceCreate'])->name('service.create');
+        Route::post('/service/store', [PageController::class,'serviceStore'])->name('service.store');
+        Route::get('/service/{id}/edit', [PageController::class,'serviceEdit'])->name('service.edit');
+        Route::put('/service/{id}/update', [PageController::class,'serviceUpdate'])->name('service.update');
+        Route::delete('/service/{id}/delete', [PageController::class,'serviceDelete'])->name('service.delete');
+
+        // About route
+        Route::get('/about-us', [PageController::class,'aboutPage'])->name('about.index');
+        Route::post('/about/store', [PageController::class,'aboutStore'])->name('about.store');
 
         // user management
         Route::get('/customer/list', [UserManagementController::class,'index'])->name('customer.index');
+
+        // partner route
+        Route::get('/partner/list', [PartnerController::class,'index'])->name('partner.index');
+        Route::get('/partner/create', [PartnerController::class,'create'])->name('partner.create');
+        Route::post('/partner/store', [PartnerController::class,'store'])->name('partner.store');
+        Route::get('/partner/{id}/edit', [PartnerController::class,'edit'])->name('partner.edit');
+        Route::put('/partner/{id}/update', [PartnerController::class,'update'])->name('partner.update');
+        Route::delete('/partner/{id}/delete', [PartnerController::class,'destroy'])->name('partner.delete');
 
         // Post Route
         Route::get('/post/list', [PostController::class, 'index'])->name('post.index');
@@ -118,17 +167,36 @@ Route::prefix('admin')->name('admin.')->group(function (){
 
 
         // Faq controller
-        // Route::get('/faq/list', [FaqController::class, 'index'])->name('faq.index');
-        // Route::get('/faq/create', [FaqController::class, 'create'])->name('faq.create');
-        // Route::get('/faq/{id}/edit', [FaqController::class, 'edit'])->name('faq.edit');
-        // Route::post('/faq/store', [FaqController::class, 'store'])->name('faq.store');
-        // Route::put('/faq/{id}/update', [FaqController::class, 'update'])->name('faq.update');
-        // Route::delete('/faq/{id}/delete', [FaqController::class, 'destroy'])->name('faq.delete');
-        
+        Route::get('/faq/list', [FaqController::class, 'index'])->name('faq.index');
+        Route::get('/faq/create', [FaqController::class, 'create'])->name('faq.create');
+        Route::get('/faq/{id}/edit', [FaqController::class, 'edit'])->name('faq.edit');
+        Route::post('/faq/store', [FaqController::class, 'store'])->name('faq.store');
+        Route::put('/faq/{id}/update', [FaqController::class, 'update'])->name('faq.update');
+        Route::delete('/faq/{id}/delete', [FaqController::class, 'destroy'])->name('faq.delete');
+
+        // testimonial
+        Route::get('/testimonial/list', [TestimonialController::class, 'index'])->name('testimonial.index');
+        Route::get('/testimonial/create', [TestimonialController::class, 'create'])->name('testimonial.create');
+        Route::get('/testimonial/{id}/edit', [TestimonialController::class, 'edit'])->name('testimonial.edit');
+        Route::post('/testimonial/store', [TestimonialController::class, 'store'])->name('testimonial.store');
+        Route::put('/testimonial/{id}/update', [TestimonialController::class, 'update'])->name('testimonial.update');
+        Route::delete('/testimonial/{id}/delete', [TestimonialController::class, 'destroy'])->name('testimonial.delete');
         
         // plugin
-        // Route::get('/plugin', [PluginController::class, 'index'])->name('plugin.index');
-        // Route::post('/plugin/store', [PluginController::class, 'store'])->name('plugin.firebase.store');
+        Route::get('/plugin', [PluginController::class, 'index'])->name('plugin.index');
+        Route::post('/plugin/store', [PluginController::class, 'store'])->name('plugin.firebase.store');
+
+        // term
+        Route::get('/term/list', [PageController::class, 'terms'])->name('terms.index');
+        Route::post('/term/store', [PageController::class, 'termStore'])->name('terms.store');
+
+        // policy
+        Route::get('/policy/list', [PageController::class, 'policy'])->name('policy.index');
+        Route::post('/policy/store', [PageController::class, 'policyStore'])->name('policy.store');
+
+        // whyChooseUs
+        // Route::get('/why-choose-us/list', [PageController::class, 'whyChoose'])->name('why-choose-us.index');
+        Route::post('/why-choose-us/store', [PageController::class, 'whyChooseStore'])->name('why-choose-us.store');
 
 
         // update profile and change profile

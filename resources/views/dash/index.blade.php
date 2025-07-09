@@ -408,7 +408,7 @@
                                     </div>
                                     <div class="wsus__invoice">
                                         <a class="go_back"><i class="fas fa-long-arrow-alt-left" aria-hidden="true"></i> go back</a>
-                                        @include('partials.order_details')
+                                        <div id="load_order_details"></div>
                                     </div>
                                 </div>
                             </div>
@@ -683,28 +683,27 @@
     </script>
 
     <script>
-        (function($) {
-            "use strict";
-            $(document).ready(function () {
-                $(".view_invoice").on("click", function(){
-                    let order_id = $(this).data('order-id');
-                    $("#load_order_details").html('')
-                    $.ajax({
-                        type: 'get',
-                        url: "{{ url('dashboard/order') }}/" + order_id + "/edit",
-                        success: function (response) {
-                            $("#load_order_details").html(response);
-                        },
-                        error: function(response) {
-                            toastr.error("Server error occurred");
-                        }
-                    });
+(function($) {
+    "use strict";
+    $(document).ready(function () {
+        $(".view_invoice").on("click", function(){
+            let order_id = $(this).data('order-id');
+            $("#load_order_details").html('<p>Loading...</p>');
 
-                })
-
-
+            $.ajax({
+                type: 'get',
+                url: "{{ url('dashboard/order') }}/" + order_id + "/edit",
+                success: function (response) {
+                    $("#load_order_details").html(response);
+                },
+                error: function(response) {
+                    toastr.error("Server error occurred");
+                }
             });
-        })(jQuery);
-    </script>
+        });
+    });
+})(jQuery);
+</script>
+
 
 @endpush

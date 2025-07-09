@@ -21,7 +21,8 @@ return new class extends Migration
             $table->decimal('price', 10, 2);
             $table->decimal('discount', 10, 2);
             $table->string('images')->nullable();
-            $table->string('status')->default('active');
+            $table->string('status')->default(false);
+            $table->string('today_special')->default(false);
             $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
             $table->longText('description');
             $table->timestamps();

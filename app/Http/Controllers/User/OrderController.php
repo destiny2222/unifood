@@ -9,9 +9,11 @@ use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
-    public function edit($id){
-        $order = OrderItem::findOrFail($id);
-            return view('partials.order_details', compact('order'));
-        // } catch (\Exception $exception) {
+    public function edit($id)
+    {
+        $order = OrderItem::with(['product', 'shippingAddress.deliveryArea'])->findOrFail($id);
+        return view('partials.order_details', compact('order'));
     }
+
+
 }
