@@ -246,14 +246,16 @@ class FrontendController extends Controller
 
     public function subscribe(Request $request){
          $validator = Validator::make($request->all(), [
-            'email' => 'required|email|unique:subscribers,email',
-        ]);
+        'email' => 'required|email|unique:newslatters,email',
+    ], [
+        'email.required' => 'Please enter your email address.',
+        'email.email' => 'Please enter a valid email address.',
+        'email.unique' => 'This email is already subscribed.',
+    ]);
 
-        if ($validator->fails()) {
-            throw ValidationException::withMessages([
-                'email' => 'The provided email is already subscribed or invalid.',
-            ]);
-        }
+    if ($validator->fails()) {
+        return back()->with('error', $validator->errors()->first())->withInput();
+    }
 
         Newslatter::create(['email' => $request->email]);
 

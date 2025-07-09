@@ -296,10 +296,7 @@
                                 <img src="{{ asset('images/logo/footer_logo.png') }}" alt="UniFood"
                                     class="img-fluid w-100">
                             </a>
-                            <span>There are many variations of Lorem Ipsum available, but the majority have
-                                suffered.</span>
-                            <p class="info"><i class="far fa-map-marker-alt"></i> 7232 Broadway 308, United States
-                            </p>
+                            <p class="info"><i class="far fa-map-marker-alt"></i> Unit 10 western Halls Plaza Edinburgh, EH14 1SW, Wester Hails. </p>
                             <a class="info" href="callto:07867986338"><i class="fas fa-phone-alt"></i>
                                 07867986338</a>
                             <a class="info" href="mailto:inquiry@mightyolu.com "><i class="fas fa-envelope"></i>
@@ -336,7 +333,7 @@
                     <div class="col-lg-4 col-sm-8 col-md-6 order-lg-4">
                         <div class="wsus__footer_content">
                             <h3>Subscribe to Newsletter</h3>
-                            <form id="subscribe_form" action="{{ route('subscribe') }}">
+                            <form id="subscribe_form" action="{{ route('subscribe') }}" method="POST">
                                 @csrf
                                 <input type="email" name="email" required placeholder="Enter your email">
                                 <button id="subscribe_btn" type="submit"><i class="fas fa-paper-plane"></i></button>
