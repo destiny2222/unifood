@@ -27,6 +27,7 @@
 
      <!-- Theme Config js (Require in all Page) -->
      <script  src="/backend/js/config.js"></script>
+     @stack('styles')
 </head>
 
 <body>

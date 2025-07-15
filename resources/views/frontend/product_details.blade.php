@@ -20,11 +20,20 @@
                 <div class="exzoom hidden" id="exzoom">
                     <div class="exzoom_img_box wsus__menu_details_images">
                         <ul class='exzoom_img_ul'>
+                            {{-- Show the main product image first --}}
+                            @if ($product->image)
+                                <li>
+                                    <img class="zoom img-fluid w-100"
+                                        src="{{ asset('storage/upload/product/' . $product->image) }}"
+                                        alt="Main product image">
+                                </li>
+                            @endif
+                            {{-- Loop through additional photos --}}
                             @foreach ($product->photos as $image)
                                 <li>
                                     <img class="zoom img-fluid w-100"
-                                         src="{{ asset('storage/upload/product/' . $image->image_path) }}"
-                                         alt="product">
+                                        src="{{ asset('storage/upload/product/' . $image->image_path) }}"
+                                        alt="product">
                                 </li>
                             @endforeach
                         </ul>
@@ -42,41 +51,53 @@
             </div>
             <div class="col-lg-7 wow fadeInUp" data-wow-duration="1s">
                 <div class="wsus__menu_details_text">
-                    <h2>{{ $product->title   }}</h2>
+                    <h2>{{ $product->title }}</h2>
                     <h3 class="price">${{ $product->price }} <del>${{ $product->discount }}</del></h3>
                     <p class="short_description">
-                        {!! \Str::limit($product->description, 200)  !!}
+                        {!! \Str::limit($product->description, 200) !!}
                     </p>
 
-                    <form id="add_to_cart_form" action="{{ route('cart.add') }}" method="POST">
-                         @csrf
+                    <form id="add_to_cart_form" action="{{ route('cart.add') }}" method="POST" class="py-4">
+                        @csrf
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
                         <input type="hidden" name="slug" value="{{ $product->slug }}">
-
+                        <div class="details_size">
+                            <h5>Wight Unit</h5>
+                            <div class="form-check">
+                                <p>{{ $product->weight }}   <span>- {{ $product->weight_unit }}</span></p>
+                            </div>
+                        </div>
                         <div class="details_quentity">
                             <h5>select quantity</h5>
                             <div class="quentity_btn_area d-flex flex-wrapa align-items-center">
                                 <div class="quentity_btn">
-                                    <button type="button" class="btn btn-danger decrement_qty_detail_page"><i class="fal fa-minus"></i></button>
-                                    <input type="text" value="1" name="quantity" class="product_qty" readonly="">
-                                    <button type="button" class="btn btn-success increment_qty_detail_page"><i class="fal fa-plus"></i></button>
+                                    <button type="button" class="btn btn-danger decrement_qty_detail_page"><i
+                                            class="fal fa-minus"></i></button>
+                                    <input type="text" value="1" name="quantity" class="product_qty"
+                                        readonly="">
+                                    <button type="button" class="btn btn-success increment_qty_detail_page"><i
+                                            class="fal fa-plus"></i></button>
                                 </div>
 
                                 {{-- <h3>$ <span class="grand_total">0.00</span></h3> --}}
                             </div>
                         </div>
                         <ul class="details_button_area d-flex flex-wrap">
-                            <li class="me-2"><button type="submit" id="add_to_cart" class="common_btn" href="javascript:;">add to cart</button></li>
+                            <li class="me-2"><button type="submit" id="add_to_cart" class="common_btn"
+                                    href="javascript:;">add to cart</button></li>
                             <li>
-                                <a class="wishlist" href="{{ route('wishlist.add') }}" onclick="event.preventDefault(); document.getElementById('wish-{{ $product->id  }}').submit()" href="{{ route('wishlist.add') }}">
+                                <a class="wishlist" href="{{ route('wishlist.add') }}"
+                                    onclick="event.preventDefault(); document.getElementById('wish-{{ $product->id }}').submit()"
+                                    href="{{ route('wishlist.add') }}">
                                     <i class="fal fa-heart"></i>
-                                </a>         
-                                <form action="{{ route('wishlist.add') }}" id="wish-{{ $product->id  }}" method="post">
+                                </a>
+                                <form action="{{ route('wishlist.add') }}" id="wish-{{ $product->id }}"
+                                    method="post">
                                     @csrf
                                     <input type="hidden" name="product_id" value="{{ $product->id }}">
                                 </form>
                             </li>
-                                        
+
                         </ul>
 
                     </form>
@@ -100,7 +121,7 @@
                         <div class="tab-pane fade show active" id="pills-home" role="tabpanel"
                             aria-labelledby="pills-home-tab" tabindex="0">
                             <div class="menu_det_description">
-                                {!! \Str::limit($product->description, 200)  !!}
+                                {!! \Str::limit($product->description, 200) !!}
                             </div>
                         </div>
                         <div class="tab-pane fade" id="pills-contact" role="tabpanel"
@@ -113,9 +134,12 @@
                                             @if ($review->status == 1)
                                                 <div class="wsus__comment pt-0 mt_20">
                                                     <div class="wsus__single_comment m-0 border-0">
-                                                        <img src="{{ asset('images/profile/'.$review->user->profile_picture ) }}" alt="review" class="img-fluid">
+                                                        <img src="{{ asset('images/profile/' . $review->user->profile_picture) }}"
+                                                            alt="review" class="img-fluid">
                                                         <div class="wsus__single_comm_text">
-                                                            <h3>{{ $review->user->name }} <span>{{ $review->created_at->format('d M Y') }} </span></h3>
+                                                            <h3>{{ $review->user->name }}
+                                                                <span>{{ $review->created_at->format('d M Y') }}
+                                                                </span></h3>
                                                             <p>{{ $review->review }}</p>
                                                         </div>
                                                     </div>
@@ -126,10 +150,12 @@
                                     <div class="col-lg-4">
                                         <div class="wsus__post_review">
                                             <h4>write a Review</h4>
-                                            <form id="review_form" action="{{ route('review.store') }}" method="POST">
+                                            <form id="review_form" action="{{ route('review.store') }}"
+                                                method="POST">
                                                 @csrf
                                                 <div class="row">
-                                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                    <input type="hidden" name="product_id"
+                                                        value="{{ $product->id }}">
 
                                                     {{-- <input type="hidden" name="rating" value="5"
                                                         id="product_rating"> --}}
@@ -165,7 +191,8 @@
                                 </a>
                             </div>
                             <div class="wsus__menu_item_text">
-                                <a class="title" href="{{ route('frontend.product.show', $related->id) }}">{{ $related->title }}</a>
+                                <a class="title"
+                                    href="{{ route('frontend.product.show', $related->slug) }}">{{ $related->title }}</a>
                                 <h5 class="price">${{ $related->price }} <del>${{ $related->discount }}</del></h5>
                                 <ul class="d-flex flex-wrap justify-content-center">
                                     <li>
@@ -174,10 +201,13 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('wishlist.add') }}" onclick="event.preventDefault(); document.getElementById('wish-{{ $product->id  }}').submit()" href="{{ route('wishlist.add') }}">
+                                        <a href="{{ route('wishlist.add') }}"
+                                            onclick="event.preventDefault(); document.getElementById('wish-{{ $product->id }}').submit()"
+                                            href="{{ route('wishlist.add') }}">
                                             <i class="fal fa-heart"></i>
-                                        </a>         
-                                        <form action="{{ route('wishlist.add') }}" id="wish-{{ $product->id  }}" method="post">
+                                        </a>
+                                        <form action="{{ route('wishlist.add') }}" id="wish-{{ $product->id }}"
+                                            method="post">
                                             @csrf
                                             <input type="hidden" name="product_id" value="{{ $product->id }}">
                                         </form>
@@ -192,7 +222,7 @@
                         </div>
                     </div>
                 @endforeach
-               
+
             </div>
         </div>
     </div>
@@ -248,19 +278,18 @@
             })
 
         });
-        
+
     })(jQuery);
 
     function updateQtyButtons() {
-            let qty = parseInt($(".product_qty").val());
-            $(".decrement_qty_detail_page").prop('disabled', qty <= 1);
-        }
+        let qty = parseInt($(".product_qty").val());
+        $(".decrement_qty_detail_page").prop('disabled', qty <= 1);
+    }
 
-        $(".increment_qty_detail_page, .decrement_qty_detail_page").on("click", function () {
-            updateQtyButtons();
-        });
+    $(".increment_qty_detail_page, .decrement_qty_detail_page").on("click", function() {
+        updateQtyButtons();
+    });
 
-        updateQtyButtons(); // call on page load
-
+    updateQtyButtons(); // call on page load
 </script>
 @endpush

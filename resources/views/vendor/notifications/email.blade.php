@@ -50,7 +50,7 @@
 </head>
 <body>
     <div class="container">
-        @if ($actionText === 'Confirm Email')
+        @if ($actionText === 'Verify Email Address')
             <h1>Welcome to Our {{ config('app.name') }}!</h1>
             <p>We're excited to have you on board. Please confirm your email address to complete your registration.</p>
             <a href="{{ $actionUrl }}" class="button">Confirm Email</a>
@@ -76,7 +76,8 @@
             <a href="{{ $actionUrl }}" class="button">View Orders</a>
         @else
             <h1>{{ $actionText ?? 'Notification' }}</h1>
-            <p><a href="{{ $actionUrl }}" class="break-all">{{ $actionUrl }}</a></p>
+            <p></p>
+            <a class="button" href="{{ $actionUrl }}" class="break-all">{{ $actionUrl }}</a>
         @endif
     </div>
 </body>

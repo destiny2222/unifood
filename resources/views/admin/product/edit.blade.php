@@ -84,6 +84,17 @@
                                     <option value="1" {{ $product->status == 0 ? 'selected' : ''}}>Yes</option>
                                 </select>
                             </div>
+                            <div class="col-lg-4">
+                                <label for="weight">Weight</label>
+                                <input type="number" step="0.01" value="{{ $product->weight }}" id="weight" name="weight" class="form-control" required>
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="weight_unit">Unit</label>
+                                <select name="weight_unit" class="form-control" required>
+                                    <option value="g" {{ $product->weight_unit == 'g' ? 'selected' : ''}}>Grams</option>
+                                    <option value="kg" {{ $product->weight_unit == 'kg' ? 'selected' : ''}}>Kilograms</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>

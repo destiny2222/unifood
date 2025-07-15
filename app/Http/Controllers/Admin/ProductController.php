@@ -55,6 +55,8 @@ class ProductController extends Controller
                 'badge'=>$request->badge,
                 'price'=>$request->price,
                 'images'=>$image,
+                'weight' => $request->weight,
+                'weight_unit' => $request->weight_unit,
                 'discount'=>$request->discount,
                 'status'=>$request->status,
                 'category_id'=>$request->category_id,
@@ -124,7 +126,7 @@ class ProductController extends Controller
                 'discount'=>$request->discount,
                 'description'=>$request->description,
                 'category_id'=>$request->category_id,
-                'images'=>$image ?? $product->image,
+                'images'=>$image ?? $product->images,
             ]);
 
             if($request->has('images')){

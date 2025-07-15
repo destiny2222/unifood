@@ -26,6 +26,8 @@ class StoreRequest extends FormRequest
             'availability'=>['nullable', 'string'],
             'featured'=>['nullable', 'string'],
             'badge'=>['nullable', 'string'],
+            'weight'=>['required','numeric'],
+            'weight_unit'=>['required', 'in:g,kg'],
             'price'=>['required','numeric'],
             'discount'=>['required','numeric'],
             'images' => ['array', 'nullable'],

@@ -17,6 +17,8 @@ class Product extends Model
         'discount',
         'today_special',
         'images',
+        'weight',
+        'weight_unit',
         'status',
         'category_id',
         'description',

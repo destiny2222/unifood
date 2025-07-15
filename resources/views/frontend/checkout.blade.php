@@ -139,11 +139,12 @@
             <div class="col-lg-4 wow fadeInUp" data-wow-duration="1s">
                 <div id="sticky_sidebar" class="wsus__cart_list_footer_button">
                     <h6>total price</h6>
-                    <p>subtotal: <span>${{ $totalPrice }}</span></p>
+                    <p>subtotal: <span>${{ number_format($totalPrice, 2) }}</span></p>
                     <p>discount (-): <span>$0</span></p>
+                    <p><strong>Total Weight:</strong> {{ number_format($totalWeight, 2) }} g</p>
                     <p>delivery (+): <span class="delivery_charge">$0.00</span></p>
                     <p class="total">
-                        <span>Total:</span> <span class="grand_total">${{ $totalPrice }}</span>
+                        <span>Total:</span> <span class="grand_total">${{ number_format($totalPrice, 2) }}</span>
                     </p>
                    
                     <form action="{{ route('stripe.checkout.process') }}" id="checkout_form" method="POST" class="d-none">
@@ -181,13 +182,15 @@
                 $("input[name='address_id']").on("change", function() {
                     var delivery_id = $("input[name='address_id']:checked").val();
                     var deliveryCharge = $("input[name='address_id']:checked").data('delivery-charge');
+                    var weightUnit = {{ $totalWeight }};
                     var subtotal = {{ $totalPrice }};
+                    
 
                     // Update delivery charge display
                     $(".delivery_charge").html(`$${deliveryCharge}`);
                     
                     // Calculate grand total
-                    var grand_total = parseFloat(subtotal) + parseFloat(deliveryCharge);
+                    var grand_total = parseFloat(subtotal) + parseFloat(deliveryCharge) + parseFloat(weightUnit);
                     
                     // Update grand total display
                     $(".grand_total").html(`$${grand_total.toFixed(2)}`);

@@ -7,12 +7,15 @@ use App\Models\Cart;
 use App\Models\DeliveryArea;
 use App\Models\OrderItem;
 use App\Models\ShippingAddress;
+use App\Traits\WeightConversion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class CheckoutController extends Controller
 {
+    use WeightConversion;
+
 
     protected $paymentController;
 
@@ -21,16 +24,21 @@ class CheckoutController extends Controller
         $this->paymentController = $paymentController;
     }
 
-    public function checkout(){
+    public function checkout()
+    {
         $cart = Cart::where('user_id', Auth::user()->id)->get();
         $shipping = ShippingAddress::where('user_id', Auth::user()->id)->get();
         $deliveryArea = DeliveryArea::orderBy('id', 'desc')->get();
-        // sum the total price of all the cart items
-        $totalPrice = $cart->sum(function($item) {
+
+        // Total price
+        $totalPrice = $cart->sum(function ($item) {
             return $item->quantity * $item->product->price;
         });
 
-        
+        // Total weight
+        $totalWeight = $cart->sum(function ($item) {
+            return $this->toGrams($item->product->weight, $item->product->weight_unit) * $item->quantity;
+        });
 
         return view('frontend.checkout', [
             'cartItems' => $cart,
@@ -38,8 +46,10 @@ class CheckoutController extends Controller
             'shippingAddresses' => $shipping,
             'deliveryArea' => $deliveryArea,
             'totalPrice' => $totalPrice,
+            'totalWeight' => $totalWeight, // send to view
         ]);
     }
+
 
     public function processPayment(Request $request){
         try {

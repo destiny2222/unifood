@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class UserManagementController extends Controller
 {
     public function index(){
-      $user = User::orderBy('id', 'desc')->paginate(50);
+      $user = User::all();
       return view('admin.userManagement.index',[
         'users'=>$user
       ]);
