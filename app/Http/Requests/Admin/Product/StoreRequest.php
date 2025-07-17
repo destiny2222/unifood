@@ -29,9 +29,9 @@ class StoreRequest extends FormRequest
             'weight'=>['required','numeric'],
             'weight_unit'=>['required', 'in:g,kg'],
             'price'=>['required','numeric'],
-            'discount'=>['required','numeric'],
-            'images' => ['array', 'nullable'],
-            'images.*' => ['image', 'nullable', 'mimes:jpeg,png,jpg,gif,svg'],
+            'discount'=>['nullable','numeric'],
+            // 'images' => ['array', 'nullable'],
+            // 'images.*' => ['image', 'nullable', 'mimes:jpeg,png,jpg,gif,svg'],
             'status'=>['nullable', 'boolean'],
             'today_special'=>['nullable', 'boolean'],
         ];

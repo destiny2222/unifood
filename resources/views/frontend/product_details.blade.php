@@ -24,7 +24,7 @@
                             @if ($product->image)
                                 <li>
                                     <img class="zoom img-fluid w-100"
-                                        src="{{ asset('storage/upload/product/' . $product->image) }}"
+                                        src="{{ $product->image }}"
                                         alt="Main product image">
                                 </li>
                             @endif
@@ -32,7 +32,7 @@
                             @foreach ($product->photos as $image)
                                 <li>
                                     <img class="zoom img-fluid w-100"
-                                        src="{{ asset('storage/upload/product/' . $image->image_path) }}"
+                                        src="{{ $image->image_path }}"
                                         alt="product">
                                 </li>
                             @endforeach
@@ -184,7 +184,7 @@
                     <div class="col-xl-3 wow fadeInUp" data-wow-duration="1s">
                         <div class="wsus__menu_item">
                             <div class="wsus__menu_item_img">
-                                <img src="{{ asset('storage/upload/product/single/' . ($related->images ?? 'default.jpg')) }}"
+                                <img src="{{ $related->images }}"
                                     alt="{{ $related->title }}" class="img-fluid w-100">
                                 <a class="category" href="{{ route('frontend.product.show', $related->slug) }}">
                                     {{ $related->category->title ?? '' }}

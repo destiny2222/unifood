@@ -84,7 +84,7 @@
                                                     <td>
                                                         <div class="d-flex align-items-center gap-2">
                                                             <div class="rounded bg-light avatar-md d-flex align-items-center justify-content-center">
-                                                                <img src="{{ asset('storage/upload/product/single/'.$orderItem->product->images) }}" alt="" class="avatar-md">
+                                                                <img src="{{ $orderItem->product->images }}" alt="" class="avatar-md">
                                                             </div>
                                                             <div>
                                                                 <a href="#!" class="text-dark fw-medium fs-15">
@@ -105,13 +105,16 @@
                                                     <td colspan="4" class="text-end">Discount: $0</td>
                                                 </tr>
                                                 <tr>
+                                                    <td colspan="4" class="text-end">Weight: {{ number_format($totalWeight) }}</td>
+                                                </tr>
+                                                <tr>
                                                     <td colspan="4" class="text-end">Delivery Charge : ${{ $orderItem->shippingAddress->deliveryArea->delivery_fee }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td colspan="4" class="text-end">
                                                         Grand Total : $
                                                         {{
-                                                            ($orderItem->price * $orderItem->quantity) +
+                                                            ($orderItem->price * $orderItem->quantity) + $totalWeight +
                                                             ($orderItem->shippingAddress->deliveryArea->delivery_fee ?? 0)
                                                         }}
                                                     </td>

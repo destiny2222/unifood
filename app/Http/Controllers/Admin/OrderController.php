@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\OrderItem;
+use App\Traits\WeightConversion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
+    use WeightConversion;
     public function index(){
         $orderItem  =  OrderItem::orderBy('id', 'desc')->paginate(50);
         return view('admin.order.index', [
@@ -18,8 +20,12 @@ class OrderController extends Controller
 
     public function show($id){
         $orderItem = OrderItem::findOrFail($id);
+        // Total weight
+        $totalWeight =  $this->toGrams($orderItem->product->weight, $orderItem->product->weight_unit) * $orderItem->quantity;
+        // dd($totalWeight);
         return view('admin.order.show', [
             'orderItem' => $orderItem,
+            'totalWeight'=>$totalWeight,
         ]);
     }
 

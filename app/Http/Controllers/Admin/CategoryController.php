@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Category\StoreRequest;
 use App\Http\Requests\Admin\Category\UpdateRequest;
+use Illuminate\Support\Facades\Log;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 
@@ -36,13 +37,17 @@ class CategoryController extends Controller
         // }
 
         
-
-        Category::firstOrCreate([
-            'title' => $request->title,
-            'slug'=>Str::slug($request->title),
-            // 'image'=>$image_file,
-        ]);
-        return redirect()->route('admin.category.index')->with('success', 'Category created successfully');
+       try{
+            Category::firstOrCreate([
+                'title' => $request->title,
+                'slug'=>Str::slug($request->title),
+                // 'image'=>$image_file,
+            ]);
+            return redirect()->route('admin.category.index')->with('success', 'Category created successfully');
+        }catch(\Exception $exception){
+            Log::error($exception->getMessage());
+            return back()->with('error', 'Something went wrong');
+        }
     }
 
     public function edit($id){
@@ -61,18 +66,28 @@ class CategoryController extends Controller
         //     $image->save(public_path('upload/category/'). $image_file);
         // }
 
-        $category = Category::find($id);
-        $category->update([
-            'title' => $request->title,
-            'slug'=>Str::slug($request->title),
-            // 'image'=>$image_file ?? $category->image,
-        ]);
-        return redirect()->route('admin.category.index')->with('success', 'Category updated successfully');
+        try {
+            $category = Category::find($id);
+            $category->update([
+                'title' => $request->title,
+                'slug'=>Str::slug($request->title),
+                // 'image'=>$image_file ?? $category->image,
+            ]);
+            return redirect()->route('admin.category.index')->with('success', 'Category updated successfully');
+        }catch(\Exception $exception){
+            Log::error($exception->getMessage());
+            return back()->with('error', 'Something went wrong');
+        }
     }
 
     public function destroy($id){
-        $category = Category::find($id);
-        $category->delete();
-        return back()->with('success', 'Category deleted successfully');
+        try{
+            $category = Category::find($id);
+            $category->delete();
+            return back()->with('success', 'Category deleted successfully');
+        }catch(\Exception $exception){
+            Log::error($exception->getMessage());
+            return back()->with('error', 'Something went wrong');
+        }
     }
 }

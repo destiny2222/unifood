@@ -170,7 +170,7 @@
                     @endphp
                     <li class="min-item mb-5">
                         <div class="menu_cart_img">
-                            <img src="{{ asset('storage/upload/product/single/'.$cartItem->product->images) }}"
+                            <img src="{{ $cartItem->product->images }}"
                                 alt="menu" class="img-fluid w-100">
                         </div>
                         <div class="menu_cart_text">

@@ -114,14 +114,14 @@
 
                             <span>{{ $percentageOff }}% off</span>
 
-                            <a class="title" href="product/dal-makhani-paneer.html">
+                            <a class="title" href="{{ route('frontend.product.show', $dailyOffer->slug) }}">
                                 {{ \Str::limit($dailyOffer->title,  50, '...') }}
                             </a>
                             <p>{!! \Str::limit($dailyOffer->description, 50, '...') !!}</p>
                             <ul class="d-flex flex-wrap">
                                 <li><a href="javascript:;"><i class="fas fa-shopping-basket"></i></a></li>
                                 <li><a href="javascript:;"><i class="fal fa-heart"></i></a></li>
-                                <li><a href="product/dal-makhani-paneer.html"><i class="far fa-eye"></i></a></li>
+                                <li><a href="{{ route('frontend.product.show', $dailyOffer->slug) }}"><i class="far fa-eye"></i></a></li>
                             </ul>
                         </div>
                     </div>
@@ -178,7 +178,7 @@
                         <div class="wsus__menu_item">
                             <div class="wsus__menu_item_img">
                                 <a href="{{ route('frontend.product.show', $product->slug) }}">
-                                    <img src="{{ asset('storage/upload/product/single/'.$product->images ?? 'images/hyderabadi-biryani.png') }}"
+                                    <img src="{{ $product->images  }}"
                                     alt="menu" class="img-fluid w-100">
                                 </a>
                                 <a class="category" href="{{ route('frontend.product.show', $product->slug) }}">{{ $product->category->title ?? 'Category' }}</a>

@@ -27,7 +27,7 @@ class UpdateRequest extends FormRequest
             'featured'=>['nullable', 'string'],
             'badge'=>['nullable', 'string'],
             'price'=>['required','numeric'],
-            'discount'=>['required','numeric'],
+            'discount'=>['nullable','numeric'],
             'images' => ['array', 'nullable'],
             'images.*' => ['image', 'nullable', 'mimes:jpeg,png,jpg,gif,svg'],
             'status'=>['nullable', 'boolean'],

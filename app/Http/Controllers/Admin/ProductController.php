@@ -14,10 +14,12 @@ use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 use App\Http\Requests\Admin\Product\UpdateRequest;
 use Illuminate\Support\Facades\Log;
+use App\Traits\CloudinaryUploadTrait;
 
 
 class ProductController extends Controller
 {
+    use CloudinaryUploadTrait;
     public function index(){
         $products = Product::orderBy('id', 'desc')->paginate(10);
         return view('admin.product.index', compact('products'));
@@ -37,12 +39,13 @@ class ProductController extends Controller
 
         try{
 
-            $image = null;
+            $result = null;
             if ($request->hasFile('image')) {
-                $imageFile = $request->file('image');
-                $filename = time() . '_' . uniqid() . '.' . $imageFile->getClientOriginalExtension();
-                $path = $imageFile->storeAs('upload/product/single', $filename, 'public');
-                $image = $filename; // Save only the filename to the database
+                $result = $this->uploadImageToCloudinary($request->file('image'), 'mightyolu/upload/product/single');
+                // $imageFile = $request->file('image');
+                // $filename = time() . '_' . uniqid() . '.' . $imageFile->getClientOriginalExtension();
+                // $path = $imageFile->storeAs('upload/product/single', $filename, 'public');
+                // $image = $filename; // Save only the filename to the database
             }
 
 
@@ -54,7 +57,7 @@ class ProductController extends Controller
                 'featured'=>$request->featured,
                 'badge'=>$request->badge,
                 'price'=>$request->price,
-                'images'=>$image,
+                'images'=>$result['secure_url'],
                 'weight' => $request->weight,
                 'weight_unit' => $request->weight_unit,
                 'discount'=>$request->discount,
@@ -62,28 +65,26 @@ class ProductController extends Controller
                 'category_id'=>$request->category_id,
                 'description'=>$request->description,
             ]);
-            
-            if($request->hasFile('images')){
-                foreach($request->file('images') as $image){
-                    // Generate a unique filename
-                    $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-                    
-                    // Store the original image
-                    $path = $image->storeAs('upload/product', $filename, 'public');
-                    
-                    // Process the image
-                    $manager = new ImageManager(new Driver());
-                    $img = $manager->read(storage_path('app/public/' . $path));
-                    $img->resize(600, 600);
-                    $img->save(storage_path('app/public/' . $path));
-                    
-                    // Create image record - save ONLY the filename
-                    ProductImage::create([
-                        'product_id' => $new_product->id,
-                        'image_path' => $filename  // Changed from $path to $filename
-                    ]);
+
+            if($request->has('images')){
+                 $imageResults = $this->uploadMultipleToCloudinary(
+                    $request->images, 
+                    'mightyolu/upload/images', 
+                    'image'
+                );
+                foreach ($imageResults as $result) {
+                    if ($result['success']) {
+                        ProductImage::create([
+                            'product_id' => $new_product->id,
+                            // 'image_url' => $result['secure_url'],
+                            'image_path' => $result['secure_url'],
+                        ]);
+                    } else {
+                        Log::error('Failed to upload image: ' . $result['error']);
+                    }
                 }
             }
+            
             return redirect()->route('admin.product.index')->with('success', 'Product created successfully');
         }catch(\Exception $e){
             Log::error($e->getMessage());
@@ -105,12 +106,9 @@ class ProductController extends Controller
        try {
             $product  = Product::findOrFail($id);
 
-            $image = null;
+            $result = null;
             if ($request->hasFile('image')) {
-                $imageFile = $request->file('image');
-                $filename = time() . '_' . uniqid() . '.' . $imageFile->getClientOriginalExtension();
-                $path = $imageFile->storeAs('upload/product/single', $filename, 'public');
-                $image = $filename; // Save only the filename to the database
+                $result = $this->uploadImageToCloudinary($request->file('image'), 'mightyolu/upload/product/single');
             }
 
 
@@ -124,30 +122,31 @@ class ProductController extends Controller
                 'slug'=>Str::slug($request->title),
                 'price'=>$request->price,
                 'discount'=>$request->discount,
+                'weight' => $request->weight,
+                'weight_unit' => $request->weight_unit,
                 'description'=>$request->description,
                 'category_id'=>$request->category_id,
-                'images'=>$image ?? $product->images,
+                'images'=> $result['secure_url'] ?? $product->images,
             ]);
 
+            $productImages = ProductImage::where('product_id', $product->id)->get();
             if($request->has('images')){
-                foreach($request->file('images') as $image){
-                    // Generate a unique filename
-                    $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-                    
-                    // Store the original image
-                    $path = $image->storeAs('upload/product', $filename, 'public');
-                    
-                    // Process the image
-                    $manager = new ImageManager(new Driver());
-                    $img = $manager->read(storage_path('app/public/' . $path));
-                    $img->resize(600, 600);
-                    $img->save(storage_path('app/public/' . $path));
-                    
-                    // Create image record - save ONLY the filename
-                    ProductImage::create([
-                        'product_id' => $product->id,
-                        'image_path' => $filename  // Changed from $path to $filename
-                    ]);
+                 $imageResults = $this->uploadMultipleToCloudinary(
+                    $request->images, 
+                    'mightyolu/upload/images', 
+                    'image'
+                );
+                foreach ($imageResults as $result) {
+                    if ($result['success']) {
+                        ProductImage::create([
+                            'product_id' => $productImages->id,
+                            // 'image_url' => $result['secure_url'],
+                            'image_path' => $result['secure_url'] ?? $productImages->image_path,
+                            // 'image_public_id' => $result['public_id'],
+                        ]);
+                    } else {
+                        Log::error('Failed to upload image: ' . $result['error']);
+                    }
                 }
             }
             return redirect()->route('admin.product.index')->with('success', 'Product updated successfully');

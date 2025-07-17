@@ -30,7 +30,7 @@
                                     @forelse ($carts as $cart)
                                         <tr class="main-cart-item" data-id="{{ $cart->id }}">
                                             <td class="wsus__pro_img">
-                                                <img src="{{ asset('storage/upload/product/single/'.$cart->product->images ) }}" alt="product" class="img-fluid w-100" />
+                                                <img src="{{ $cart->product->images }}" alt="product" class="img-fluid w-100" />
                                             </td>
 
                                             <td class="wsus__pro_name">

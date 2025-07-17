@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('order_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('shipping_addresses_id')->constrained('shipping_addresses')->cascadeDelete();
-            $table->foreignId('product_id')->constrained('products')->cascadeDelete();
+            $table->foreignId('shipping_addresses_id')->constrained('shipping_addresses')->cascadeOnDelete();
+            $table->foreignId('product_id')->constrained('products')->cascadeOnDelete();
             $table->integer('quantity');
             $table->decimal('price', 10, 2);
             $table->boolean('payment_status')->default(false);
             $table->string('invoice_number')->nullable();
             $table->boolean('order_status')->default(false);
             $table->string('payment_method')->nullable();
-            $table->foreignUuid('user_id')->constrained('users')->cascadeDelete();
+            $table->foreignUuid('user_id')->constrained('users')->cascadeOnDelete();
             $table->timestamps();
         });
     }

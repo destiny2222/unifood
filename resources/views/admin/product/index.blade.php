@@ -40,7 +40,7 @@
                                              <td>
                                                   <div class="d-flex align-items-center gap-2">
                                                       <div class="rounded bg-light avatar-md d-flex align-items-center justify-content-center">
-                                                            <img src="{{ asset('storage/upload/product/single/' . $product->images) }}" alt="" class="avatar-md">
+                                                            <img src="{{ $product->images }}" alt="" class="avatar-md">
                                                        </div>
                                                   </div>
                                               </td>
