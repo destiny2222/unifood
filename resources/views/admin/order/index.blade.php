@@ -41,13 +41,13 @@
                                     @forelse ($orderItems as $orderItem)
                                     <tr>
                                         <td>
-                                            #583488/80
+                                            {{ $loop->index + 1 }}
                                         </td>
                                         <td>{{ $orderItem->created_at->format('d-m-Y') }}</td>
                                         <td>
                                             <a href="#!" class="link-success fw-medium">{{ $orderItem->user->name }}</a>
                                         </td>
-                                        <td> &#8358;{{ number_format($orderItem->price, 2) }} </td>
+                                        <td> €{{ number_format($orderItem->price, 2) }} </td>
                                         <td> 
                                             @if ($orderItem->payment_status == 1)
                                              <span class="badge bg-success text-light  px-2 py-1 fs-13">Paid</span>

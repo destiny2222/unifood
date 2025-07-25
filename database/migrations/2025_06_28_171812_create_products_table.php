@@ -18,10 +18,8 @@ return new class extends Migration
             $table->string('availability')->nullable();
             $table->string('featured')->nullable();
             $table->string('badge')->nullable();
-            $table->decimal('weight', 8, 2)->nullable();
-            $table->string('weight_unit')->nullable();
-            $table->decimal('price', 10, 2);
-            $table->decimal('discount', 10, 2);
+            $table->decimal('price', 10, 2)->default(0)->nullable();
+            $table->decimal('discount', 10, 2)->default(0)->nullable();
             $table->string('images')->nullable();
             $table->string('status')->default(false);
             $table->string('today_special')->default(false);

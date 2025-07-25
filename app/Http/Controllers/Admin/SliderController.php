@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Slider\StoreRequest;
+use App\Traits\CloudinaryUploadTrait;
 use Illuminate\Http\Request;
 use App\Models\Slider;
 use Illuminate\Support\Facades\Log;
@@ -13,6 +14,7 @@ use Intervention\Image\Drivers\Gd\Driver;
 
 class SliderController extends Controller
 {
+    use CloudinaryUploadTrait;
     public function index(){
         $sliders = Slider::orderBy('id', 'desc')->get();
         return view('admin.pages.slider.index', compact('sliders'));
@@ -26,16 +28,17 @@ class SliderController extends Controller
         $validated = $request->validated();
         try {
             $imageName = null;
-            if (request()->hasFile('image')) {
-                $image = $request->file('image');
-                $imageName = time() . '.' . $image->getClientOriginalExtension();
+            if ($request->hasFile('image')) {
+                $imageName = $this->uploadImageToCloudinary($request->file('image'), 'mightyolu/upload/slider');
+                // $image = $request->file('image');
+                // $imageName = time() . '.' . $image->getClientOriginalExtension();
                 
-                $manager = new ImageManager(new Driver());
-                $processedImage = $manager->read($image);
-                $processedImage->resize(200, 200);
-                $processedImage->save(public_path('upload/slider/') . $imageName);
+                // $manager = new ImageManager(new Driver());
+                // $processedImage = $manager->read($image);
+                // $processedImage->resize(200, 200);
+                // $processedImage->save(public_path('upload/slider/') . $imageName);
             }
-            $validated['image'] = $imageName;
+            $validated['image'] = $imageName['secure_url'];
             Slider::create($validated);
             return redirect()->route('admin.slider.index')->with('Successful! Updated!');
         } catch (\Exception $exception) {
@@ -54,17 +57,18 @@ class SliderController extends Controller
         try {
             $slider = Slider::findOrFail($id);
             $imageName = $slider->image;
-            if (request()->hasFile('image')) {
-                $image = $request->file('image');
-                $imageName = time() . '.' . $image->getClientOriginalExtension();
+            if ($request->hasFile('image')) {
+                $imageName = $this->uploadImageToCloudinary($request->file('image'), 'mightyolu/upload/slider');
+                // $image = $request->file('image');
+                // $imageName = time() . '.' . $image->getClientOriginalExtension();
                 
-                $manager = new ImageManager(new Driver());
-                $processedImage = $manager->read($image);
-                $processedImage->resize(200, 200);
-                $processedImage->save(public_path('upload/slider/') . $imageName);
+                // $manager = new ImageManager(new Driver());
+                // $processedImage = $manager->read($image);
+                // $processedImage->resize(200, 200);
+                // $processedImage->save(public_path('upload/slider/') . $imageName);
             }
             $slider = Slider::findOrFail($id);
-            $validated['image'] = $imageName ? $imageName : $slider->image;
+            $validated['image'] = $imageName['secure_url'] ?? $slider->image;
             $slider->update($validated);
             return redirect()->route('admin.slider.index')->with('Successful! Updated!');
         } catch (\Exception $exception) {

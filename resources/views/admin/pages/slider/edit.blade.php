@@ -64,7 +64,7 @@
                                             <label for="meta-description-image" class="form-label">Image</label>
                                             <input type="file" name="image" id="meta-description-image" class="form-control">
                                             @if($slider->image)
-                                                <img src="{{ asset('upload/slider/'.$slider->image) }}" alt="Current Image" class="mt-2" style="max-width: 150px;">
+                                                <img src="{{ $slider->image }}" alt="Current Image" class="mt-2" style="max-width: 150px;">
                                             @endif
                                         </div>
                                     </div>

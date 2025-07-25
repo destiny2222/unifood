@@ -32,7 +32,7 @@ class FrontendController extends Controller
 {
     public function index()
     {
-        $Product = Product::orderBy('id', 'DESC')->get()->take(8);
+        $Product = Product::orderBy('id', 'DESC')->paginate(12);
         $category = Category::orderBy('id', 'asc')->get()->take(6);
         $blog = Post::where('show_homepage', 1)->get();
         $services = Service::orderBy('id', 'DESC')->get();
@@ -42,6 +42,11 @@ class FrontendController extends Controller
         $counter = Counter::orderBy('id', 'DESC')->get();
         $appSection = AppSection::first();
         $testimonial = Testimonial::orderBy('id', 'DESC')->get();
+
+        // $countCarts = session('cart', []);
+        // dd($countCarts);
+        // session()->forget('cart');
+
         return view('frontend.index', [
             'products' => $Product,
             'categories' => $category,
@@ -78,15 +83,108 @@ class FrontendController extends Controller
         ]);
     }
 
-    public function product()
+    // public function product()
+    // {
+    //     $categories = Category::orderBy('id', 'desc')->get();
+    //     $product = Product::paginate(12);
+    //     return view('frontend.product', [
+    //         'categories' => $categories,
+    //         'products' => $product,
+    //     ]);
+    // }
+
+
+    public function product(Request $request)
     {
-        $categories = Category::orderBy('id', 'desc')->get();
-        $product = Product::paginate(12);
+        // Get categories with product count
+        $categories = Category::withCount('product')
+                            ->orderBy('title', 'asc')
+                            ->get();
+        
+        // Filter products by category if category parameter exists
+        $query = Product::query();
+        
+        if ($request->has('category') && $request->category != '') {
+            $query->whereHas('category', function($q) use ($request) {
+                $q->where('slug', $request->category);
+            });
+        }
+        
+        $products = $query->paginate(9);
+        
         return view('frontend.product', [
             'categories' => $categories,
-            'products' => $product,
+            'products' => $products,
         ]);
     }
+
+    // public function product(Request $request)
+    // {
+    //     // Get categories with product count
+    //     $categories = Category::withCount('product')->orderBy('title', 'asc')->get();
+        
+    //     $query = Product::with('category');
+        
+    //     // Filter by category if exists
+    //     if ($request->has('category') && $request->category != '') {
+    //         $query->whereHas('category', function($q) use ($request) {
+    //             $q->where('slug', $request->category);
+    //         });
+    //     }
+        
+    //     // Filter by search term if exists
+    //     if ($request->has('search') && $request->search != '') {
+    //         $searchTerm = $request->search;
+    //         $query->where(function($q) use ($searchTerm) {
+    //             $q->where('title', 'LIKE', "%{$searchTerm}%")
+    //             ->orWhere('description', 'LIKE', "%{$searchTerm}%")
+    //             ->orWhereHas('category', function($categoryQuery) use ($searchTerm) {
+    //                 $categoryQuery->where('title', 'LIKE', "%{$searchTerm}%");
+    //             });
+    //         });
+    //     }
+        
+    //     // ordering
+    //     $query->orderBy('created_at', 'desc');
+        
+    //     // Paginate 
+    //     $products = $query->paginate(9);
+        
+    //     $products->appends($request->query());
+        
+    //     return view('frontend.product', [
+    //         'categories' => $categories,
+    //         'products' => $products,
+    //         'searchTerm' => $request->get('search', ''),
+    //         'selectedCategory' => $request->get('category', '')
+    //     ]);
+    // }
+
+    // Add this method for category-specific products
+    public function productsByCategory(Request $request, $categorySlug)
+    {
+        $categories = Category::withCount('product')
+                            ->orderBy('title', 'asc')
+                            ->get();
+        
+        $products = Product::whereHas('category', function($q) use ($categorySlug) {
+            $q->where('slug', $categorySlug);
+        })->paginate(9);
+        
+        return view('frontend.product', [
+            'categories' => $categories,
+            'products' => $products,
+            'selectedCategory' => $categorySlug
+        ]);
+    }
+
+    public function product_show(Product $product){
+        return view('partials.product_modal', [
+            'product' => $product,
+        ]);
+    }
+
+    
 
     public function productDetails(Product $product)
     {
@@ -119,28 +217,7 @@ class FrontendController extends Controller
         ]);
     }
 
-    public function searchProduct(Request $request)
-    {
-        $query = Product::query();
-
-
-        if ($request->filled('search')) {
-            $query->where('title', 'like', '%' . $request->search . '%');
-        }
-
-        // Filter by category 
-        if ($request->filled('category')) {
-            $query->whereHas('category', function ($q) use ($request) {
-                $q->where('title', $request->category);
-            });
-        }
-
-        // Execute the query and get results
-        $products = $query->paginate(12); // or ->paginate(12)
-
-
-        return view('frontend.product_search', compact('products'));
-    }
+    
 
     public function searchBlog(Request $request)
     {
@@ -157,18 +234,36 @@ class FrontendController extends Controller
     public function searchEngine(Request $request)
     {
         $search = $request->input('search');
-        $products = Product::where('title', '!=', Null)
+        
+        if (!$search) {
+            return redirect()->route('frontend.index')->with('error', 'Your request was not found.');
+        }
+        
+        // Get categories for sidebar
+        $categories = Category::withCount('product')
+                            ->orderBy('title', 'asc')
+                            ->get();
+        
+        // Search products
+        $products = Product::where('title', '!=', null)
             ->where(function ($query) use ($search) {
                 $query->where('title', 'LIKE', "%{$search}%")
+                    ->orWhere('description', 'LIKE', "%{$search}%") // Added description search
                     ->orWhereHas('category', function ($query) use ($search) {
                         $query->where('title', 'LIKE', "%{$search}%");
                     });
             })
-            ->paginate(6);
-        if (!$search) {
-            return redirect()->route('frontend.index')->with('error', 'Your request was not found.');
-        }
-        return view('frontend.product_search', compact('products'));
+            ->orderBy('created_at', 'desc')
+            ->paginate(9); // Changed to match your other pagination
+        
+        // Append search term to pagination links
+        $products->appends(['search' => $search]);
+        
+        return view('frontend.product_search', [
+            'products' => $products,
+            'categories' => $categories,
+            'searchTerm' => $search
+        ]);
     }
 
     public function commentStore(Request $request, Post $post)

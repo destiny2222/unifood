@@ -17,17 +17,16 @@
         </ul>
     </div>
 
-    <p class="delivary_time">estimated delivery time : {{ $order->shippingAddress->deliveryArea->maximum_delivery_time }} - {{ $order->shippingAddress->deliveryArea->minimum_delivery_time }} Minutes</p>
 
     <div class="wsus__invoice_header">
         <div class="header_address">
             <h4>invoice to</h4>
 
             <p> {{ $order->shippingAddress->address }} </p>
-            <p> {{ $order->shippingAddress->first_name }} {{ $order->shippingAddress->last_name }}
-                , {{ $order->shippingAddress->phone_number }}
+            <p> {{ $order->shippingAddress->user->name }}
+                , {{ $order->shippingAddress->user->phone }}
             </p>
-            <p>{{ $order->shippingAddress->email }}</p>
+            <p>{{ $order->shippingAddress->user->email }}</p>
 
         </div>
         <div class="header_address">
@@ -101,9 +100,6 @@
                         <td class="qnty">
                             <b></b>
                         </td>
-                        <td class="total coast">
-                            <b>${{ $order->shippingAddress->deliveryArea->delivery_fee }}</b>
-                        </td>
                     </tr>
                     <tr>
                         <td class="package" colspan="3">
@@ -113,7 +109,7 @@
                             <b></b>
                         </td>
                         <td class="total">
-                            <b>${{($order->price * $order->quantity) + ($order->shippingAddress->deliveryArea->delivery_fee ?? 0) }}</b>
+                            <b>${{($order->price * $order->quantity ?? 0) }}</b>
                         </td>
                     </tr>
                 </tfoot>

@@ -38,6 +38,15 @@ class Product extends Model
     {
         return Str::slug($this->title);
     }
+
+
+    public function variants()
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
+
+    
+
    
     // public function averageRating()
 

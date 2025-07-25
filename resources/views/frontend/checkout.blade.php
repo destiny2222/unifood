@@ -13,159 +13,82 @@
     ==============================-->
 <section class="wsus__cart_view mt_125 xs_mt_95 mb_100 xs_mb_70">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-lg-7 wow fadeInUp" data-wow-duration="1s">
-                <div class="wsus__checkout_form">
-                    <div class="wsus__check_form">
-                        <h5>
-                            select address
-                            <a href="#" data-bs-toggle="modal" data-bs-target="#address_modal"><i class="far fa-plus"></i> New Address</a>
-                        </h5>
-
-                        <div class="wsus__address_modal">
-                            <div class="modal fade" id="address_modal" data-bs-backdrop="static"
-                                data-bs-keyboard="false" aria-labelledby="address_modalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="address_modalLabel">
-                                                add new address
-                                            </h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form action="{{ route('shipping.address.store') }}"  method="POST">
-                                                @csrf
-                                                <div class="row">
-                                                    <div class="col-12">
-                                                        <div class="wsus__check_single_form">
-                                                            <select name="delivery_area_id" class="modal_select2" required>
-                                                                <option value="">   Select Delivery Area </option>
-                                                                @foreach ($deliveryArea as $delivery)
-                                                                 <option value="{{ $delivery->id }}"> {{ $delivery->delivery_area_name }}  </option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-md-6 col-lg-12 col-xl-6">
-                                                        <div class="wsus__check_single_form">
-                                                            <input type="text" placeholder="First Name*" name="first_name" />
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6 col-lg-12 col-xl-6">
-                                                        <div class="wsus__check_single_form">
-                                                            <input type="text" placeholder="Last Name *"    name="last_name" />
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-md-6 col-lg-12 col-xl-6">
-                                                        <div class="wsus__check_single_form">
-                                                            <input type="text" placeholder="Phone" name="phone_number" />
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6 col-lg-12 col-xl-6">
-                                                        <div class="wsus__check_single_form">
-                                                            <input type="email" placeholder="Email" name="email" />
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-12 col-lg-12 col-xl-12">
-                                                        <div class="wsus__check_single_form">
-                                                            <textarea name="address" cols="3" rows="4" placeholder="Address *"></textarea>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12">
-                                                        <div class="wsus__check_single_form check_area">
-                                                            <div class="form-check">
-                                                                <input value="home" class="form-check-input"  type="radio" name="address_type" id="flexRadioDefault1" />
-                                                                <label class="form-check-label" for="flexRadioDefault1">  home </label>
-                                                            </div>
-                                                            <div class="form-check">
-                                                                <input value="office" class="form-check-input" type="radio" name="address_type" id="flexRadioDefault2" />
-                                                                <label class="form-check-label" for="flexRadioDefault2"> office </label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12">
-                                                        <div class="wsus__check_single_form m-0">
-                                                            <button type="submit" class="common_btn">
-                                                                Save Address
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
+        <form  action="{{ route('stripe.checkout.process') }}" id="checkout_form"   method="POST" autocomplete="off">
+            @csrf
+            <div class="row">
+                <div class="col-lg-8 col-lg-7 wow fadeInUp" data-wow-duration="1s">
+                    <div class="wsus__checkout_form">
+                        <div class="wsus__check_form">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="wsus__check_single_form">
+                                        <label for="">Deliver to*</label>
+                                        <input  id="ship-address" name="ship-address" required autocomplete="off" />
                                     </div>
                                 </div>
+                                <div class="col-md-12">
+                                    <div class="wsus__check_single_form">
+                                        <label for="">Apartment, unit, suite, or floor #</label>
+                                        <input type="text" id="address2" placeholder="Apartment, unit, suite, or floor #" name="address" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="wsus__check_single_form">
+                                        <label for="">City <span class="text-danger">*</span></label>
+                                        <input type="text" id="locality" placeholder="City *" name="city" required />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="wsus__check_single_form">
+                                        <label for="">State/Province<span class="text-danger">*</span></label>
+                                        <input type="text" id="state" placeholder="State *" name="state" required />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="wsus__check_single_form">
+                                        <label for="">Postal code<span class="text-danger">*</span></label>
+                                        <input type="text" id="postcode" placeholder="Postcode *" name="postal_code" required />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="wsus__check_single_form">
+                                        <label for="">Country/Region<span class="text-danger">*</span></label>
+                                        <input type="text" id="country" placeholder="Country *" name="country" required />
+                                    </div>
+                                </div>
+                                {{-- <div class="col-12 mb-3">
+                                    <div class="form-check align-items-center">
+                                        <input type="checkbox" class="form-check-input" style="padding: 5px;" id="setDefault" name="is_default" value="1">
+                                        <label class="form-check-label" for="setDefault">Set as default address</label>
+                                    </div>
+                                </div> --}}
                             </div>
-                        </div>
-
-                        <div class="row">
-                            @forelse ($shippingAddresses as $shipping)
-                                <div class="col-md-6">
-                                    <div class="wsus__checkout_single_address">
-                                        <div class="form-check">
-                                            <input value="{{ $shipping->id }}"  data-delivery-charge="{{ $shipping->deliveryArea->delivery_fee }}"   class="form-check-input address_id" type="radio" name="address_id"   id="home-{{ $shipping->id }}" />
-                                            <label class="form-check-label" for="home-{{ $shipping->id }}">
-                                                @if ($shipping->address_type == 'Home')
-                                                    <span class="icon"><i class="fas fa-home"></i>{{ $shipping->address_type }}</span>
-                                                @else
-                                                    <span class="icon"><i class="far fa-car-building"></i>{{ $shipping->address_type }}</span>
-                                                @endif
-                                                <span class="address">Name : {{ $shipping->first_name }}  {{ $shipping->last_name }}</span>
-                                                <span class="address">Phone : {{ $shipping->phone_number }}</span>
-                                                <span class="address">Delivery area : {{ $shipping->deliveryArea->delivery_area_name }}</span>
-                                                <span class="address">Address : {{ $shipping->address }}</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            @empty
-                                <div class="col-md-6">
-                                    <div class="wsus__checkout_single_address">
-                                        <div class="form-check">
-                                            <p>Add Shipping Address </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforelse
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="col-lg-4 wow fadeInUp" data-wow-duration="1s">
-                <div id="sticky_sidebar" class="wsus__cart_list_footer_button">
-                    <h6>total price</h6>
-                    <p>subtotal: <span>${{ number_format($totalPrice, 2) }}</span></p>
-                    <p>discount (-): <span>$0</span></p>
-                    <p><strong>Total Weight:</strong> {{ number_format($totalWeight, 2) }} g</p>
-                    <p>delivery (+): <span class="delivery_charge">$0.00</span></p>
-                    <p class="total">
-                        <span>Total:</span> <span class="grand_total">${{ number_format($totalPrice, 2) }}</span>
-                    </p>
-                   
-                    <form action="{{ route('stripe.checkout.process') }}" id="checkout_form" method="POST" class="d-none">
-                        @csrf
+                <div class="col-lg-4 wow fadeInUp" data-wow-duration="1s">
+                    <div id="sticky_sidebar" class="wsus__cart_list_footer_button">
+                        <h6>Order Summery</h6>
+                        <p>subtotal: <span>£{{ number_format($totalPrice, 2) }}</span></p>
+                        <p>discount (-): <span>£0</span></p>
+                        <p>delivery (+): <span class="delivery_charge">£0.00</span></p>
+                        <p class="total">
+                            <span>Total:</span> <span class="grand_total">£{{ number_format($totalPrice, 2) }}</span>
+                        </p>
                         <input type="hidden" name="total_price" id="total_price_input" value="{{ $totalPrice }}"/>
-                        <input type="hidden" class="shippingAddress_id" name="shipping_addresses_id">
-                    </form>
-                    <a class="common_btn" href="javascript:;" onclick="checkAddressAndSubmit(event)">Continue to pay</a>
-                    <script>
-                        function checkAddressAndSubmit(e) {
-                            e.preventDefault();
-                            if ($("input[name='address_id']").is(":checked")) {
+                        
+                        <a class="common_btn" href="javascript:;" onclick="checkAddressAndSubmit(event)">Continue to pay</a>
+                        <script>
+                            function checkAddressAndSubmit(e) {
+                                e.preventDefault();
                                 document.getElementById('checkout_form').submit();
-                            } else {
-                                toastr.error("Please select an address");
                             }
-                        }
-                    </script>
+                        </script>
+                    </div>
                 </div>
             </div>
-        </div>
+        </form>    
     </div>
 </section>
 <!--============================
@@ -180,17 +103,16 @@
             $(document).ready(function () {
 
                 $("input[name='address_id']").on("change", function() {
-                    var delivery_id = $("input[name='address_id']:checked").val();
-                    var deliveryCharge = $("input[name='address_id']:checked").data('delivery-charge');
-                    var weightUnit = {{ $totalWeight }};
+                    // var delivery_id = $("input[name='address_id']:checked").val();
+                    // var deliveryCharge = $("input[name='address_id']:checked").data('delivery-charge');
                     var subtotal = {{ $totalPrice }};
                     
 
                     // Update delivery charge display
-                    $(".delivery_charge").html(`$${deliveryCharge}`);
+                    // $(".delivery_charge").html(`$${deliveryCharge}`);
                     
                     // Calculate grand total
-                    var grand_total = parseFloat(subtotal) + parseFloat(deliveryCharge) + parseFloat(weightUnit);
+                    // var grand_total = parseFloat(subtotal) + parseFloat(deliveryCharge);
                     
                     // Update grand total display
                     $(".grand_total").html(`$${grand_total.toFixed(2)}`);
@@ -202,19 +124,91 @@
                     $("#grand_total").val(grand_total.toFixed(2));
                     
                     // Update shipping address ID
-                    $('.shippingAddress_id').val(delivery_id);
+                    // $('.shippingAddress_id').val(delivery_id);
                 });
 
-                $("#continue_to_pay").on("click", function(e){
-                    e.preventDefault();
-                    if ($("input[name='address_id']").is(":checked")) {
-                        window.location.href = "https://unifood.websolutionus.com/payment";
-                    } else {
-                        toastr.error("Please select an address")
-                    }
-                });
+               
 
             });
         })(jQuery);
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARkCEFCZpUtHsK6w0gw-Bg7jk68ilhV6g&callback=initAutocomplete&libraries=places&v=weekly" defer></script>
+    <script>
+        let autocomplete;
+        let address1Field;
+        let address2Field;
+        let postalField;
+
+        function initAutocomplete() {
+        address1Field = document.querySelector("#ship-address");
+        address2Field = document.querySelector("#address2");
+        postalField = document.querySelector("#postcode");
+        // Create the autocomplete object, restricting the search predictions to
+        // addresses in the US and Canada.
+        autocomplete = new google.maps.places.Autocomplete(address1Field, {
+            componentRestrictions: { country: ["us", "ca"] },
+            fields: ["address_components", "geometry"],
+            types: ["address"],
+        });
+        address1Field.focus();
+        // When the user selects an address from the drop-down, populate the
+        // address fields in the form.
+        autocomplete.addListener("place_changed", fillInAddress);
+        }
+
+        function fillInAddress() {
+        // Get the place details from the autocomplete object.
+        const place = autocomplete.getPlace();
+        let address1 = "";
+        let postcode = "";
+
+  
+        for (const component of place.address_components) {
+            // @ts-ignore remove once typings fixed
+            const componentType = component.types[0];
+
+            switch (componentType) {
+            case "street_number": {
+                address1 = `${component.long_name} ${address1}`;
+                break;
+            }
+
+            case "route": {
+                address1 += component.short_name;
+                break;
+            }
+
+            case "postal_code": {
+                postcode = `${component.long_name}${postcode}`;
+                break;
+            }
+
+            case "postal_code_suffix": {
+                postcode = `${postcode}-${component.long_name}`;
+                break;
+            }
+            case "locality":
+                document.querySelector("#locality").value = component.long_name;
+                break;
+            case "administrative_area_level_1": {
+                document.querySelector("#state").value = component.short_name;
+                break;
+            }
+            case "country":
+                document.querySelector("#country").value = component.long_name;
+                break;
+            }
+        }
+
+        address1Field.value = address1;
+        postalField.value = postcode;
+        // After filling the form with address components from the Autocomplete
+        // prediction, set cursor focus on the second address line to encourage
+        // entry of subpremise information such as apartment, unit, or floor number.
+        address2Field.focus();
+        }
+
+        window.initAutocomplete = initAutocomplete;
+
     </script>
 @endpush

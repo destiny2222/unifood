@@ -6,8 +6,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('', [FrontendController::class, 'index'])->name('frontend.index');
 Route::get('/about', [FrontendController::class, 'about'])->name('frontend.about');
-Route::get('/product', [FrontendController::class, 'product'])->name('frontend.product');
-Route::get('/product/{product}', [FrontendController::class, 'productDetails'])->name('frontend.product.show');
+Route::get('/products', [FrontendController::class, 'product'])->name('frontend.product');
+Route::get('/products/{product}', [FrontendController::class, 'productDetails'])->name('frontend.product.show');
+Route::get('/product/{product}', [FrontendController::class, 'product_show'])->name('frontend.product.details');
 Route::get('/blog', [FrontendController::class, 'blog'])->name('frontend.blog');
 Route::get('/blog/{post}', [FrontendController::class, 'blogDetails'])->name('frontend.blog.show');
 Route::get('/blog', [FrontendController::class, 'searchBlog'])->name('frontend.blog.search');
@@ -20,5 +21,6 @@ Route::get('terms-and-condition', [FrontendController::class, 'terms'])->name('f
 Route::get('privacy-policy', [FrontendController::class, 'privacy'])->name('frontend.privacy-policy');
 Route::get('/faq', [FrontendController::class, 'faq'])->name('frontend.faq');
 Route::post('/contact/store', [FrontendController::class, 'contactStore'])->name('frontend.contact.store');
-
+Route::get('/products/category/{categorySlug}', [FrontendController::class, 'productsByCategory'])
+     ->name('products.by.category');
 Route::post('/subscribe', [FrontendController::class, 'subscribe'])->name('subscribe');

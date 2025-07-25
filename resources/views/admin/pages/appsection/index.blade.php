@@ -35,7 +35,7 @@
                                     </div>
                                     <div class="col-12 col-lg-12">
                                         <div class="mb-3">
-                                            <img src="{{ $appsection && $appsection->background_image ? asset('upload/appsection/'.$appsection->background_image) : asset('default-image-path.jpg') }}" class="img-fluid" alt="" style="width: 50%; height: auto; object-fit: cover;">
+                                            <img src="{{ $appsection && $appsection->background_image ? $appsection->background_image : asset('default-image-path.jpg') }}" class="img-fluid" alt="" style="width: 50%; height: auto; object-fit: cover;">
                                         </div>
                                     </div>
                                 </div>
@@ -48,7 +48,7 @@
                                     </div>
                                     <div class="col-12 col-lg-12">
                                         <div class="mb-3">
-                                            <img src="{{ $appsection && $appsection->app_image ? asset('upload/appsection/image/'.$appsection->app_image) : asset('default-image-path.jpg') }}" class="img-fluid" alt="" style="width: 50%; height: auto; object-fit: cover;">
+                                            <img src="{{ $appsection && $appsection->app_image ? $appsection->app_image : asset('default-image-path.jpg') }}" class="img-fluid" alt="" style="width: 50%; height: auto; object-fit: cover;">
 
                                         </div>
                                     </div>

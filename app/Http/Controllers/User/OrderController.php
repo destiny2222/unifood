@@ -13,7 +13,7 @@ class OrderController extends Controller
     
     public function edit($id)
     {
-        $order = OrderItem::with(['product', 'shippingAddress.deliveryArea'])->findOrFail($id);
+        $order = OrderItem::with(['product', 'shippingAddress'])->findOrFail($id);
         
         return view('partials.order_details', compact('order'));
     }

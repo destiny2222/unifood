@@ -25,6 +25,10 @@
                                             <th>Price</th>
                                             <th>Discount</th>
                                             <th>Stock</th>
+                                            <th>Size</th>
+                                            <th>Weight</th>
+                                            <th>Unit</th>
+                                            <th>Variant Price</th>
                                             <th>Category</th>
                                             {{-- <th>Rating</th> --}}
                                             <th>Description</th>
@@ -45,10 +49,30 @@
                                                   </div>
                                               </td>
                                              <td>{{ $product->title }}</td>
-                                             <td>{{ number_format($product->price, 2) }}</td>
-                                             <td>{{  number_format($product->discount, 2) }}</td>
+                                             <td>€{{ number_format($product->price, 2) }}</td>
+                                             <td>€{{  number_format($product->discount, 2) }}</td>
                                              <td>
                                                   <p class="mb-0 text-muted">{{ $product->availability }} Stock</p>
+                                             </td>
+                                             <td>
+                                                  @foreach($product->variants as $variant)
+                                                       <span class="badge bg-success text-white mb-1">{{ $variant->size }}</span><br>
+                                                  @endforeach
+                                             </td>
+                                             <td>
+                                                  @foreach($product->variants as $variant)
+                                                       <span class="badge bg-success text-white mb-1">{{ $variant->weight }}</span><br>
+                                                  @endforeach
+                                             </td>
+                                             <td>
+                                                  @foreach($product->variants as $variant)
+                                                       <span class="badge bg-success text-white mb-1">{{ $variant->unit }}</span><br>
+                                                  @endforeach
+                                             </td>
+                                             <td>
+                                                  @foreach ($product->variants as $variant)
+                                                      <span class="badge bg-success text-white mb-1">{{ $variant->price }}</span><br>
+                                                  @endforeach
                                              </td>
                                              <td> {{ $product->category->title }} </td>
                                              {{-- <td> 

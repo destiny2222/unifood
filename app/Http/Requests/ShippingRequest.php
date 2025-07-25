@@ -28,7 +28,7 @@ class ShippingRequest extends FormRequest
             'phone_number'=> ['required'],
             'address'=> ['required'],
             'address_type'=> ['required'],
-            'delivery_area_id'=> ['required'],
+            // 'delivery_area_id'=> ['required'],
             // 'user_id'=>['required']
         ];
     }

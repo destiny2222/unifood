@@ -21,10 +21,10 @@
                     <div class="exzoom_img_box wsus__menu_details_images">
                         <ul class='exzoom_img_ul'>
                             {{-- Show the main product image first --}}
-                            @if ($product->image)
+                            @if ($product->images)
                                 <li>
                                     <img class="zoom img-fluid w-100"
-                                        src="{{ $product->image }}"
+                                        src="{{ $product->images }}"
                                         alt="Main product image">
                                 </li>
                             @endif
@@ -52,21 +52,40 @@
             <div class="col-lg-7 wow fadeInUp" data-wow-duration="1s">
                 <div class="wsus__menu_details_text">
                     <h2>{{ $product->title }}</h2>
-                    <h3 class="price">${{ $product->price }} <del>${{ $product->discount }}</del></h3>
+                    <h3 class="price variant-price">
+                        £ {{ number_format($product->variants->first()->price ?? 0, 2) }}
+                        @if ($product->discount)
+                         <del>£{{ $product->discount }}</del> 
+                        @endif
+                    </h3>
                     <p class="short_description">
                         {!! \Str::limit($product->description, 200) !!}
                     </p>
-
-                    <form id="add_to_cart_form" action="{{ route('cart.add') }}" method="POST" class="py-4">
+                    
+                    <form id="add_to_cart_form"  method="POST" class="py-4">
                         @csrf
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
                         <input type="hidden" name="slug" value="{{ $product->slug }}">
+                        @if($product->variants && $product->variants->count() > 0)
                         <div class="details_size">
-                            <h5>Wight Unit</h5>
+                            <h5>select size</h5>
+                            @foreach($product->variants as $index => $variant)
                             <div class="form-check">
-                                <p>{{ $product->weight }}   <span>- {{ $product->weight_unit }}</span></p>
+                                <input name="size_variant" class="form-check-input" type="radio"
+                                    id="size-{{ $index }}"
+                                    value="{{ $variant->size }}(::){{ $variant->price }}"
+                                    data-variant-price="{{ $variant->price }}"
+                                    data-variant-size="{{ $variant->size }}"
+                                    data-variant-weight="{{ $variant->weight }}"
+                                    data-variant-unit="{{ $variant->unit }}">
+                                <label class="form-check-label" for="size-{{ $index }}">
+                                    {{ $variant->size }} - {{ $variant->weight }} {{ $variant->unit }} - £{{ $variant->price }}
+                                </label>
                             </div>
+                            @endforeach
+
                         </div>
+                        @endif
                         <div class="details_quentity">
                             <h5>select quantity</h5>
                             <div class="quentity_btn_area d-flex flex-wrapa align-items-center">
@@ -83,12 +102,12 @@
                             </div>
                         </div>
                         <ul class="details_button_area d-flex flex-wrap">
-                            <li class="me-2"><button type="submit" id="add_to_cart" class="common_btn"
-                                    href="javascript:;">add to cart</button></li>
+                            <li class="me-2">
+                                <button type="submit" id="add_to_cart" class="common_btn"  href="javascript:;">add to cart</button>
+                            </li>
                             <li>
                                 <a class="wishlist" href="{{ route('wishlist.add') }}"
-                                    onclick="event.preventDefault(); document.getElementById('wish-{{ $product->id }}').submit()"
-                                    href="{{ route('wishlist.add') }}">
+                                   onclick="event.preventDefault(); document.getElementById('wish-{{ $product->id }}').submit()" href="{{ route('wishlist.add') }}">
                                     <i class="fal fa-heart"></i>
                                 </a>
                                 <form action="{{ route('wishlist.add') }}" id="wish-{{ $product->id }}"
@@ -193,10 +212,17 @@
                             <div class="wsus__menu_item_text">
                                 <a class="title"
                                     href="{{ route('frontend.product.show', $related->slug) }}">{{ $related->title }}</a>
-                                <h5 class="price">${{ $related->price }} <del>${{ $related->discount }}</del></h5>
+                                <h5 class="price">
+                                    £{{ optional($related->variants->first())->price ?? '0.00' }}
+                                    <del>
+                                        @if ($related->discount)
+                                            £{{ $related->discount }}
+                                        @endif
+                                    </del>
+                                </h5>
                                 <ul class="d-flex flex-wrap justify-content-center">
                                     <li>
-                                        <a href="javascript:;" onclick="load_product_model({{ $related->id }})">
+                                        <a href="javascript:;" onclick="event.preventDefault(); load_product_model({{ json_encode($related->slug) }})">
                                             <i class="fas fa-shopping-basket"></i>
                                         </a>
                                     </li>
@@ -241,25 +267,52 @@
         "use strict";
         $(document).ready(function() {
 
-            // $("#add_to_cart").on("click", function(e) {
-            //     e.preventDefault();
+             // Handle size selection
+            $('.size-option').click(function() {
+                $('.size-option').removeClass('active');
+                $(this).addClass('active');
+                $('#selected_size').val($(this).data('size'));
 
-            //     $.ajax({
-            //         type: 'POST',
-            //         url: "{{ route('cart.add') }}", 
-            //         data: $('#add_to_cart_form').serialize(),
-            //         headers: {
-            //             'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            //         },
-            //         success: function(response) {
-            //             toastr.success("Item added successfully");
-            //             // Optional: update mini cart UI
-            //         },
-            //         error: function(response) {
-            //             toastr.error("Could not add to cart.");
-            //         }
-            //     });
-            // });
+                // Optional: update price if sizes have different prices
+                const price = $(this).data('price');
+                $('.variant-price').text(`£${price}`);
+                $('#selected_price').val(price);
+            });
+
+            $("#add_to_cart").on("click", function(e) {
+                e.preventDefault();
+
+                
+                // Check if there are size_variant inputs
+                if ($("input[name='size_variant']").length > 0) {
+                    // If there are, ensure one is selected
+                    if (!$("input[name='size_variant']:checked").val()) {
+                        toastr.error('Please select a size before adding to cart.');
+                        return;
+                    }
+                } else {
+                    // If no size_variant input exists, do not submit
+                    toastr.error('This product cannot be added to cart.');
+                    return;
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ route('cart.add') }}",
+                    data: $('#add_to_cart_form').serialize(),
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        toastr.success(response.message);
+                        Livewire.emit('cartUpdated');
+                    },
+                    error: function(response) {
+                        toastr.error(response.message || 'An error occurred while adding to cart.');
+                    }
+                });
+            });
+
 
 
             $(".increment_qty_detail_page").on("click", function() {
@@ -291,5 +344,30 @@
     });
 
     updateQtyButtons(); // call on page load
+</script>
+<script>
+    function load_product_model(product_slug){
+
+        $("#preloader").addClass('preloader')
+        $(".img").removeClass('d-none')
+
+        $.ajax({
+            type: 'get',
+            url: "{{ url('product') }}/" + product_slug,
+            success: function (response) {
+                $("#preloader").removeClass('preloader')
+                $(".img").addClass('d-none')
+                $(".load_product_modal_response").html(response)
+                $("#cartModal").modal('show');
+            },
+            error: function(response) {
+                toastr.error("Server error occured")
+                // reload the web page
+                window.location.reload();
+                $(".img").addClass('d-none')
+                
+            }
+        });
+    }
 </script>
 @endpush

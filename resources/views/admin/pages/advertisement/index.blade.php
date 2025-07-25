@@ -39,7 +39,7 @@
                                             {{ $loop->index + 1 }}
                                         </td>
                                         <td>
-                                            <img src="{{ asset('upload/advertisement/'.$advertisement->image) }}" width="50px" height="50px" alt="">
+                                            <img src="{{ $advertisement->image }}" width="50px" height="50px" alt="">
                                         </td>
                                         <td>
                                             {{ $advertisement->title }}

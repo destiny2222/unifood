@@ -18,7 +18,7 @@
         <div class="row">
             <div class="col-xl-6 col-lg-5 wow fadeInUp" data-wow-duration="1s">
                 <div class="wsus__about_us_img">
-                    <img src="{{ asset('upload/about-us/'. optional($about)->image ?? '') }}" alt="about us"  class="img-fluid w-100">
+                    <img src="{{ optional($about)->image ?? '' }}" alt="about us"  class="img-fluid w-100">
                 </div>
             </div>
             <div class="col-xl-6 col-lg-7 wow fadeInUp" data-wow-duration="1s">
@@ -45,13 +45,13 @@
                 <div class="col-xl-6 col-lg-5 col-md-10 wow fadeInUp" data-wow-duration="1s">
                     <div class="wsus__about_choose_img">
                         <span class="img_1">
-                            <img src="{{ asset('upload/whychoose/background/'. optional($whyChooseUs)->background_image ?? '') }}"  alt="about us" class="img-fluid w-100">
+                            <img src="{{ optional($whyChooseUs)->background_image ?? '' }}"  alt="about us" class="img-fluid w-100">
                         </span>
                         <span class="img_2">
-                            <img src="{{ asset('upload/whychoose/image/'. optional($whyChooseUs)->image_one ?? '') }}"  alt="about us" class="img-fluid w-100">
+                            <img src="{{  optional($whyChooseUs)->image_one ?? '' }}"  alt="about us" class="img-fluid w-100">
                         </span>
-                        <span class="img_3">n
-                            <img src="{{ asset('upload/whychoose/'. optional($whyChooseUs)->image_two ?? '') }}" alt="about us" class="img-fluid w-100">
+                        <span class="img_3">
+                            <img src="{{  optional($whyChooseUs)->image_two ?? '' }}" alt="about us" class="img-fluid w-100">
                         </span>
                     </div>
                 </div>

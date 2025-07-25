@@ -35,7 +35,7 @@
                                     </div>
                                     <div class="col-12 col-lg-12">
                                         <div class="mb-3">
-                                            <img src="{{ $contact && $contact->existing_image ? asset('upload/contact/'.$contact->existing_image) : asset('default-image-path.jpg') }}" class="img-fluid" alt="" style="width: 50%; height: auto; object-fit: cover;">
+                                            <img src="{{ $contact && $contact->existing_image ? $contact->existing_image : asset('default-image-path.jpg') }}" class="img-fluid" alt="" style="width: 50%; height: auto; object-fit: cover;">
                                         </div>
                                     </div>
                                 </div>

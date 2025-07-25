@@ -29,7 +29,7 @@ class StoreRequest extends FormRequest
             'offer_text'=>['required', 'string'], 
             'link'=>['required', 'string'], 
             'serial'=>['required', 'string'],
-            'image'=>['nullable', 'image', 'mimes:png,jpg,jpeg'],
+            // 'image'=>['nullable', 'image', 'mimes:png,jpg,jpeg'],
         ];
     }
 }

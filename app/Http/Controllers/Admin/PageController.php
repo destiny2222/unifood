@@ -23,6 +23,7 @@ use App\Models\Policy;
 use App\Models\Service;
 use App\Models\Terms;
 use App\Models\WhyChooseUS;
+use App\Traits\CloudinaryUploadTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Intervention\Image\ImageManager;
@@ -30,6 +31,7 @@ use Intervention\Image\Drivers\Gd\Driver;
 
 class PageController extends Controller
 {
+    use CloudinaryUploadTrait;
     public function AboutPage(){
         $whyChoose = WhyChooseUS::first();
         $about = AboutPage::first();
@@ -45,16 +47,17 @@ class PageController extends Controller
         try {
             $imageName = null;
             if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $imageName = $this->uploadImageToCloudinary($request->file('image'), 'mightyolu/upload/about-us');
+                // $image = $request->file('image');
+                // $imageName = time() . '.' . $image->getClientOriginalExtension();
                 
-                $manager = new ImageManager(new Driver());
-                $processedImage = $manager->read($image);
-                $processedImage->resize(400, 250);
-                $processedImage->save(public_path('upload/about-us/') . $imageName);
+                // $manager = new ImageManager(new Driver());
+                // $processedImage = $manager->read($image);
+                // $processedImage->resize(400, 250);
+                // $processedImage->save(public_path('upload/about-us/') . $imageName);
             }
             $existingImage = AboutPage::first();
-            $validated['image'] = $imageName ?? $existingImage->image;
+            $validated['image'] = $imageName['secure_url'] ?? $existingImage->image;
             if (AboutPage::count()) {
                 AboutPage::first()->update($validated);
             } else {
@@ -93,15 +96,16 @@ class PageController extends Controller
         try {
             $imageName = null;
             if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $imageName = $this->uploadImageToCloudinary($request->file('image'), 'mightyolu/upload/advertisement');
+                // $image = $request->file('image');
+                // $imageName = time() . '.' . $image->getClientOriginalExtension();
                 
-                $manager = new ImageManager(new Driver());
-                $processedImage = $manager->read($image);
-                $processedImage->resize(400, 250);
-                $processedImage->save(public_path('upload/advertisement/') . $imageName);
+                // $manager = new ImageManager(new Driver());
+                // $processedImage = $manager->read($image);
+                // $processedImage->resize(400, 250);
+                // $processedImage->save(public_path('upload/advertisement/') . $imageName);
             }
-            $validated['image'] = $imageName;
+            $validated['image'] = $imageName['secure_url'];
             Advertisement::updateOrCreate($validated);
             return redirect()->route('admin.advertisement.index')->with('success', 'Successful!');
         } catch (\Exception $exception) {
@@ -115,16 +119,17 @@ class PageController extends Controller
         try {
             $imageName = null;
             if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $imageName = $this->uploadImageToCloudinary($request->file('image'), 'mightyolu/upload/advertisement');
+                // $image = $request->file('image');
+                // $imageName = time() . '.' . $image->getClientOriginalExtension();
                 
-                $manager = new ImageManager(new Driver());
-                $processedImage = $manager->read($image);
-                $processedImage->resize(400, 250);
-                $processedImage->save(public_path('upload/advertisement/') . $imageName);
+                // $manager = new ImageManager(new Driver());
+                // $processedImage = $manager->read($image);
+                // $processedImage->resize(400, 250);
+                // $processedImage->save(public_path('upload/advertisement/') . $imageName);
             }
             $advertisement = Advertisement::findOrFail($id);
-            $validated['image'] = $imageName ? $imageName : $advertisement->image;
+            $validated['image'] = $imageName['secure_url'] ?? $advertisement->image;
             $advertisement->update($validated);
             return redirect()->route('admin.advertisement.index')->with('success', 'Successful!');
         } catch (\Exception $exception) {
@@ -156,26 +161,28 @@ class PageController extends Controller
             $appsection = AppSection::first();
             $imageName = null;
             if ($request->hasFile('background_image')) {
-                $image = $request->file('background_image');
-                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $imageName = $this->uploadImageToCloudinary($request->file('background_image'), 'mightyolu/upload/appsection');
+                // $image = $request->file('background_image');
+                // $imageName = time() . '.' . $image->getClientOriginalExtension();
                 
-                $manager = new ImageManager(new Driver());
-                $processedImage = $manager->read($image);
-                $processedImage->resize(1300, 600);
-                $processedImage->save(public_path('upload/appsection/') . $imageName);
+                // $manager = new ImageManager(new Driver());
+                // $processedImage = $manager->read($image);
+                // $processedImage->resize(1300, 600);
+                // $processedImage->save(public_path('upload/appsection/') . $imageName);
             }
             $fileName = null;
             if ($request->hasFile('app_image')) {
-                $image = $request->file('app_image');
-                $fileName = time() . '.' . $image->getClientOriginalExtension();
+                $fileName = $this->uploadImageToCloudinary($request->file('app_image'), 'mightyolu/upload/appsection/image');
+                // $image = $request->file('app_image');
+                // $fileName = time() . '.' . $image->getClientOriginalExtension();
                 
-                $manager = new ImageManager(new Driver());
-                $processedImage = $manager->read($image);
-                $processedImage->resize(700, 600);
-                $processedImage->save(public_path('upload/appsection/image/') . $fileName);
+                // $manager = new ImageManager(new Driver());
+                // $processedImage = $manager->read($image);
+                // $processedImage->resize(700, 600);
+                // $processedImage->save(public_path('upload/appsection/image/') . $fileName);
             }
-            $validated['background_image'] = $imageName ? $imageName : $appsection->background_image;
-            $validated['app_image'] = $fileName ? $fileName : $appsection->app_image;
+            $validated['background_image'] = $imageName['secure_url'] ?? $appsection->background_image;
+            $validated['app_image'] = $fileName['secure_url'] ??  $appsection->app_image;
             if(AppSection::count()){
                 AppSection::first()->update($validated);
             }else{
@@ -199,19 +206,18 @@ class PageController extends Controller
         $validated = $request->validated();
         try {
             $imageName = null;
-            if (request()->hasFile('existing_image')) {
-                if ($request->hasFile('existing_image')) {
-                    $image = $request->file('existing_image');
-                    $imageName = time() . '.' . $image->getClientOriginalExtension();
-                    
-                    $manager = new ImageManager(new Driver());
-                    $processedImage = $manager->read($image);
-                    $processedImage->resize(485, 343);
-                    $processedImage->save(public_path('upload/contact/') . $imageName);
-                }
+           if ($request->hasFile('existing_image')) {
+                $imageName = $this->uploadImageToCloudinary($request->file('existing_image'), 'mightyolu/upload/contact');
+                // $image = $request->file('existing_image');
+                // $imageName = time() . '.' . $image->getClientOriginalExtension();
+                
+                // $manager = new ImageManager(new Driver());
+                // $processedImage = $manager->read($image);
+                // $processedImage->resize(485, 343);
+                // $processedImage->save(public_path('upload/contact/') . $imageName);
             }
             $contact = ContactPage::first();
-            $validated['existing_image'] = $imageName ? $imageName : $contact->existing_image;
+            $validated['existing_image'] = $imageName['secure_url'] ?? $contact->existing_image;
             if(ContactPage::count()){
                 ContactPage::first()->update($validated);
             }else{
@@ -222,6 +228,7 @@ class PageController extends Controller
             Log::error($exception->getMessage());
             return back()->with('error', 'Something went worry');
         }
+
     }
 
     public function counterPage(){
@@ -374,44 +381,48 @@ class PageController extends Controller
 
      public function whyChooseStore(WhyChooseStoreRequest  $request){
         $validated = $request->validated();
+        // dd($validated);
         try {
            $imageName = null;
-            if (request()->hasFile('background_image')) {
-                $image = $request->file('background_image');
-                $imageName = time() . '.' . $image->getClientOriginalExtension();
+            if ($request->hasFile('background_image')) {
+                $imageName = $this->uploadImageToCloudinary($request->file('background_image'), 'mightyolu/whychoose/background');
+                // $image = $request->file('background_image');
+                // $imageName = time() . '.' . $image->getClientOriginalExtension();
                 
-                $manager = new ImageManager(new Driver());
-                $processedImage = $manager->read($image);
-                $processedImage->resize(350, 450);
-                $processedImage->save(public_path('upload/whychoose/background/') . $imageName);
+                // $manager = new ImageManager(new Driver());
+                // $processedImage = $manager->read($image);
+                // $processedImage->resize(350, 450);
+                // $processedImage->save(public_path('upload/whychoose/background/') . $imageName);
             }
 
             $fileName = null;
-            if (request()->hasFile('image_one')) {
-                $image = $request->file('image_one');
-                $fileName = time() . '.' . $image->getClientOriginalExtension();
+            if ($request->hasFile('image_one')) {
+                $fileName =  $this->uploadImageToCloudinary($request->file('image_one'), 'mightyolu/whychoose/image');
+                // $image = $request->file('image_one');
+                // $fileName = time() . '.' . $image->getClientOriginalExtension();
                 
-                $manager = new ImageManager(new Driver());
-                $processedImage = $manager->read($image);
-                $processedImage->resize(300, 200);
-                $processedImage->save(public_path('upload/whychoose/image/') . $fileName);
+                // $manager = new ImageManager(new Driver());
+                // $processedImage = $manager->read($image);
+                // $processedImage->resize(300, 200);
+                // $processedImage->save(public_path('upload/whychoose/image/') . $fileName);
             }
 
 
             $photoName = null;
-            if (request()->hasFile('image_two')) {
-                $image = $request->file('image_two');
-                $photoName = time() . '.' . $image->getClientOriginalExtension();
+            if ($request->hasFile('image_two')) {
+                $photoName = $this->uploadImageToCloudinary($request->file('image_two'), 'mightyolu/whychoose');
+                // $image = $request->file('image_two');
+                // $photoName = time() . '.' . $image->getClientOriginalExtension();
                 
-                $manager = new ImageManager(new Driver());
-                $processedImage = $manager->read($image);
-                $processedImage->resize(300, 200);
-                $processedImage->save(public_path('upload/whychoose/') . $photoName);
+                // $manager = new ImageManager(new Driver());
+                // $processedImage = $manager->read($image);
+                // $processedImage->resize(300, 200);
+                // $processedImage->save(public_path('upload/whychoose/') . $photoName);
             }
             $whychoose = WhyChooseUS::first();
-            $validated['background_image'] = $imageName ? $imageName  : $whychoose->background_image;
-            $validated['image_one'] = $fileName ? $fileName  : $whychoose->image_one;
-            $validated['image_two'] = $photoName ? $photoName  : $whychoose->image_two;
+            $validated['background_image'] = $imageName['secure_url'] ?? $whychoose->background_image;
+            $validated['image_one'] = $fileName['secure_url'] ?? $whychoose->image_one;
+            $validated['image_two'] = $photoName['secure_url'] ?? $whychoose->image_two;
             if (WhyChooseUS::count()) {
                 WhyChooseUS::first()->update($validated);
             } else {

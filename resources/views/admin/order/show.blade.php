@@ -39,10 +39,14 @@
                                     <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
                                         <div>
                                             <h4 class="fw-medium text-dark d-flex align-items-center gap-2">Delivery Information:</h4>
-                                            <p class="mb-1">{{ $orderItem->shippingAddress->first_name ?? ''}}  {{ $orderItem->shippingAddress->last_name ?? '' }}</p>
-                                            <p class="mb-1">{{ $orderItem->shippingAddress->email ?? '' }}</p>
-                                            <p class="mb-1">{{ $orderItem->shippingAddress->phone_number ?? '' }}</p>
+                                            <p class="mb-1">{{ $orderItem->shippingAddress->user->name ?? '' }}</p>
+                                            <p class="mb-1">{{ $orderItem->shippingAddress->user->email ?? '' }}</p>
+                                            <p class="mb-1">{{ $orderItem->shippingAddress->user->phone ?? '' }}</p>
                                             <p class="mb-1">{{ $orderItem->shippingAddress->address ?? '' }}</p>
+                                            <p class="mb-1">{{ $orderItem->shippingAddress->state ?? '' }}</p>
+                                            <p class="mb-1">{{ $orderItem->shippingAddress->city ?? '' }}</p>
+                                            <p class="mb-1">{{ $orderItem->shippingAddress->postal_code ?? '' }}</p>
+                                            <p class="mb-1">{{ $orderItem->shippingAddress->country ?? '' }}</p>
                                         </div>
                                         <div>
                                             <h4 class="fw-medium text-dark d-flex align-items-center gap-2">Order Information:</h4>
@@ -99,23 +103,19 @@
                                                     <td> ${{ $orderItem->price * $orderItem->quantity }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td colspan="4" class="text-end">Subtotal : ${{ $orderItem->price * $orderItem->quantity }}</td>
+                                                    <td colspan="4" class="text-end">Subtotal : €{{ $orderItem->price * $orderItem->quantity }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td colspan="4" class="text-end">Discount: $0</td>
+                                                    <td colspan="4" class="text-end">Discount: €0</td>
                                                 </tr>
-                                                <tr>
-                                                    <td colspan="4" class="text-end">Weight: {{ number_format($totalWeight) }}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="4" class="text-end">Delivery Charge : ${{ $orderItem->shippingAddress->deliveryArea->delivery_fee }}</td>
-                                                </tr>
+                                                {{-- <tr>
+                                                    <td colspan="4" class="text-end">Weight: {{ number_format($orderItem->) }}</td>
+                                                </tr> --}}
                                                 <tr>
                                                     <td colspan="4" class="text-end">
-                                                        Grand Total : $
+                                                        Grand Total : €
                                                         {{
-                                                            ($orderItem->price * $orderItem->quantity) + $totalWeight +
-                                                            ($orderItem->shippingAddress->deliveryArea->delivery_fee ?? 0)
+                                                            ($orderItem->price * $orderItem->quantity) 
                                                         }}
                                                     </td>
                                                 </tr>

@@ -20,14 +20,14 @@ class HomeController extends Controller
         $user  = Auth::user();
         $wishlist = Wishlist::orderBy('id', 'desc')->get();
         $shippingAddress = ShippingAddress::where('user_id', $user->id)->get();
-        $deliveryArea = DeliveryArea::orderBy('id', 'desc')->get();
+        // $deliveryArea = DeliveryArea::orderBy('id', 'desc')->get();
         $review = ReviewRating::where('user_id', $user->id)->get();
         $order = OrderItem::where('user_id', $user->id)->get();
         return view("dash.index", [
             'user'=>$user,
             'wishlists'=>$wishlist,
             'shippingAddress'=>$shippingAddress,
-            'deliveryArea' => $deliveryArea,
+            // 'deliveryArea' => $deliveryArea,
             'reviews'=>$review,
             'orders'=>$order,
             'countOrder'=> $order->count(),

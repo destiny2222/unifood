@@ -39,7 +39,7 @@
                                     <tr>
                                         <td>{{ $loop->index + 1 }}</td>
                                         <td>
-                                            <img src="{{ asset('upload/slider/'.$slide->image) }}" width="50px" height="50px" alt="">
+                                            <img src="{{ $slide->image }}" width="50px" height="50px" alt="">
                                         </td>
                                         <td>{{ $slide->title_one }}</td>
                                         <td>{{ $slide->title_two }}</td>

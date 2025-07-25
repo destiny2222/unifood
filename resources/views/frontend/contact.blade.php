@@ -18,7 +18,7 @@
         <div class="row">
             <div class="col-xl-4 col-md-6 col-lg-4 wow fadeInUp" data-wow-duration="1s">
                 <div class="wsus__contact_info"
-                    style="background: url({{ asset('upload/contact/'. optional($contact)->existing_image ?? '') }});">
+                    style="background: url({{ optional($contact)->existing_image ?? '' }});">
                     <span><i class="fa fa-phone-alt"></i></span>
                     <h3>call</h3>
                     <p>{{  optional($contact)->phone ?? '' }}</p>
@@ -26,7 +26,7 @@
             </div>
             <div class="col-xl-4 col-md-6 col-lg-4 wow fadeInUp" data-wow-duration="1s">
                 <div class="wsus__contact_info"
-                    style="background: url({{ asset('upload/contact/'. optional($contact)->existing_image ?? '') }});">
+                    style="background: url({{ optional($contact)->existing_image ?? '' }});">
                     <span><i class="fa fa-envelope"></i></span>
                     <h3>Email</h3>
                     <p>{{ $contact->email ?? '' }}</p>
@@ -34,7 +34,7 @@
             </div>
             <div class="col-xl-4 col-md-6 col-lg-4 wow fadeInUp" data-wow-duration="1s">
                 <div class="wsus__contact_info"
-                    style="background: url({{ asset('upload/contact/'. optional($contact)->existing_image ?? '') }});">
+                    style="background: url({{ optional($contact)->existing_image ?? '' }});">
                     <span><i class="fas fa-street-view"></i></span>
                     <h3>Location</h3>
                     <p>{{ $contact->address ?? '' }}</p>

@@ -11,9 +11,19 @@ use App\Http\Controllers\User\WishListController;
 use App\Http\Controllers\User\ReviewRatingController;
 
 
+// cart routes
+Route::get('/cart', [CartController::class, 'cart'])->name('cart.index');
+Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
+Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
+Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+Route::delete('/cart/{id}/destroy', [CartController::class, 'destroy'])->name('cart.destroy');
+Route::get('/cart/mini', [CartController::class, 'miniCart'])->name('cart.mini');
 
 
 Route::prefix('dashboard')->group(function (){
+    
+
+
     Route::middleware(['auth','verified', 'check.user'])->group(function (){
         Route::get("",[HomeController::class, "index"])->name("home");
 
@@ -26,13 +36,6 @@ Route::prefix('dashboard')->group(function (){
         // order route list
         Route::get('/order/{id}/edit', [OrderController::class, 'edit'])->name('order.edit');
         // Route::get('/order/{id}/invoice', [HomeController::class, 'invoice'])->name('invoice.index');
-        
-
-        // cart routes
-        Route::get('/cart', [CartController::class, 'cart'])->name('cart.index');
-        Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
-        Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
-        Route::delete('/cart/{id}/destroy', [CartController::class, 'destroy'])->name('cart.destroy');
     
         // checkout routes
         Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');

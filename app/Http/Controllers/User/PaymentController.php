@@ -82,6 +82,7 @@ class PaymentController extends Controller
                 }
                 // Clear the user's cart after successful payment
                 Cart::where('user_id', $session->metadata->user_id)->delete();
+                session()->forget('cart');
                 $successMessage = "Payment successful! Your order has been confirmed.";
                 
             } else {

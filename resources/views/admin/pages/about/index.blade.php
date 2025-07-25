@@ -55,6 +55,15 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <div class="card-header">
                     <h4 class="card-title">Why Choose Us</h4>
                 </div>
@@ -134,7 +143,7 @@
                                     <label for="background_image" class="form-label">Background Image</label>
                                     <input type="file" name="background_image" id="background_image" class="form-control">
                                     @if(!empty($whyChoose->background_image))
-                                        <img src="{{ asset('upload/whyChoose/background/'.$whyChoose->background_image) }}" class="img-fluid mt-2" style="width: 50%; height: auto; object-fit: cover;" alt="">
+                                        <img src="{{ $whyChoose->background_image }}" class="img-fluid mt-2" style="width: 50%; height: auto; object-fit: cover;" alt="">
                                     @endif
                                 </div>
                             </div>
@@ -143,7 +152,7 @@
                                     <label for="image_one" class="form-label">Image One</label>
                                     <input type="file" name="image_one" id="image_one" class="form-control">
                                     @if(!empty($whyChoose->image_one))
-                                        <img src="{{ asset('upload/whyChoose/image/'.$whyChoose->image_one) }}" class="img-fluid mt-2" style="width: 50%; height: auto; object-fit: cover;" alt="">
+                                        <img src="{{ $whyChoose->image_one }}" class="img-fluid mt-2" style="width: 50%; height: auto; object-fit: cover;" alt="">
                                     @endif
                                 </div>
                             </div>
@@ -152,7 +161,7 @@
                                     <label for="image_two" class="form-label">Image Two</label>
                                     <input type="file" name="image_two" id="image_two" class="form-control">
                                     @if(!empty($whyChoose->image_two))
-                                        <img src="{{ asset('upload/whyChoose/'.$whyChoose->image_two) }}" class="img-fluid mt-2" style="width: 50%; height: auto; object-fit: cover;" alt="">
+                                        <img src="{{ $whyChoose->image_two }}" class="img-fluid mt-2" style="width: 50%; height: auto; object-fit: cover;" alt="">
                                     @endif
                                 </div>
                             </div>

@@ -14,6 +14,8 @@ class ShippingAddressController extends Controller
     public function store(ShippingRequest $request){
        $validated = $request->validated();
        try {
+        
+        $validated['is_default'] = $request->has('is_default');
         $validated['user_id'] = Auth::user()->id;
         ShippingAddress::create($validated);
         return back()->with('success',value: 'Shipping Address Added Successfully');

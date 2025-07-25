@@ -13,13 +13,12 @@ return new class extends Migration
     {
         Schema::create('shipping_addresses', function (Blueprint $table) {
             $table->id();
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('email');
-            $table->string('phone_number');
+            $table->string('city');
+            $table->string('state');
+            $table->string('country');
+            $table->string('postal_code');
             $table->string('address');
-            $table->string('address_type');
-            $table->foreignId('delivery_area_id')->constrained('delivery_areas')->cascadeOnDelete();
+            $table->boolean('is_default')->default(false);
             $table->foreignUuid('user_id')->constrained('users')->cascadeOnDelete();
             $table->timestamps();
         });

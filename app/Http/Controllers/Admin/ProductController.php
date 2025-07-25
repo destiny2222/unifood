@@ -35,36 +35,30 @@ class ProductController extends Controller
 
     public function store(StoreRequest $request){
 
-        // dd($request->all());
-
+        $validatedData = $request->validated();
+        
         try{
+
+          
 
             $result = null;
             if ($request->hasFile('image')) {
                 $result = $this->uploadImageToCloudinary($request->file('image'), 'mightyolu/upload/product/single');
-                // $imageFile = $request->file('image');
-                // $filename = time() . '_' . uniqid() . '.' . $imageFile->getClientOriginalExtension();
-                // $path = $imageFile->storeAs('upload/product/single', $filename, 'public');
-                // $image = $filename; // Save only the filename to the database
             }
 
+            $validatedData['slug'] = Str::slug($request->title);
+            $validatedData['images'] = $result['secure_url'] ?? null;
 
-            $new_product = Product::firstOrCreate([
-                'title' => $request->title,
-                'price' => $request->price,
-                'slug'=>Str::slug($request->title),
-                'availability'=>$request->availability,
-                'featured'=>$request->featured,
-                'badge'=>$request->badge,
-                'price'=>$request->price,
-                'images'=>$result['secure_url'],
-                'weight' => $request->weight,
-                'weight_unit' => $request->weight_unit,
-                'discount'=>$request->discount,
-                'status'=>$request->status,
-                'category_id'=>$request->category_id,
-                'description'=>$request->description,
-            ]);
+            $new_product = Product::firstOrCreate($validatedData);
+            
+            foreach ($request->variants as $variant) {
+                $new_product->variants()->create([
+                    'size'   => $variant['size'],
+                    'weight' => $variant['weight'],
+                    'unit'   => $variant['unit'],
+                    'price'  => $variant['price'],
+                ]);
+            }
 
             if($request->has('images')){
                  $imageResults = $this->uploadMultipleToCloudinary(
@@ -103,6 +97,7 @@ class ProductController extends Controller
     }
 
     public function update(UpdateRequest $request, $id){
+        $validatedData = $request->validated();
        try {
             $product  = Product::findOrFail($id);
 
@@ -112,24 +107,50 @@ class ProductController extends Controller
             }
 
 
+            $validatedData['slug'] = Str::slug($request->title);
+            $validatedData['images'] = $result['secure_url'] ?? $product->images;
 
-            $product->update([
-                'title' => $request->title,
-                'price' => $request->price,
-                'availability'=>$request->availability,
-                'featured'=>$request->featured,
-                'badge'=>$request->badge,
-                'slug'=>Str::slug($request->title),
-                'price'=>$request->price,
-                'discount'=>$request->discount,
-                'weight' => $request->weight,
-                'weight_unit' => $request->weight_unit,
-                'description'=>$request->description,
-                'category_id'=>$request->category_id,
-                'images'=> $result['secure_url'] ?? $product->images,
-            ]);
+            $product->update($validatedData);
+
+            $variantIds = [];
+
+            
+            if ($request->has('variants') && is_array($request->variants)) {
+                foreach ($request->variants as $variant) {
+                    if (isset($variant['_destroy']) && $variant['_destroy'] == '1') {
+                        if (!empty($variant['id'])) {
+                            $product->variants()->where('id', $variant['id'])->delete();
+                        }
+                        continue; 
+                    }
+
+                    if (!empty($variant['id'])) {
+                        $existingVariant = $product->variants()->where('id', $variant['id'])->first();
+                        if ($existingVariant) {
+                            $existingVariant->update([
+                                'size'   => $variant['size'],
+                                'weight' => $variant['weight'],
+                                'unit'   => $variant['unit'],
+                                'price'  => $variant['price'],
+                            ]);
+                            $variantIds[] = $existingVariant->id;
+                        }
+                    } else {
+                        $newVariant = $product->variants()->create([
+                            'size'   => $variant['size'],
+                            'weight' => $variant['weight'],
+                            'unit'   => $variant['unit'],
+                            'price'  => $variant['price'],
+                        ]);
+                        $variantIds[] = $newVariant->id;
+                    }
+                }
+            }
+            
+
 
             $productImages = ProductImage::where('product_id', $product->id)->get();
+
             if($request->has('images')){
                  $imageResults = $this->uploadMultipleToCloudinary(
                     $request->images, 
@@ -138,11 +159,9 @@ class ProductController extends Controller
                 );
                 foreach ($imageResults as $result) {
                     if ($result['success']) {
-                        ProductImage::create([
-                            'product_id' => $productImages->id,
-                            // 'image_url' => $result['secure_url'],
+                        $productImages->update([
+                            'product_id' => $product->id,
                             'image_path' => $result['secure_url'] ?? $productImages->image_path,
-                            // 'image_public_id' => $result['public_id'],
                         ]);
                     } else {
                         Log::error('Failed to upload image: ' . $result['error']);

@@ -21,11 +21,11 @@ class OrderController extends Controller
     public function show($id){
         $orderItem = OrderItem::findOrFail($id);
         // Total weight
-        $totalWeight =  $this->toGrams($orderItem->product->weight, $orderItem->product->weight_unit) * $orderItem->quantity;
+        // $totalWeight =  $this->toGrams($orderItem->product->weight, $orderItem->product->weight_unit) * $orderItem->quantity;
         // dd($totalWeight);
         return view('admin.order.show', [
             'orderItem' => $orderItem,
-            'totalWeight'=>$totalWeight,
+            // 'totalWeight'=>$totalWeight,
         ]);
     }
 

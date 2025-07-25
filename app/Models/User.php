@@ -37,6 +37,14 @@ class User extends Authenticatable implements MustVerifyEmail
         'remember_token',
     ];
 
+    public function shippingAddresses() {
+        return $this->hasMany(ShippingAddress::class);
+    }
+
+    public function defaultAddress() {
+        return $this->hasOne(ShippingAddress::class)->where('is_default', true);
+    }
+
     /**
      * Get the attributes that should be cast.
      *

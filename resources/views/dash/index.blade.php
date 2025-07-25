@@ -44,7 +44,7 @@
                         <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                             <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true"><span><i class="fas fa-user" aria-hidden="true"></i></span> Personal Info</button>
 
-                            <button class="nav-link" id="v-pills-address-tab" data-bs-toggle="pill" data-bs-target="#v-pills-address" type="button" role="tab" aria-controls="v-pills-address" aria-selected="false" tabindex="-1"><span><i class="fas fa-user" aria-hidden="true"></i></span>Address</button>
+                            {{-- <button class="nav-link" id="v-pills-address-tab" data-bs-toggle="pill" data-bs-target="#v-pills-address" type="button" role="tab" aria-controls="v-pills-address" aria-selected="false" tabindex="-1"><span><i class="fas fa-user" aria-hidden="true"></i></span>Address</button> --}}
 
                             <button class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false" tabindex="-1"><span><i class="fas fa-bags-shopping" aria-hidden="true"></i></span> Order</button>
 
@@ -159,9 +159,10 @@
 
                             <div class="tab-pane fade" id="v-pills-address" role="tabpanel" aria-labelledby="v-pills-address-tab">
                                 <div class="wsus_dashboard_body address_body">
-                                    <h3>address <a class="dash_add_new_address"><i class="far fa-plus" aria-hidden="true"></i> add new
+                                    {{-- <h3>
+                                        address <a class="dash_add_new_address"><i class="far fa-plus" aria-hidden="true"></i> add new
                                         </a>
-                                    </h3>
+                                    </h3> --}}
                                     <div class="wsus_dashboard_address">
                                         <div class="wsus_dashboard_existing_address">
                                             <div class="row" id="address_all_list">
@@ -170,31 +171,23 @@
                                                         <div class="wsus__checkout_single_address ">
                                                             <div class="form-check address-list-1">
                                                                 <label class="form-check-label">
-                                                                    @if ($shipping->address_type == 'Home')
-                                                                        <span class="icon"><i class="fas fa-home" aria-hidden="true"></i>{{ $shipping->address_type }}</span>
-                                                                    @else
-                                                                        <span class="icon"><i class="far fa-car-building" aria-hidden="true"></i>{{ $shipping->address_type }}</span>
-                                                                    @endif
-                                                                    <span class="address">Name : {{ $shipping->first_name }}  {{ $shipping->last_name }}</span>
-                                                                    <span class="address">Phone : {{ $shipping->phone_number }}</span>
-                                                                    <span class="address">Delivery area : {{ $shipping->deliveryArea->delivery_area_name }}</span>
+                                                                    <span class="address">Name : {{ $shipping->user->name }} </span>
+                                                                    <span class="address">Phone : {{ $shipping->user->phone }}</span>
                                                                     <span class="address">Address : {{ $shipping->address }}</span>
+                                                                    <span class="address">Delivery area : {{ $shipping->country }}</span>
                                                                 </label>
                                                             </div>
                                                             <ul>
                                                                 {{-- <li><a href="{{ route('shipping.address.edit', $shipping->id) }}" class="dash_edit_btn edit_data_attribute"><i class="far fa-edit" aria-hidden="true"></i></a></li> --}}
-                                                                <li>
+                                                                {{-- <li>
                                                                     @php
                                                                         $shippingData = [
                                                                             'id' => $shipping->id,
-                                                                            'first_name' => $shipping->first_name,
-                                                                            'last_name' => $shipping->last_name,
-                                                                            'phone_number' => $shipping->phone_number,
-                                                                            'email' => $shipping->email,
-                                                                            'delivery_area_id' => $shipping->delivery_area_id,
-                                                                            'delivery_area_name' => $shipping->deliveryArea->delivery_area_name,
+                                                                            'first_name' => $shipping->user->name,
+                                                                            'phone_number' => $shipping->user->phone,
+                                                                            'email' => $shipping->user->email,
+                                                                            'delivery_area_name' => $shipping->country,
                                                                             'address' => $shipping->address,
-                                                                            'address_type' => $shipping->address_type
                                                                         ];
                                                                     @endphp
                                                                     <a href="javascript:void(0);"
@@ -202,15 +195,15 @@
                                                                         data-address='@json($shippingData)'>
                                                                         <i class="far fa-edit" aria-hidden="true"></i>
                                                                     </a>
-                                                                </li>
+                                                                </li> --}}
 
 
-                                                                <li><a onclick="delete_address(1)" class="dash_del_icon"><i class="fas fa-trash-alt" aria-hidden="true"></i></a> </li>
+                                                                {{-- <li><a onclick="delete_address(1)" class="dash_del_icon"><i class="fas fa-trash-alt" aria-hidden="true"></i></a> </li> --}}
 
-                                                                <form id="delete_address_1" action="" method="POST">
+                                                                {{-- <form id="delete_address_1" action="" method="POST">
                                                                     @method('DELETE') 
                                                                     @csrf 
-                                                                </form>
+                                                                </form> --}}
                                                             </ul>
                                                         </div>
                                                     </div>
@@ -230,9 +223,6 @@
                                                         <div class="wsus__check_single_form">
                                                             <select name="delivery_area_id" class="select2"  tabindex="-1" aria-hidden="true">
                                                                 <option value="">   Select Delivery Area </option>
-                                                                @foreach ($deliveryArea as $delivery)
-                                                                 <option value="{{ $delivery->id }}"> {{ $delivery->delivery_area_name }}  </option>
-                                                                @endforeach
                                                             </select>
                                                         </div>
                                                     </div>
@@ -300,23 +290,13 @@
                                                     </div>
                                                     <div class="col-12">
                                                         <div class="wsus__check_single_form">
-                                                            <select name="delivery_area_id" class="select2 edit_delivery_area_id" tabindex="-1" aria-hidden="true">
-                                                                <option value="">Select Delivery Area</option>
-                                                                @foreach ($deliveryArea as $delivery)
-                                                                    <option value="{{ $delivery->id }}">{{ $delivery->delivery_area_name }}</option>
-                                                                @endforeach
-                                                            </select>
+                                                            <input type="text" name="delivery_area_id" class="edit_name" placeholder="Name">
                                                         </div>
                                                     </div>
                                                     <input type="hidden" name="edit_id" class="edit_id">
-                                                    <div class="col-md-6 col-lg-12 col-xl-6">
+                                                    <div class="col-md-12 col-lg-12 col-xl-6">
                                                         <div class="wsus__check_single_form">
                                                             <input class="edit_first_name" type="text" placeholder="First Name*" name="first_name">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6 col-lg-12 col-xl-6">
-                                                        <div class="wsus__check_single_form">
-                                                            <input class="edit_last_name" type="text" placeholder="Last Name *" name="last_name">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6 col-lg-12 col-xl-6">
@@ -332,18 +312,6 @@
                                                     <div class="col-md-12 col-lg-12 col-xl-12">
                                                         <div class="wsus__check_single_form">
                                                             <textarea class="edit_address" name="address" cols="3" rows="4" placeholder="Address *"></textarea>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12">
-                                                        <div class="wsus__check_single_form check_area">
-                                                            <div class="form-check">
-                                                                <input value="home" class="form-check-input edit_address_type home_type" type="radio" name="address_type" id="flexRadioDefault3">
-                                                                <label class="form-check-label" for="flexRadioDefault3">home</label>
-                                                            </div>
-                                                            <div class="form-check">
-                                                                <input value="office" class="form-check-input edit_address_type office_type" type="radio" name="address_type" id="flexRadioDefault4">
-                                                                <label class="form-check-label" for="flexRadioDefault4">office</label>
-                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-12">
@@ -395,7 +363,7 @@
                                                             </td>
                                                             <td>
                                                                 <h5>
-                                                                    ${{($order->price * $order->quantity) + ($order->shippingAddress->deliveryArea->delivery_fee ?? 0) }}
+                                                                    €{{($order->price * $order->quantity) ?? 0 }}
                                                                 </h5>
                                                             </td>
                                                             <td><a class="view_invoice" data-order-id="{{ $order->id }}"> View Details </a></td>
@@ -422,23 +390,17 @@
                                                 <div class="col-xl-4 col-sm-6 col-lg-6">
                                                     <div class="wsus__menu_item">
                                                         <div class="wsus__menu_item_img">
-                                                            <img src="{{ asset('storage/upload/product/single/'.$wishlist->product->images ) }}" alt="menu" class="img-fluid w-100">
+                                                            <img src="{{ $wishlist->product->images  }}" alt="menu" class="img-fluid w-100">
                                                             <a class="category" href="">{{ $wishlist->product->category->title  }}</a>
                                                         </div>
                                                         <div class="wsus__menu_item_text">
                                                             <a class="title" href="{{ route('frontend.product.show', $wishlist->product->slug) }}">{{  $wishlist->product->title }}</a>
-                                                            <h5 class="price">${{ $wishlist->product->price ?? 0 }} @if($wishlist->product->discount)<del>${{ $wishlist->product->discount }}</del>@endif </h5>
+                                                            
                                                             <ul class="d-flex flex-wrap justify-content-center">
                                                                 <li>
-                                                                    <a href="javascript:;" onclick="event.preventDefault(); document.getElementById('add-cart-{{ $wishlist->product->id  }}').submit()" href="{{ route('wishlist.add.cart') }}">
+                                                                    <a href="javascript:;" onclick="event.preventDefault(); load_product_model({{ json_encode($wishlist->product->slug) }})">
                                                                         <i class="fas fa-shopping-basket" aria-hidden="true"></i>
                                                                     </a>
-                                                                    <form action="{{ route('wishlist.add.cart') }}" id="add-cart-{{ $wishlist->product->id }}" method="post">
-                                                                        @csrf
-                                                                        <input type="hidden" name="product_id" value="{{ $wishlist->product->id }}">
-                                                                        <input type="hidden" name="slug" value="{{ $wishlist->product->slug }}">
-                                                                        <input type="text" value="1" name="quantity" hidden>
-                                                                    </form>
                                                                 </li>
 
                                                                 <form id="remove_wishlist_1" action="" method="POST">
@@ -657,18 +619,10 @@
             // ✅ Fill in form fields
             $('.edit_id').val(data.id);
             $('.edit_first_name').val(data.first_name);
-            $('.edit_last_name').val(data.last_name);
             $('.edit_phone').val(data.phone_number);
             $('.edit_email').val(data.email);
             $('.edit_address').val(data.address);
             $('.edit_delivery_area_id').val(data.delivery_area_id).trigger('change');
-
-            // ✅ Check the appropriate radio button
-            if (data.address_type === 'home') {
-                $('.home_type').prop('checked', true);
-            } else if (data.address_type === 'office') {
-                $('.office_type').prop('checked', true);
-            }
 
             // ✅ Update the form action URL dynamically
             let form = $('#edit_address_form');
@@ -683,27 +637,50 @@
     </script>
 
     <script>
-(function($) {
-    "use strict";
-    $(document).ready(function () {
-        $(".view_invoice").on("click", function(){
-            let order_id = $(this).data('order-id');
-            $("#load_order_details").html('<p>Loading...</p>');
+        (function($) {
+            "use strict";
+            $(document).ready(function () {
+                $(".view_invoice").on("click", function(){
+                    let order_id = $(this).data('order-id');
+                    $("#load_order_details").html('<p>Loading...</p>');
 
-            $.ajax({
-                type: 'get',
-                url: "{{ url('dashboard/order') }}/" + order_id + "/edit",
-                success: function (response) {
-                    $("#load_order_details").html(response);
-                },
-                error: function(response) {
-                    toastr.error("Server error occurred");
-                }
+                    $.ajax({
+                        type: 'get',
+                        url: "{{ url('dashboard/order') }}/" + order_id + "/edit",
+                        success: function (response) {
+                            $("#load_order_details").html(response);
+                        },
+                        error: function(response) {
+                            toastr.error("Server error occurred");
+                        }
+                    });
+                });
             });
+        })(jQuery);
+    </script>
+    <script>
+    function load_product_model(product_slug){
+
+        $("#preloader").addClass('preloader')
+        $(".img").removeClass('d-none')
+
+        $.ajax({
+            type: 'get',
+            url: "{{ url('product') }}/" + product_slug,
+            success: function (response) {
+                $("#preloader").removeClass('preloader')
+                $(".img").addClass('d-none')
+                $(".load_product_modal_response").html(response)
+                $("#cartModal").modal('show');
+            },
+            error: function(response) {
+                toastr.error("Server error occured")
+                // reload the web page
+                window.location.reload();
+                $(".img").addClass('d-none')
+                
+            }
         });
-    });
-})(jQuery);
+    }
 </script>
-
-
 @endpush
