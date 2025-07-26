@@ -69,9 +69,10 @@
                             </form>
                         </div>
                         <ul class="topbar_icon d-flex flex-wrap">
-                            <li><a href="https://www.facebook.com/@MightyOlu"><i class="fab fa-facebook-f"></i></a></li>
-                            <li><a href="https://www.tiktok.com/@MightyOlu"><i class="fab fa-tiktok"></i></a></li>
-                            <li><a href="https://www.instagram.com/@MightyOlu"><i class="fab fa-instagram"></i></a></li>
+                            <li><a href="https://www.facebook.com/profile.php?id=61572736592102"><i class="fab fa-facebook-f"></i></a></li>
+                            <li><a href="https://tiktok.com/@mightyolu_grocery"><i class="fab fa-tiktok"></i></a></li>
+                            <li><a href="https://api.whatsapp.com/send?phone=447867986338"><i class="fab fa-whatsapp"></i></a></li>
+                            <li><a href="https://instagram.com/mightyolu_grocery"><i class="fab fa-instagram"></i></a></li>
                         </ul>
                     </div>
                 </div>
@@ -344,9 +345,10 @@
                             <div class="wsus__footer_social_link">
                                 <h5>Follow us:</h5>
                                 <ul class="d-flex flex-wrap">
-                                    <li><a href="https://www.facebook.com/@MightyOlu"><i class="fab fa-facebook-f"></i></a></li>
-                                    <li><a href="https://www.tiktok.com/@MightyOlu"><i class="fab fa-tiktok"></i></a></li>
-                                    <li><a href="https://www.instagram.com/@MightyOlu"><i class="fab fa-instagram"></i></a></li>
+                                    <li><a href="https://www.facebook.com/profile.php?id=61572736592102"><i class="fab fa-facebook-f"></i></a></li>
+                                    <li><a href="https://tiktok.com/@mightyolu_grocery"><i class="fab fa-tiktok"></i></a></li>
+                                    <li><a href="https://api.whatsapp.com/send?phone=447867986338"><i class="fab fa-whatsapp"></i></a></li>
+                                    <li><a href="https://instagram.com/mightyolu_grocery"><i class="fab fa-instagram"></i></a></li>
                                 </ul>
                             </div>
                         </div>

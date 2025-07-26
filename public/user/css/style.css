@@ -48,6 +48,11 @@ a:hover {
     background: #45871B !important;
 }
 
+.topbar_icon li a:hover {
+    background: #6bbf3c !important;
+    color: #fff !important;
+}
+
 h1,
 h2,
 h3,
