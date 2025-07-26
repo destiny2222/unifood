@@ -92,6 +92,12 @@
                 <img src="{{ asset('images/logo/logo.png') }}" width="50" height="50" alt="UniFood"
                     class="img-fluid">
             </a>
+            <div class="mobile_cart_icon">
+                @php
+                    $countCarts = session('cart', []);
+                @endphp
+                <a class="cart_icon"><i class="fas fa-shopping-basket"></i> <span  class="topbar_cart_qty">{{ count($countCarts) }}</span></a>
+            </div>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="far fa-bars"></i>
@@ -128,14 +134,7 @@
                             </form>
                         </div>
                     </li>
-                    {{-- <li>
-                        @php
-                            $countCarts = session('cart', []);
-                        @endphp
-                        <a class="cart_icon"><i class="fas fa-shopping-basket"></i> <span
-                                class="topbar_cart_qty">{{ count($countCarts) }}</span></a>
-                    </li> --}}
-                    <li>
+                    <li class="wsus__cart_desktop">
                         @php
                             $countCarts = session('cart', []);
                         @endphp

@@ -18,7 +18,7 @@
                 <li class="min-item mb-5">
                     <div class="menu_cart_img">
                         <img src="{{ $product->images }}" alt="menu" class="img-fluid w-100">
-                    </div>
+                    </div> 
                     <div class="menu_cart_text">
                         <a class="title" href="{{ route('frontend.product.show', $product->slug) }}">
                             {{ \Str::limit($product->title, 50) }}

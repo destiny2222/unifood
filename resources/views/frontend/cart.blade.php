@@ -92,7 +92,7 @@
                             <p>Shipping options will be updated during checkout.</p>
                         </div>
                         <div class="btns-group d-flex  gap-3">
-                            <a href="/product" class="btn btn-outline-secondary cart-shop border-secondary btn-md rounded-1 w-50">Continue Shopping</a>
+                            <a href="{{ route('frontend.product') }}" class="btn btn-outline-secondary cart-shop border-secondary btn-md rounded-1 w-50">Continue Shopping</a>
                             <a href="{{ route('checkout') }}" type="submit" class="common_btn w-50">Checkout</a>
                         </div>
                     </div>

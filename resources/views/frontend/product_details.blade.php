@@ -65,19 +65,19 @@
                     <form id="add_to_cart_form"  method="POST" class="py-4">
                         @csrf
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
-                        <input type="hidden" name="slug" value="{{ $product->slug }}">
+                      <input type="hidden" id="selected_price" name="price">
+                      <input type="hidden" id="selected_size" name="size_variant">
+
+
+
                         @if($product->variants && $product->variants->count() > 0)
                         <div class="details_size">
                             <h5>select size</h5>
                             @foreach($product->variants as $index => $variant)
                             <div class="form-check">
-                                <input name="size_variant" class="form-check-input" type="radio"
-                                    id="size-{{ $index }}"
-                                    value="{{ $variant->size }}(::){{ $variant->price }}"
-                                    data-variant-price="{{ $variant->price }}"
-                                    data-variant-size="{{ $variant->size }}"
-                                    data-variant-weight="{{ $variant->weight }}"
-                                    data-variant-unit="{{ $variant->unit }}">
+                                <input name="size_variant" class="form-check-input" type="radio" id="size-{{ $index }}" value="{{ $variant->size }}"
+                                    data-price="{{ $variant->price }}"
+                                    data-size="{{ $variant->size }}">
                                 <label class="form-check-label" for="size-{{ $index }}">
                                     {{ $variant->size }} - {{ $variant->weight }} {{ $variant->unit }} - £{{ $variant->price }}
                                 </label>
@@ -267,59 +267,98 @@
         "use strict";
         $(document).ready(function() {
 
-             // Handle size selection
-            $('.size-option').click(function() {
-                $('.size-option').removeClass('active');
-                $(this).addClass('active');
-                $('#selected_size').val($(this).data('size'));
-
-                // Optional: update price if sizes have different prices
+            // Handle size variant selection
+            $('input[name="size_variant"]').on('click', function () {
+                const size = $(this).data('size');
                 const price = $(this).data('price');
-                $('.variant-price').text(`£${price}`);
+
+                $('#selected_size').val(size);
                 $('#selected_price').val(price);
+
+                $('.variant-price').text(`£${price}`);
             });
 
+            // Handle add to cart
             $("#add_to_cart").on("click", function(e) {
                 e.preventDefault();
 
-                
+                const button = $(this);
+                button.prop('disabled', true).text('Adding...');
+
                 // Check if there are size_variant inputs
                 if ($("input[name='size_variant']").length > 0) {
                     // If there are, ensure one is selected
                     if (!$("input[name='size_variant']:checked").val()) {
                         toastr.error('Please select a size before adding to cart.');
+                        button.prop('disabled', false).text('Add To Cart');
                         return;
                     }
+                    
+                    // Get the selected variant data
+                    const selectedVariant = $("input[name='size_variant']:checked");
+                    const selectedSize = selectedVariant.data('size');
+                    const selectedPrice = selectedVariant.data('price');
+                    
+                    // Update hidden fields with selected values
+                    $('#selected_size').val(selectedSize);
+                    $('#selected_price').val(selectedPrice);
+                    
                 } else {
                     // If no size_variant input exists, do not submit
                     toastr.error('This product cannot be added to cart.');
+                    button.prop('disabled', false).text('Add To Cart');
+                    return;
+                }
+
+                const form = $('#add_to_cart_form');
+
+                // Double check that we have size and price
+                const finalSize = $('#selected_size').val();
+                const finalPrice = $('#selected_price').val();
+                
+                if (!finalSize) {
+                    toastr.error("Please select a size.");
+                    button.prop('disabled', false).text('Add To Cart');
                     return;
                 }
 
                 $.ajax({
                     type: 'POST',
                     url: "{{ route('cart.add') }}",
-                    data: $('#add_to_cart_form').serialize(),
+                    data: form.serialize(),
                     headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
-                        toastr.success(response.message);
-                        Livewire.emit('cartUpdated');
+                        if (response.success) {
+                            toastr.success(response.message);
+                            console.log(response);
+                            Livewire.dispatch('cartUpdated');                           // Update cart count
+                            if (response.cart_count !== undefined) {
+                                $('#cart-count').text(response.cart_count).addClass('animate__animated animate__pulse');
+                                setTimeout(() => {
+                                    $('#cart-count').removeClass('animate__animated animate__pulse');
+                                }, 1000);
+                            }
+                            updateMiniCart();
+                        } else {
+                            toastr.error(response.message);
+                        }
                     },
-                    error: function(response) {
-                        toastr.error(response.message || 'An error occurred while adding to cart.');
+                    error: function(xhr) {
+                        toastr.error("Something went wrong. Try again.");
+                        console.log(xhr.responseText);
+                    },
+                    complete: function() {
+                        button.prop('disabled', false).text('Add To Cart');
                     }
                 });
             });
-
-
 
             $(".increment_qty_detail_page").on("click", function() {
                 let product_qty = $(".product_qty").val();
                 let new_qty = parseInt(product_qty) + 1;
                 $(".product_qty").val(new_qty);
-                calculatePrice(); // update total
             })
 
             $(".decrement_qty_detail_page").on("click", function() {
@@ -327,7 +366,6 @@
                 if (product_qty == 1) return;
                 let new_qty = parseInt(product_qty) - 1;
                 $(".product_qty").val(new_qty);
-                calculatePrice(); // update total
             })
 
         });

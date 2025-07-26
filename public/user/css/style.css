@@ -4055,7 +4055,7 @@ footer {
     width: 45px;
     height: 45px;
     text-align: center;
-    line-height: 45px;
+    line-height: 29px;
     margin-right: 0;
     background: var(--gradiantBg);
     color: var(--colorWhite);
@@ -8361,4 +8361,47 @@ CHECKOUT PAGE START
 
 #cartModal{
   z-index:10000 !important;   
+}
+
+.mobile_cart_icon .cart_icon{
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--colorBlack);
+    text-transform: capitalize;
+    margin: 0px 10px;
+    padding: 0;
+    position: relative;
+    cursor: pointer;
+    transition: all linear .3s;
+    -webkit-transition: all linear .3s;
+    -moz-transition: all linear .3s;
+    -ms-transition: all linear .3s;
+    -o-transition: all linear .3s;
+}
+
+@media (min-width: 992px) {
+    .mobile_cart_icon{
+        display:none;
+    }
+}
+
+@media (max-width: 991px) {
+    .wsus__cart_desktop{
+        display:none;
+    }
+}
+
+.mobile_cart_icon .cart_icon span {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--colorPrimary);
+    color: var(--colorWhite);
+    line-height: 20px;
+    font-size: 12px;
+    text-align: center;
+    font-weight: 600;
+    top: -12px;
+    right: -12px;
 }

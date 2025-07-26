@@ -46,6 +46,18 @@ class CartController extends Controller
     {
         $productId = $request->product_id;
         $quantity = (int) $request->quantity ?: 1;
+        $price = $request->price;
+        $size = $request->size_variant;
+        
+        
+
+        // Validate that we have the required data
+        if (!$price || !$size) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Please select a size and ensure price is available'
+            ]);
+        }
 
         $cart = session()->get('cart', []);
 
