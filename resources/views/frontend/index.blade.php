@@ -367,7 +367,7 @@
     <section class="wsus__download mt_100 xs_mt_70">
         <div class="container">
             <div class="wsus__download_bg"
-     style="background: url({{ asset('upload/appsection/' . ($appSection?->background_image ?? '')) }});">
+     style="background: url({{ optional($appSection)->background_image ?? '' }});">
 
                 <div class="wsus__download_overlay">
                     <div class="row justify-content-between">
@@ -395,7 +395,7 @@
                         </div>
                         <div class="col-xl-6 col-lg-6 wow fadeInUp" data-wow-duration="1s">
                             <div class="wsus__download_img">
-                                <img src="{{ asset('upload/appsection/image/'. optional($appSection)->app_image ?? '') }}"  alt="download" class="img-fluid w-100">
+                                <img src="{{ optional($appSection)->app_image ?? '' }}"  alt="download" class="img-fluid w-100">
                             </div>
                         </div>
                     </div>

@@ -111,6 +111,7 @@
                             // Update cart count
                             if (response.cart_count !== undefined) {
                                 $('#cart-count').text(response.cart_count).addClass('animate__animated animate__pulse');
+                                $('#cart-counts').text(response.cart_count);
                                 setTimeout(() => {
                                     $('#cart-count').removeClass('animate__animated animate__pulse');
                                 }, 1000);

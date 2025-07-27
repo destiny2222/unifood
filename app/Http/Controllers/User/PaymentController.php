@@ -7,6 +7,7 @@ use App\Models\Admin;
 use App\Models\Cart;
 use App\Models\OrderItem;
 use App\Notifications\OrderNotification;
+use App\Notifications\PaymentSuccessNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -76,10 +77,17 @@ class PaymentController extends Controller
                         'payment_status' => 1,
                     ]);
                 // notify administrator that a user made a transaction
-                $admins = Admin::all();
-                if ($admins->isNotEmpty()) {
-                    Notification::send($admins, new OrderNotification($orderItemIds, Auth::user()));
-                }
+                $user = Auth::user();
+
+                // $admins = Admin::all();
+                foreach (['Olumideadelugba25@gmail.com', 'dailydevo9@gmail.com'] as $email) {
+                    Notification::route('mail', $email)->notify(new OrderNotification($orderItemIds, $user));
+                }        
+                // notification user
+                
+                $user->notify(new PaymentSuccessNotification($orderItemIds, $user));
+                
+                
                 // Clear the user's cart after successful payment
                 Cart::where('user_id', $session->metadata->user_id)->delete();
                 session()->forget('cart');

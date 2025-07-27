@@ -14,8 +14,27 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title> {{ config('app.name') }} - Welcome to Our Restaurant Management </title>
     <meta name="description" content="MightyOlu Grocery - Welcome to Our Restaurant Management">
+    <meta name="author" content="Dexnovate" />
+    <meta name="keywords" content="ecommerce, online shopping, fast delivery, secure payment, customer support">
+    <!-- Place favicon.ico in the root directory -->
+    <link rel="shortcut icon" type="image/x-icon" href="https://mightyolu.com/images/logo/logo.png">
+    <meta name="og:image" content="https://mightyolu.com/images/logo/logo.png">
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+    <meta name="bingbot" content="index, follow">
 
-    <link rel="icon" type="image/png" href="/images/logo/favicon.png">
+    {{-- <meta property="fb:app_id" content="123456789"> --}}
+    <meta property="og:url" content="https://mightyolu.com/">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ config('app.name') }}">
+    <meta property="og:image" content="https://mightyolu.com/images/logo/logo.png">
+    <meta property="og:image:alt" content="MightyOlu Grocery - Welcome to Our Restaurant Management">
+    <meta property="og:description" content="MightyOlu Grocery - Welcome to Our Restaurant Management">
+    <meta property="og:site_name" content="{{ config('app.name') }}">
+    <meta property="og:locale" content="en_US">
+    <meta property="article:author" content="dexnovate">
+
+    <link rel="icon" type="image/png" href="https://mightyolu.com/images/logo/logo.png">
     <link rel="stylesheet" href="/user/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/user/css/spacing.css">
@@ -97,7 +116,7 @@
                 @php
                     $countCarts = session('cart', []);
                 @endphp
-                <a class="cart_icon"><i class="fas fa-shopping-basket"></i> <span  class="topbar_cart_qty">{{ count($countCarts) }}</span></a>
+                <a class="cart_icon"><i class="fas fa-shopping-basket"></i> <span  class="topbar_cart_qty" id="cart-count">{{ count($countCarts) }}</span></a>
             </div>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -141,7 +160,7 @@
                         @endphp
                         <a class="cart_icon">
                             <i class="fas fa-shopping-basket"></i> 
-                            <span class="topbar_cart_qty" id="cart-count">{{ count($countCarts) }}</span>
+                            <span class="topbar_cart_qty" id="cart-counts">{{ count($countCarts) }}</span>
                         </a>
                     </li>
                     <li>

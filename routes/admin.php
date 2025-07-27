@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PluginController;
 use App\Http\Controllers\Admin\PostCategoryController;
 use App\Http\Controllers\Admin\SliderController;
+use App\Http\Controllers\Admin\SystemController;
 use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\ReviewController;
 use Illuminate\Support\Facades\Route;
@@ -65,6 +66,16 @@ Route::prefix('admin')->name('admin.')->group(function (){
         Route::get('/order/cancel', [OrderController::class, 'cancelledOrder'])->name('order.cancel');
         Route::put('/order/{id}/update', [OrderController::class, 'update'])->name('order.update');
         Route::delete('/order/{id}/delete', [OrderController::class, 'destroy'])->name('order.delete');
+
+        //system clear
+         Route::get('/system', [SystemController::class, 'index'])->name('system.index');
+        Route::post('/system/clear-all-cache', [SystemController::class, 'clearAllCache'])->name('system.clear-all-cache');
+        Route::post('/system/clear-app-cache', [SystemController::class, 'clearAppCache'])->name('system.clear-app-cache');
+        Route::post('/system/clear-config-cache', [SystemController::class, 'clearConfigCache'])->name('system.clear-config-cache');
+        Route::post('/system/clear-route-cache', [SystemController::class, 'clearRouteCache'])->name('system.clear-route-cache');
+        Route::post('/system/clear-view-cache', [SystemController::class, 'clearViewCache'])->name('system.clear-view-cache');
+        Route::post('/system/optimize', [SystemController::class, 'optimizeApp'])->name('system.optimize');
+        Route::post('/system/clear-logs', [SystemController::class, 'clearLogs'])->name('system.clear-logs');
         
 
         // site management

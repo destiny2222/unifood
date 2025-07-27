@@ -34,6 +34,16 @@ class OrderNotification extends Notification
         return ['mail', 'database'];
     }
 
+//     public function via(object $notifiable): array
+// {
+//     if ($notifiable instanceof \Illuminate\Notifications\AnonymousNotifiable) {
+//         return ['mail'];
+//     }
+
+//     return ['mail', 'database'];
+// }
+
+
     /**
      * Get the mail representation of the notification.
      */
