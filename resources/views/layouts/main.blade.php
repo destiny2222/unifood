@@ -380,7 +380,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="wsus__footer_bottom_text d-flex flex-wrap justify-content-between">
-                            <p class="text-center">&copy;{{ date('Y') }} <a href="https://dexnovate.com" target="_blank">Dexnovate</a> All rights reserved</p>
+                            <p class="text-center"><script>document.write(new Date().getFullYear())</script> &copy; {{ config('app.name') }}. Crafted by <i" class="fa fa-heart fs-18 align-middle text-danger"></i>  <a href="https://dexnovate.com"  class="text-warning fs-5" target="_blank">Dexnovate</a></p>
                             {{-- <ul class="d-flex flex-wrap">
                                 <li><a href="#">FAQ</a></li>
                                 <li><a href="#">Cart</a></li>
