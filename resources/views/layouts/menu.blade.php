@@ -88,7 +88,7 @@
                     </ul>
                </div>
           </li>
-          {{-- <li class="nav-item">
+          <li class="nav-item">
                <a class="nav-link menu-arrow" href="#sidebarDelivery" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarDelivery">
                     <span class="nav-icon">
                          <iconify-icon icon="solar:box-bold-duotone"></iconify-icon>
@@ -106,7 +106,7 @@
                          </li>
                     </ul>
                </div>
-          </li> --}}
+          </li>
           <li class="nav-item">
                <a class="nav-link menu-arrow" href="#sidebarBlog" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarBlog">
                     <span class="nav-icon">

@@ -52,40 +52,54 @@
             <div class="col-lg-7 wow fadeInUp" data-wow-duration="1s">
                 <div class="wsus__menu_details_text">
                     <h2>{{ $product->title }}</h2>
-                    <h3 class="price variant-price">
-                        £ {{ number_format($product->variants->first()->price ?? 0, 2) }}
-                        @if ($product->discount)
-                         <del>£{{ $product->discount }}</del> 
-                        @endif
-                    </h3>
+                    @if ($product->has_variants === 1)
+                        <h3 class="price ">
+                            £ {{ number_format($product->variants->first()->price ?? 0, 2) }}
+                            @if ($product->discount)
+                            <del>£{{ $product->discount }}</del> 
+                            @endif
+                        </h3>
+                    @else
+                        <h3 class="price ">
+                            £ {{ number_format($product->price ?? 0, 2) }} / {{ $product->unit }}
+                            @if ($product->discount)
+                            <del>£{{ $product->discount }}</del> 
+                            @endif
+                        </h3>
+                    @endif
+
+                    <p class='mt-3 mb-3'><span style="color:#E6005C;font-weight:bolder;">Weight:</span> {{ $product->weight }}</p>
+                   
                     <p class="short_description">
                         {!! \Str::limit($product->description, 200) !!}
                     </p>
+
+                    
                     
                     <form id="add_to_cart_form"  method="POST" class="py-4">
                         @csrf
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
-                      <input type="hidden" id="selected_price" name="price">
-                      <input type="hidden" id="selected_size" name="size_variant">
+                        <input type="hidden" id="selected_price" name="price" value="{{ $product->has_variants === 1 ? ($product->variants->first()->price ?? 0) : $product->price }}">
+                        <input type="hidden" id="selected_size" name="size_variant" value="{{ $product->has_variants === 1 ? '' : 'default' }}">
+                        <input type="hidden" id="has_variants" value="{{ $product->has_variants }}">
 
-
-
-                        @if($product->variants && $product->variants->count() > 0)
+                        @if($product->has_variants === 1 && $product->variants && $product->variants->count() > 0)
                         <div class="details_size">
                             <h5>select size</h5>
                             @foreach($product->variants as $index => $variant)
                             <div class="form-check">
                                 <input name="size_variant" class="form-check-input" type="radio" id="size-{{ $index }}" value="{{ $variant->size }}"
                                     data-price="{{ $variant->price }}"
-                                    data-size="{{ $variant->size }}">
+                                    data-size="{{ $variant->size }}"
+                                    {{ $index === 0 ? 'checked' : '' }}>
                                 <label class="form-check-label" for="size-{{ $index }}">
                                     {{ $variant->size }} - {{ $variant->weight }} {{ $variant->unit }} - £{{ $variant->price }}
                                 </label>
                             </div>
                             @endforeach
-
                         </div>
                         @endif
+                        
                         <div class="details_quentity">
                             <h5>select quantity</h5>
                             <div class="quentity_btn_area d-flex flex-wrapa align-items-center">
@@ -97,8 +111,6 @@
                                     <button type="button" class="btn btn-success increment_qty_detail_page"><i
                                             class="fal fa-plus"></i></button>
                                 </div>
-
-                                {{-- <h3>$ <span class="grand_total">0.00</span></h3> --}}
                             </div>
                         </div>
                         <ul class="details_button_area d-flex flex-wrap">
@@ -176,9 +188,6 @@
                                                     <input type="hidden" name="product_id"
                                                         value="{{ $product->id }}">
 
-                                                    {{-- <input type="hidden" name="rating" value="5"
-                                                        id="product_rating"> --}}
-
                                                     <div class="col-xl-12">
                                                         <textarea name="review" rows="3" placeholder="Write your review"></textarea>
                                                     </div>
@@ -213,12 +222,21 @@
                                 <a class="title"
                                     href="{{ route('frontend.product.show', $related->slug) }}">{{ $related->title }}</a>
                                 <h5 class="price">
-                                    £{{ optional($related->variants->first())->price ?? '0.00' }}
-                                    <del>
-                                        @if ($related->discount)
-                                            £{{ $related->discount }}
-                                        @endif
-                                    </del>
+                                    @if ($related->has_variants === 1)
+                                        £{{ optional($related->variants->first())->price ?? '0.00' }}
+                                        <del>
+                                            @if ($related->discount)
+                                                £{{ $related->discount }}
+                                            @endif
+                                        </del>
+                                    @else
+                                        £{{ $related->price ?? '0.00' }}
+                                        <del>
+                                            @if ($related->discount)
+                                                £{{ $related->discount }}
+                                            @endif
+                                        </del>
+                                    @endif
                                 </h5>
                                 <ul class="d-flex flex-wrap justify-content-center">
                                     <li>
@@ -262,10 +280,24 @@
 
 @endsection
 @push('scripts')
-<script>
+{{-- <script>
     (function($) {
         "use strict";
         $(document).ready(function() {
+            
+            // Initialize the first variant as selected if product has variants
+            const hasVariants = parseInt($('#has_variants').val());
+            if (hasVariants === 1) {
+                const firstVariant = $('input[name="size_variant"]:first');
+                if (firstVariant.length > 0) {
+                    firstVariant.prop('checked', true);
+                    const size = firstVariant.data('size');
+                    const price = firstVariant.data('price');
+                    $('#selected_size').val(size);
+                    $('#selected_price').val(price);
+                    $('.variant-price').text(`£${parseFloat(price).toFixed(2)}`);
+                }
+            }
 
             // Handle size variant selection
             $('input[name="size_variant"]').on('click', function () {
@@ -275,7 +307,7 @@
                 $('#selected_size').val(size);
                 $('#selected_price').val(price);
 
-                $('.variant-price').text(`£${price}`);
+                $('.variant-price').text(`£${parseFloat(price).toFixed(2)}`);
             });
 
             // Handle add to cart
@@ -285,9 +317,11 @@
                 const button = $(this);
                 button.prop('disabled', true).text('Adding...');
 
-                // Check if there are size_variant inputs
-                if ($("input[name='size_variant']").length > 0) {
-                    // If there are, ensure one is selected
+                const hasVariants = parseInt($('#has_variants').val());
+
+                // Check if product has variants
+                if (hasVariants === 1) {
+                    // Product has variants - check if one is selected
                     if (!$("input[name='size_variant']:checked").val()) {
                         toastr.error('Please select a size before adding to cart.');
                         button.prop('disabled', false).text('Add To Cart');
@@ -304,23 +338,21 @@
                     $('#selected_price').val(selectedPrice);
                     
                 } else {
-                    // If no size_variant input exists, do not submit
-                    toastr.error('This product cannot be added to cart.');
-                    button.prop('disabled', false).text('Add To Cart');
-                    return;
+                   $('#selected_price').val({{ $product->price }});
                 }
 
                 const form = $('#add_to_cart_form');
 
-                // Double check that we have size and price
+                // Validate that we have the required data
                 const finalSize = $('#selected_size').val();
                 const finalPrice = $('#selected_price').val();
                 
-                if (!finalSize) {
-                    toastr.error("Please select a size.");
+                if (!finalPrice || finalPrice === '0') {
+                    toastr.error("Product price is not available.");
                     button.prop('disabled', false).text('Add To Cart');
                     return;
                 }
+
 
                 $.ajax({
                     type: 'POST',
@@ -332,10 +364,10 @@
                     success: function(response) {
                         if (response.success) {
                             toastr.success(response.message);
-                            console.log(response);
-                            Livewire.dispatch('cartUpdated');                           // Update cart count
+                            Livewire.dispatch('cartUpdated');
                             if (response.cart_count !== undefined) {
                                 $('#cart-count').text(response.cart_count).addClass('animate__animated animate__pulse');
+                                $('#cart-counts').text(response.cart_count);
                                 setTimeout(() => {
                                     $('#cart-count').removeClass('animate__animated animate__pulse');
                                 }, 1000);
@@ -346,8 +378,14 @@
                         }
                     },
                     error: function(xhr) {
-                        toastr.error("Something went wrong. Try again.");
-                        console.log(xhr.responseText);
+                        console.log('Error:', xhr.responseText);
+                        let errorMessage = "Something went wrong. Try again.";
+                        
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        }
+                        
+                        toastr.error(errorMessage);
                     },
                     complete: function() {
                         button.prop('disabled', false).text('Add To Cart');
@@ -359,6 +397,7 @@
                 let product_qty = $(".product_qty").val();
                 let new_qty = parseInt(product_qty) + 1;
                 $(".product_qty").val(new_qty);
+                updateQtyButtons();
             })
 
             $(".decrement_qty_detail_page").on("click", function() {
@@ -366,23 +405,20 @@
                 if (product_qty == 1) return;
                 let new_qty = parseInt(product_qty) - 1;
                 $(".product_qty").val(new_qty);
+                updateQtyButtons();
             })
+
+            function updateQtyButtons() {
+                let qty = parseInt($(".product_qty").val());
+                $(".decrement_qty_detail_page").prop('disabled', qty <= 1);
+            }
+
+            updateQtyButtons(); // call on page load
 
         });
 
     })(jQuery);
-
-    function updateQtyButtons() {
-        let qty = parseInt($(".product_qty").val());
-        $(".decrement_qty_detail_page").prop('disabled', qty <= 1);
-    }
-
-    $(".increment_qty_detail_page, .decrement_qty_detail_page").on("click", function() {
-        updateQtyButtons();
-    });
-
-    updateQtyButtons(); // call on page load
-</script>
+</script> --}}
 <script>
     function load_product_model(product_slug){
 
@@ -407,5 +443,16 @@
             }
         });
     }
+</script>
+<script>
+function updateMiniCart() {
+    $.ajax({
+        url: '/cart/mini',
+        type: 'GET',
+        success: function (response) {
+            $('.wsus__menu_cart_area').html(response.html);
+        }
+    });
+}
 </script>
 @endpush

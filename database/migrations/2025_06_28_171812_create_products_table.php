@@ -21,7 +21,10 @@ return new class extends Migration
             $table->decimal('price', 10, 2)->default(0)->nullable();
             $table->decimal('discount', 10, 2)->default(0)->nullable();
             $table->string('images')->nullable();
+            $table->string('weight')->nullable();
+            $table->string('unit')->nullable();
             $table->string('status')->default(false);
+            $table->boolean('has_variants')->default(false);
             $table->string('today_special')->default(false);
             $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
             $table->longText('description');

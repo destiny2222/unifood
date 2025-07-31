@@ -55,24 +55,40 @@
                                                   <p class="mb-0 text-muted">{{ $product->availability }} Stock</p>
                                              </td>
                                              <td>
-                                                  @foreach($product->variants as $variant)
-                                                       <span class="badge bg-success text-white mb-1">{{ $variant->size }}</span><br>
-                                                  @endforeach
+                                                  @if ($product->has_variants == 1)
+                                                       @foreach($product->variants as $variant)
+                                                            <span class="badge bg-success text-white mb-1">{{ $variant->size }}</span><br>
+                                                       @endforeach
+                                                  @else
+                                                      null
+                                                  @endif
                                              </td>
                                              <td>
-                                                  @foreach($product->variants as $variant)
-                                                       <span class="badge bg-success text-white mb-1">{{ $variant->weight }}</span><br>
-                                                  @endforeach
+                                                  @if ($product->has_variants == 1)
+                                                       @foreach($product->variants as $variant)
+                                                            <span class="badge bg-success text-white mb-1">{{ $variant->weight }}</span><br>
+                                                       @endforeach
+                                                  @else
+                                                      <span class="badge bg-success text-white mb-1">{{ $product->weight }}</span>
+                                                  @endif
                                              </td>
                                              <td>
-                                                  @foreach($product->variants as $variant)
-                                                       <span class="badge bg-success text-white mb-1">{{ $variant->unit }}</span><br>
-                                                  @endforeach
+                                                 @if ($product->has_variants == 1)
+                                                      @foreach($product->variants as $variant)
+                                                            <span class="badge bg-success text-white mb-1">{{ $variant->unit }}</span><br>
+                                                       @endforeach
+                                                 @else
+                                                     <span class="badge bg-success text-white mb-1">{{ $product->unit }}</span>
+                                                 @endif
                                              </td>
                                              <td>
-                                                  @foreach ($product->variants as $variant)
-                                                      <span class="badge bg-success text-white mb-1">{{ $variant->price }}</span><br>
-                                                  @endforeach
+                                                  @if ($product->has_variants == 1)
+                                                       @foreach ($product->variants as $variant)
+                                                         <span class="badge bg-success text-white mb-1">{{ $variant->price }}</span><br>
+                                                       @endforeach
+                                                  @else
+                                                      null
+                                                  @endif
                                              </td>
                                              <td> {{ $product->category->title }} </td>
                                              {{-- <td> 

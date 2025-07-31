@@ -22,7 +22,7 @@
                 <div class="card text-bg-primary">
                     <div class="card-body">
                         <h5 class="card-title text-white  mb-2">Category</h5>
-                        <p class="card-text">Please create categories and subcategories first.</p>
+                        <p class="card-text">Please create categories  first.</p>
                         <a href="{{ route('admin.category.create') }}" class="btn btn-light btn-sm">Create Category</a>
                     </div>
                 </div> 
@@ -80,13 +80,11 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg-3 mb-3">
-                                <form>
-                                    <label for="product-price" class="form-label">Price</label>
-                                    <div class="input-group mb-3">
-                                        <span class="input-group-text fs-20"><i class='bx bxs-discount'></i></span>
-                                        <input type="number" id="product-price" name="price" step="0.01" class="form-control" placeholder="00.00">
-                                    </div>
-                                </form>
+                                <label for="product-price" class="form-label">Price</label>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text fs-20"><i class='bx bxs-discount'></i></span>
+                                    <input type="number" id="product-price" name="price" step="0.01" class="form-control" placeholder="00.00">
+                                </div>
                             </div>
                             <div class="col-lg-3 mb-3">
                                 <label for="product-discount" class="form-label">Discount</label>
@@ -109,6 +107,29 @@
                                     <option value="1">Yes</option>
                                 </select>
                             </div>
+                            <div class="col-lg-3 mb-3 " id="single-product-fields">
+                                <label>Weight</label>
+                                <input type="number" step="0.01" name="weight" class="form-control" placeholder="Weight (e.g. 2.5)">
+                            </div>
+                            <div class="col-lg-3 mb-3 " id="single-product-fields">
+                                <label>Unit</label>
+                                <input type="text" name="unit" class="form-control" placeholder="e.g. kg">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title"></h4>
+                        <div class="mb-3">
+                            <label>
+                                <input type="checkbox" name="has_variants" id="has_variants" value="1" {{ old('has_variants') ? 'checked' : '' }}> This product has variants?
+                            </label>
+                        </div>
+                    </div>
+                    <div class="card-body variant-card">
+                        <div class="row">
                             <div class="col-lg-12 mb-3">
                                 <div id="variant-options">
                                     <div class="row mb-2 variant-row" data-variant="0">
@@ -191,28 +212,30 @@
 </div>
 @endsection
 @push('scripts')
-{{-- <script>
-    let variantIndex = 1;
-    document.getElementById('add-variant').addEventListener('click', function () {
-        const html = `
-        <div class="row mb-2">
-            <div class="col-md-3">
-                <input type="text" name="variants[${variantIndex}][size]" class="form-control" placeholder="Size (e.g. M)">
-            </div>
-            <div class="col-md-3">
-                <input type="number" step="0.01" name="variants[${variantIndex}][weight]" class="form-control" placeholder="Weight">
-            </div>
-            <div class="col-md-3">
-                <input type="text" name="variants[${variantIndex}][unit]" class="form-control" placeholder="Unit (e.g. kg)">
-            </div>
-            <div class="col-md-3">
-                <input type="number" step="0.01" name="variants[${variantIndex}][price]" class="form-control" placeholder="Price">
-            </div>
-        </div>`;
-        document.getElementById('variant-options').insertAdjacentHTML('beforeend', html);
-        variantIndex++;
-    });
-</script> --}}
+<script>
+    const variantSection = document.querySelector('#variant-options').closest('.variant-card');
+    const singlePriceSection = document.querySelector('#product-price').closest('.col-lg-3');
+    const singleFields = document.querySelector('#single-product-fields');
+    const hasVariantsCheckbox = document.getElementById('has_variants');
+
+    function toggleVariantMode() {
+        if (hasVariantsCheckbox.checked) {
+            variantSection.style.display = 'block';
+            singlePriceSection.style.display = 'none';
+            singleFields.style.display = 'none';
+        } else {
+            variantSection.style.display = 'none';
+            singlePriceSection.style.display = 'block';
+            singleFields.style.display = 'block';
+        }
+    }
+
+    // Initial state
+    toggleVariantMode();
+
+    // Event listener
+    hasVariantsCheckbox.addEventListener('change', toggleVariantMode);
+</script>
 <script>
     let variantIndex = 1;
     
@@ -247,14 +270,14 @@
         if (e.target.classList.contains('remove-variant') || e.target.closest('.remove-variant')) {
             const button = e.target.classList.contains('remove-variant') ? e.target : e.target.closest('.remove-variant');
             const variantRow = button.closest('.variant-row');
-            const totalVariants = document.querySelectorAll('.variant-row').length;
-            
-            // Prevent removing the last variant (optional - remove this check if you want to allow removing all variants)
-            if (totalVariants > 1) {
-                variantRow.remove();
-            } else {
-                alert('At least one variant is required.');
-            }
+            // const totalVariants = document.querySelectorAll('.variant-row').length;
+             variantRow.remove();
+            // Prevent removing the last variant
+            // if (totalVariants > 1) {
+            //     variantRow.remove();
+            // } else {
+            //     alert('At least one variant is required.');
+            // }
         }
     });
 </script>

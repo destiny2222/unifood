@@ -16,8 +16,7 @@ class CartController extends Controller
     public function cart()
     {
         $sessionCart = session()->get('cart', []);
-        
-        // dd($sessionCart);
+   
         $cartItems = [];
 
         foreach ($sessionCart as $productId => $item) {
@@ -46,20 +45,9 @@ class CartController extends Controller
     {
         $productId = $request->product_id;
         $quantity = (int) $request->quantity ?: 1;
-        $price = $request->price;
-        $size = $request->size_variant;
-        
-        
-
-        // Validate that we have the required data
-        if (!$price || !$size) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Please select a size and ensure price is available'
-            ]);
-        }
 
         $cart = session()->get('cart', []);
+      
 
         if (isset($cart[$productId])) {
             $cart[$productId]['quantity'] += $quantity;
@@ -95,6 +83,8 @@ class CartController extends Controller
         $action = $request->action;
         
         $cart = session()->get('cart', []);
+
+        
         
         if (!isset($cart[$productId])) {
             return response()->json(['success' => false, 'message' => 'Product not found in cart']);

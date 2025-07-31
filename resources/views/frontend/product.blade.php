@@ -143,12 +143,24 @@
                                         </a>
 
                                         <h6 class="price">
-                                            <span class="fw-bold h4 text-success">£{{ number_format($product->variants->first()->price ?? 0, 2) }}
+                                            <span class="fw-bold h4 text-success">
+                                                @if ($product->has_variants == 1)
+                                                £{{ number_format($product->variants->first()->price ?? 0, 2) }}
+                                                @else
+                                                £{{ number_format($product->price ?? 0, 2) }}
+                                                @endif
+                                                
                                                 @if ($product->discount)
                                                     <del>£{{ $product->discount }}</del>
                                                 @endif
                                             </span>
-                                            <small>/{{ $product->variants->first()->unit ?? 'pcs' }}</small>
+                                            <small>
+                                                @if ($product->has_variants == 1)
+                                                    /{{ $product->variants->first()->unit ?? 'pcs' }}
+                                                @else
+                                                    /{{ $product->unit ?? 'pcs' }}
+                                                @endif
+                                            </small>
                                         </h6>
                                         <div class="d-flex gap-3 justify-content-between align-items-center">
                                             <button type="button" onclick="event.preventDefault(); load_product_model({{ json_encode($product->slug) }})"
@@ -271,6 +283,57 @@
         });
     })(jQuery);
 </script> --}}
+
+<script>
+    (function($) {
+        "use strict";
+        $(document).ready(function() {
+            $('.cartForm').submit(function(e) {
+                e.preventDefault(); 
+                const form = $(this);
+                const button = form.find('button[type="submit"]');
+                
+                // Disable button during request to prevent double-clicks
+                button.prop('disabled', true).text('Adding...');
+                
+                $.ajax({
+                    type: 'POST', 
+                    url: "{{ route('cart.add') }}", 
+                    data: form.serialize(),
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.success(response.message);
+                            
+                            // Update cart count badge
+                            if (response.cart_count !== undefined) {
+                                $('#cart-count').text(response.cart_count);
+                                
+                                // Optional: Add a little animation to draw attention
+                                $('#cart-count').addClass('animate__animated animate__pulse');
+                                setTimeout(function() {
+                                    $('#cart-count').removeClass('animate__animated animate__pulse');
+                                }, 1000);
+                            }
+                        } else {
+                            toastr.error(response.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        toastr.error("An error occurred while processing your request. Please try again.");
+                        console.log(xhr.responseText); // For debugging
+                    },
+                    complete: function() {
+                        // Re-enable button
+                        button.prop('disabled', false).text('Add To Cart');
+                    }
+                });
+            });
+        });
+    })(jQuery);
+</script>
 <script>
     function load_product_model(product_slug){
 
@@ -288,6 +351,7 @@
             },
             error: function(response) {
                 toastr.error("Server error occured")
+                 window.location.reload();
                 $(".img").addClass('d-none')
             }
         });

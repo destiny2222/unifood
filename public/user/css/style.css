@@ -8279,6 +8279,29 @@ CHECKOUT PAGE START
       padding: 5px;
     }
 
+
+    /* .size-option {
+        padding: 10px 15px;
+        margin: 5px;
+        border: 1px solid #ccc;
+        background: white;
+        cursor: pointer;
+    }
+    .size-option.active {
+        background: #007cba;
+        color: white;
+    }
+    .variant-price {
+        font-weight: bold;
+        font-size: 18px;
+        margin: 10px 0;
+    }
+    button {
+        padding: 10px 15px;
+        margin: 5px;
+        cursor: pointer;
+    } */
+
     .quantity-wrapper {
       display: flex;
       align-items: center;

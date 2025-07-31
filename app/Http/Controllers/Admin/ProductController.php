@@ -40,25 +40,43 @@ class ProductController extends Controller
         try{
 
           
-
-            $result = null;
             if ($request->hasFile('image')) {
                 $result = $this->uploadImageToCloudinary($request->file('image'), 'mightyolu/upload/product/single');
             }
 
+           
+            // foreach ($request->variants as $variant) {
+            //     $new_product->variants()->create([
+            //         'size'   => $variant['size'],
+            //         'weight' => $variant['weight'],
+            //         'unit'   => $variant['unit'],
+            //         'price'  => $variant['price'],
+            //     ]);
+            // }
+
             $validatedData['slug'] = Str::slug($request->title);
             $validatedData['images'] = $result['secure_url'] ?? null;
+            $validatedData['has_variants'] = $request->has('has_variants');
 
-            $new_product = Product::firstOrCreate($validatedData);
-            
-            foreach ($request->variants as $variant) {
-                $new_product->variants()->create([
-                    'size'   => $variant['size'],
-                    'weight' => $variant['weight'],
-                    'unit'   => $variant['unit'],
-                    'price'  => $variant['price'],
-                ]);
+            if (!$validatedData['has_variants']) {
+                $validatedData['weight'] = $request->weight;
+                $validatedData['unit'] = $request->unit;
+                $validatedData['price'] = $request->price;
             }
+
+            $new_product = Product::create($validatedData);
+
+            if ($validatedData['has_variants'] && is_array($request->variants)) {
+                foreach ($request->variants as $variant) {
+                    $new_product->variants()->create([
+                        'size'   => $variant['size'],
+                        'weight' => $variant['weight'],
+                        'unit'   => $variant['unit'],
+                        'price'  => $variant['price'],
+                    ]);
+                }
+            }
+
 
             if($request->has('images')){
                  $imageResults = $this->uploadMultipleToCloudinary(
@@ -109,13 +127,19 @@ class ProductController extends Controller
 
             $validatedData['slug'] = Str::slug($request->title);
             $validatedData['images'] = $result['secure_url'] ?? $product->images;
+            $validatedData['has_variants'] = $request->has('has_variants');
+
+            if (!$validatedData['has_variants']) {
+                $validatedData['weight'] = $request->weight;
+                $validatedData['unit'] = $request->unit;
+                $validatedData['price'] = $request->price;
+            }
 
             $product->update($validatedData);
 
             $variantIds = [];
 
-            
-            if ($request->has('variants') && is_array($request->variants)) {
+            if ($validatedData['has_variants'] && is_array($request->variants)) {
                 foreach ($request->variants as $variant) {
                     if (isset($variant['_destroy']) && $variant['_destroy'] == '1') {
                         if (!empty($variant['id'])) {
@@ -146,28 +170,66 @@ class ProductController extends Controller
                     }
                 }
             }
+
             
 
+            
+            
+            
 
             $productImages = ProductImage::where('product_id', $product->id)->get();
 
-            if($request->has('images')){
-                 $imageResults = $this->uploadMultipleToCloudinary(
+            if ($request->has('images')) {
+                $imageResults = $this->uploadMultipleToCloudinary(
                     $request->images, 
                     'mightyolu/upload/images', 
                     'image'
                 );
-                foreach ($imageResults as $result) {
+
+                foreach ($imageResults as $index => $result) {
                     if ($result['success']) {
-                        $productImages->update([
-                            'product_id' => $product->id,
-                            'image_path' => $result['secure_url'] ?? $productImages->image_path,
-                        ]);
+                        if (isset($productImages[$index])) {
+                            // Delete old image from Cloudinary (optional)
+                            // $this->deleteFromCloudinary(
+                            //     $this->extractPublicId($productImages[$index]->image_path),
+                            //     'image'
+                            // );
+
+                            // Update existing image record
+                            $productImages[$index]->update([
+                                'image_path' => $result['secure_url']
+                            ]);
+                        } else {
+                            // Add new image if more uploaded than existing
+                            ProductImage::create([
+                                'product_id' => $product->id,
+                                'image_path' => $result['secure_url'],
+                            ]);
+                        }
                     } else {
                         Log::error('Failed to upload image: ' . $result['error']);
                     }
                 }
             }
+            // $productImages = ProductImage::where('product_id', $product->id)->get();
+
+            // if($request->has('images')){
+            //     $imageResults = $this->uploadMultipleToCloudinary(
+            //         $request->images, 
+            //         'mightyolu/upload/images', 
+            //         'image'
+            //     );
+            //     foreach ($imageResults as $result) {
+            //         if ($result['success']) {
+            //             ProductImage::create([
+            //                 'product_id' => $product->id,
+            //                 'image_path' => $result['secure_url'],
+            //             ]);
+            //         } else {
+            //             Log::error('Failed to upload image: ' . $result['error']);
+            //         }
+            //     }
+            // }
             return redirect()->route('admin.product.index')->with('success', 'Product updated successfully');
        } catch (\Exception $exception) {
          Log::error($exception->getMessage());

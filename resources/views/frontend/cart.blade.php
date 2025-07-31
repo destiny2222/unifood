@@ -44,7 +44,7 @@
                                                 <h6>£{{ number_format($cart['price'], 2) }}</h6>
                                             </td>
 
-                                            <td class="wsus__pro_select" data-item-price="{{ number_format($cart['price'], 2) }}" data-rowid="{{ $cart['id'] }}">
+                                            <td class="wsus__pro_select" data-item-price="{{ $cart['price'] }}" data-rowid="{{ $cart['id'] }}">
                                                 <div class="quentity_btn">
                                                     <button class="btn btn-danger decrement_product" data-cart-id="{{ $cart['id'] }}">
                                                         <i class="fal fa-minus"></i>
@@ -57,7 +57,7 @@
                                             </td>
 
                                             <td class="wsus__pro_tk">
-                                                <h6 class="item-total">€{{ number_format($cart['total'], 2) }}</h6>
+                                                <h6 class="item-total">£{{ number_format($cart['total'], 2) }}</h6>
                                                 <input type="hidden" class="product_total" value="{{ $cart['total'] }}" />
                                             </td>
 
@@ -118,15 +118,15 @@
     // Update item total display
     function updateItemTotal($row, quantity, price) {
         var total = quantity * price;
-        $row.find('.item-total').text('$' + total.toFixed(2));
+        $row.find('.item-total').text('£' + total.toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
         $row.find('.product_total').val(total);
     }
 
     // Update grand total
     function updateGrandTotal() {
         var subtotal = calculate_total();
-        $('#subtotal').text('$' + subtotal.toFixed(2));
-        $('#grand-total').text('$' + subtotal.toFixed(2));
+        $('#subtotal').text('£' + subtotal.toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+        $('#grand-total').text('£' + subtotal.toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2}));
     }
 
     // Cart Minus Event Handler
@@ -293,19 +293,6 @@
             });
         }
     });
-
-    // function calculate_total() {
-    //     var total = 0;
-    //     $('.product_total').each(function() {
-    //         var val = parseFloat($(this).val());
-    //         if (!isNaN(val)) {
-    //             total += val;
-    //         }
-    //     });
-    //     return total;
-    // }
-
-    
 
     // Initialize totals on page load
     $(document).ready(function() {

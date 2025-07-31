@@ -55,13 +55,11 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg-3">
-                                <form>
-                                    <label for="product-price" class="form-label">Price</label>
-                                    <div class="input-group mb-3">
-                                        <span class="input-group-text fs-20"><i class='bx bx-dollar'></i></span>
-                                        <input type="number" id="product-price" name="price" step="0.01" value="{{ $product->price }}" class="form-control" placeholder="00.00">
-                                    </div>
-                                </form>
+                                <label for="product-price" class="form-label">Price</label>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text fs-20"><i class='bx bx-discount'></i></span>
+                                    <input type="number" id="product-price" name="price" step="0.01" value="{{ $product->price }}" class="form-control" placeholder="00.00">
+                                </div>
                             </div>
                             <div class="col-lg-3">
                                 <label for="product-discount" class="form-label">Discount</label>
@@ -84,8 +82,31 @@
                                     <option value="1" {{ $product->status == 0 ? 'selected' : ''}}>Yes</option>
                                 </select>
                             </div>
+                            <div class="col-lg-3 mb-3 " id="single-product-fields">
+                                <label>Weight</label>
+                                <input type="number" step="0.01" name="weight" value="{{ $product->weight }}" class="form-control" placeholder="Weight (e.g. 2.5)">
+                            </div>
+                            <div class="col-lg-3 mb-3 " id="single-product-fields">
+                                <label>Unit</label>
+                                <input type="text" name="unit" class="form-control" value="{{ $product->unit }}" placeholder="e.g. kg">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title"></h4>
+                        <div class="mb-3">
+                            <label>
+                                <input type="checkbox" name="has_variants" id="has_variants" value="1" 
+                                {{ ($product->has_variants || $product->variants->count() > 0) ? 'checked' : '' }}> 
+                                This product has variants?
+                            </label>
+                        </div>
+                    </div>
+                    <div class="card-body variant-card">
+                        <div class="row">
                             <div class="col-lg-12 mb-3">
-                                <label class="form-label">Product Variants</label>
                                 <div id="variant-options">
                                     @foreach ($product->variants as $index => $variant)
                                         <div class="row mb-2 variant-row" data-variant="{{ $index }}">
@@ -153,6 +174,30 @@
 @endsection
 @push('scripts')
 <script>
+    const variantSection = document.querySelector('#variant-options').closest('.variant-card');
+    const singlePriceSection = document.querySelector('#product-price').closest('.col-lg-3');
+    const singleFields = document.querySelector('#single-product-fields');
+    const hasVariantsCheckbox = document.getElementById('has_variants');
+
+    function toggleVariantMode() {
+        if (hasVariantsCheckbox.checked) {
+            variantSection.style.display = 'block';
+            singlePriceSection.style.display = 'none';
+            singleFields.style.display = 'none';
+        } else {
+            variantSection.style.display = 'none';
+            singlePriceSection.style.display = 'block';
+            singleFields.style.display = 'block';
+        }
+    }
+
+    // Initial state
+    toggleVariantMode();
+
+    // Event listener
+    hasVariantsCheckbox.addEventListener('change', toggleVariantMode);
+</script>
+<script>
     // Initialize variantIndex based on existing variants count
     let variantIndex = document.querySelectorAll('#variant-options .variant-row').length;
     
@@ -187,27 +232,22 @@
         if (e.target.classList.contains('remove-variant') || e.target.closest('.remove-variant')) {
             const button = e.target.classList.contains('remove-variant') ? e.target : e.target.closest('.remove-variant');
             const variantRow = button.closest('.row');
-            const totalVariants = document.querySelectorAll('#variant-options .row:not([style*="display: none"])').length;
+            // const totalVariants = document.querySelectorAll('#variant-options .row:not([style*="display: none"])').length;
             
-            // Prevent removing the last variant (optional)
-            if (totalVariants > 1) {
-                // For existing variants, check if they have an ID (from database)
-                const hasId = variantRow.querySelector('input[name*="[id]"]') !== null;
-                
-                if (hasId) {
-                    // This is an existing variant - mark for deletion
-                    const hiddenInput = document.createElement('input');
-                    hiddenInput.type = 'hidden';
-                    hiddenInput.name = variantRow.querySelector('input').name.replace(/\[(\w+)\]$/, '[_destroy]');
-                    hiddenInput.value = '1';
-                    variantRow.appendChild(hiddenInput);
-                    variantRow.style.display = 'none';
-                } else {
-                    // This is a new variant - safe to remove from DOM
-                    variantRow.remove();
-                }
+            // For existing variants, check if they have an ID (from database)
+            const hasId = variantRow.querySelector('input[name*="[id]"]') !== null;
+            
+            if (hasId) {
+                // This is an existing variant - mark for deletion
+                const hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = variantRow.querySelector('input').name.replace(/\[(\w+)\]$/, '[_destroy]');
+                hiddenInput.value = '1';
+                variantRow.appendChild(hiddenInput);
+                variantRow.style.display = 'none';
             } else {
-                alert('At least one variant is required.');
+                // This is a new variant - safe to remove from DOM
+                variantRow.remove();
             }
         }
     });

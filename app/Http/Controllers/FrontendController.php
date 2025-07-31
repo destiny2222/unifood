@@ -45,7 +45,7 @@ class FrontendController extends Controller
 
         // $countCarts = session('cart', []);
         // dd($countCarts);
-        // session()->forget('cart');
+        session()->forget('cart');
 
         return view('frontend.index', [
             'products' => $Product,

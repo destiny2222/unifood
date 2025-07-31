@@ -148,15 +148,12 @@
                                             </span>
                                             <small>/{{ $product->weight_unit ?? 'pcs' }}</small>
                                         </h6>
-                                        <form class="cartForm">
-                                            @csrf
-                                            <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                            <input type="hidden" name="quantity" value="1">
-                                            <button type="submit"
+                                        <div class="d-flex gap-3 justify-content-between align-items-center">
+                                            <button type="button" onclick="event.preventDefault(); load_product_model({{ json_encode($product->slug) }})"
                                                 class="btn btn_outline_secondary btn-md border-secondary d-block mt-4 w-100 direct-add-to-cart-btn add-to-cart-text">
                                                 Add to Cart
                                             </button>
-                                        </form>
+                                        </div>
 
                                     </div>
                                 </div>
@@ -219,7 +216,7 @@
 <!--shop grid section end-->
 @endsection
 @push('scripts')
-<script>
+{{-- <script>
     (function($) {
         "use strict";
         $(document).ready(function() {
@@ -272,5 +269,28 @@
             });
         });
     })(jQuery);
+</script> --}}
+<script>
+    function load_product_model(product_slug){
+
+        $("#preloader").addClass('preloader')
+        $(".img").removeClass('d-none')
+
+        $.ajax({
+            type: 'get',
+            url: "{{ url('product') }}/" + product_slug,
+            success: function (response) {
+                $("#preloader").removeClass('preloader')
+                $(".img").addClass('d-none')
+                $(".load_product_modal_response").html(response)
+                $("#cartModal").modal('show');
+            },
+            error: function(response) {
+                toastr.error("Server error occured")
+                 window.location.reload();
+                $(".img").addClass('d-none')
+            }
+        });
+    }
 </script>
 @endpush
