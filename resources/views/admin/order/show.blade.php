@@ -103,27 +103,40 @@
                                                     <td> ${{ $orderItem->price * $orderItem->quantity }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td colspan="4" class="text-end">Subtotal : €{{ $orderItem->price * $orderItem->quantity }}</td>
+                                                    <td colspan="4" class="text-end pb-3"> <span >Subtotal:</span>  €{{ $orderItem->price * $orderItem->quantity }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td colspan="4" class="text-end">Discount: €0</td>
+                                                    <td colspan="4" class="text-end pb-3"> <span >Discount:</span> €0</td>
                                                 </tr>
                                                 <tr>
                                                     @if ($orderItem->product->has_variants == 1)
-                                                        <td>
-                                                            @foreach ($ as $item)
-                                                                
-                                                            @endforeach
+                                                        <td colspan="4" class="text-end pb-3">
+                                                          <span >Weight:</span>  {{ $orderItem->product->variants->where('size', $orderItem->size)->first()->weight }}
                                                         </td>
                                                     @else
-                                                        <td colspan="4" class="text-end">Weight: {{ number_format($orderItem->product->weight, 2) }} {{ $orderItem->product->unit }}</td>
+                                                        <td colspan="4" class="text-end pb-3"><span >Weight:</span> {{ number_format($orderItem->product->weight, 2) }} {{ $orderItem->product->unit }}</td>
                                                     @endif
                                                 </tr>
                                                 <tr>
-                                                    <td colspan="4" class="text-end">
-                                                        Grand Total : €
+                                                    <td colspan="4" class="text-end pb-3">
+                                                       <span >Size: </span> {{ $orderItem->size }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="4" class="text-end pb-3">
+                                                       <span > Delivery Fee: </span> {{ number_format($orderItem->delivery_fee, 2) }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="4" class="text-end pb-3">
+                                                        <span >Total Weight:</span> {{ number_format($orderItem->totalWeight, 2) }} kg
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="4" class="text-end pb-3 fw-bold">
+                                                       <span > Grand Total: </span> €
                                                         {{
-                                                            ($orderItem->price * $orderItem->quantity) 
+                                                            ($orderItem->price + $orderItem->delivery_fee) 
                                                         }}
                                                     </td>
                                                 </tr>

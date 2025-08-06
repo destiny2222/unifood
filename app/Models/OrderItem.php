@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\WeightConversion;
 use Illuminate\Database\Eloquent\Model;
 // use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class OrderItem extends Model
 {
+    use WeightConversion;
     // use HasUuids;
     
      public $fillable = [
@@ -21,6 +23,7 @@ class OrderItem extends Model
         'user_id',
         'delivery_fee',
         'size',
+        'totalWeight',
     ];
 
     public function user(){
@@ -34,6 +37,33 @@ class OrderItem extends Model
 
     public function shippingAddress(){
         return $this->belongsTo(ShippingAddress::class, 'shipping_addresses_id');
+    }
+
+    public function getTotalWeightAttribute()
+    {
+        $itemWeight = 0;
+        $unit = '';
+
+        if ($this->product->has_variants == 1) {
+            $variant = $this->product->variants->where('size', $this->size)->first();
+            if ($variant) {
+                $itemWeight = $variant->weight;
+                $unit = $variant->unit;
+            }
+        } else {
+            $itemWeight = $this->product->weight ?? 0;
+            $unit = $this->product->unit;
+        }
+
+        if (strtolower($unit) === 'g') {
+            return $this->convertToKg($itemWeight) * $this->quantity;
+        }
+
+        if (strtolower($unit) === 'kg') {
+            return $itemWeight * $this->quantity;
+        }
+
+        return 0;
     }
 
     public static function generateInvoiceNumber()

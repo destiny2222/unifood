@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\DeliveryArea;
 use App\Models\OrderItem;
 use App\Traits\WeightConversion;
 use Illuminate\Http\Request;
@@ -13,6 +14,9 @@ class OrderController extends Controller
     use WeightConversion;
     public function index(){
         $orderItem  =  OrderItem::orderBy('id', 'desc')->paginate(50);
+        $delivery = DeliveryArea::orderBy('id', 'asc')->get();
+
+        
         return view('admin.order.index', [
             'orderItems' => $orderItem,
         ]);
