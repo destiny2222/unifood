@@ -10,22 +10,8 @@ class DeliveryArea extends Model
 {
     // use HasUuids;
     public $fillable = [
-    //    'delivery_area',
-        'delivery_area_name', 'minimum_delivery_time', 'status', 'maximum_delivery_time', 'delivery_fee', 'slug'
+        'minimum_delivery', 'status',  'delivery_fee', 
     ];
 
-    public function shippingAddress(){
-        return $this->hasMany(ShippingAddress::class);
-    }
-
-    public function getRouteKeyName()
-    {
-        return 'slug';
-    }
-
-    public function getSlugAttribute(): string
-    {
-        return Str::slug($this->area_name);
-    }
 
 }

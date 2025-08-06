@@ -22,10 +22,8 @@ class DeliveryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'delivery_area_name'=>['required', 'string'],
-            'minimum_delivery_time'=>['required', 'integer'],
+            'minimum_delivery'=>['required', 'integer'],
             'status'=>['required', 'boolean'],
-            'maximum_delivery_time'=>['required', 'integer'],
             'delivery_fee'=>['required', 'numeric'],
         ];
     }

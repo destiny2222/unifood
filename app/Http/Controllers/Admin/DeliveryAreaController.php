@@ -25,7 +25,6 @@ class DeliveryAreaController extends Controller
     public function store(DeliveryRequest $request){
         try {
             $validated = $request->validated();
-            $validated['slug'] = Str::slug($validated['area_name']);
             DeliveryArea::create($validated);
             return redirect()->route('admin.delivery.area.index')->with('success', 'Delivery Area Added Successfully');
         } catch (\Exception $e) {
@@ -42,7 +41,6 @@ class DeliveryAreaController extends Controller
     public function update(DeliveryRequest $request, $id){
         try {
             $validated = $request->validated();
-            $validated['slug'] = Str::slug($validated['area_name']);
             $deliveryArea = DeliveryArea::find($id);
             $deliveryArea->update($validated);
             return redirect()->route('admin.delivery.area.index')->with('success', 'Delivery Area Updated Successfully');

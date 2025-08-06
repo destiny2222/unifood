@@ -14,30 +14,15 @@
                          </div>
                          <div class="card-body">
                             <div class="row">
-                                <div class="mb-4 col-12">
-                                    <label>Area Name <span class="text-danger">*</span></label>
-                                    <input type="text" id="name" class="form-control" name="delivery_area_name" value="{{ $deliveryArea->delivery_area_name }}" required>
-                                </div>
-
-                                <div class="mb-4 col-md-6">
-                                    <label>Minimum delivery time (Minutes) <span class="text-danger">*</span></label>
+                                <div class="mb-4 col-md-12">
+                                    <label>Minimum delivery weight (number) <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" name="minimum_delivery_time" value="{{ $deliveryArea->minimum_delivery_time }}" required>
                                 </div>
-
-                                <div class="mb-4 col-md-6">
-                                    <label>Maximum delivery time (Minutes) <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="maximum_delivery_time" value="{{ $deliveryArea->maximum_delivery_time }}" required>
-                                </div>
-
-
-
-                                <div class="mb-4 col-md-6">
+                                <div class="mb-4 col-md-12">
                                     <label>Delivery Fee <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" name="delivery_fee" value="{{ $deliveryArea->delivery_fee }}" required>
                                 </div>
-
-
-                                <div class="mb-3 col-md-6">
+                                <div class="mb-3 col-md-12">
                                     <label>Status <span class="text-danger">*</span></label>
                                     <select name="status" class="form-control">
                                         <option selected="" {{ ($deliveryArea->status == 1) ? 'selected' : '' }} value="1">Active</option>

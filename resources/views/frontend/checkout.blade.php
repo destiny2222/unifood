@@ -15,6 +15,7 @@
     <div class="container">
         <form  action="{{ route('stripe.checkout.process') }}" id="checkout_form"   method="POST" autocomplete="off">
             @csrf
+            <input type="text" name="delivery_fee" hidden value="{{ $deliveryFee }}">
             <div class="row">
                 <div class="col-lg-8 col-lg-7 wow fadeInUp" data-wow-duration="1s">
                     <div class="wsus__checkout_form">
@@ -29,7 +30,7 @@
                                 <div class="col-md-12">
                                     <div class="wsus__check_single_form">
                                         <label for="">Apartment, unit, suite, or floor #</label>
-                                        <input type="text" id="address2" placeholder="Apartment, unit, suite, or floor #" name="address" />
+                                        <input type="text" id="address2" placeholder="Apartment, unit, suite, or floor #" name="address" required/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -70,9 +71,9 @@
                 <div class="col-lg-4 wow fadeInUp" data-wow-duration="1s">
                     <div id="sticky_sidebar" class="wsus__cart_list_footer_button">
                         <h6>Order Summery</h6>
-                        <p>subtotal: <span>£{{ number_format($totalPrice, 2) }}</span></p>
+                        <p>subtotal: <span>£{{ number_format($subtotal, 2) }}</span></p>
                         <p>discount (-): <span>£0</span></p>
-                        <p>delivery (+): <span class="delivery_charge">£0.00</span></p>
+                        <p>delivery (+): <span class="delivery_charge">£{{ $deliveryFee }}</span></p>
                         <p class="total">
                             <span>Total:</span> <span class="grand_total">£{{ number_format($totalPrice, 2) }}</span>
                         </p>

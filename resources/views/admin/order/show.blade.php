@@ -108,9 +108,17 @@
                                                 <tr>
                                                     <td colspan="4" class="text-end">Discount: €0</td>
                                                 </tr>
-                                                {{-- <tr>
-                                                    <td colspan="4" class="text-end">Weight: {{ number_format($orderItem->) }}</td>
-                                                </tr> --}}
+                                                <tr>
+                                                    @if ($orderItem->product->has_variants == 1)
+                                                        <td>
+                                                            @foreach ($ as $item)
+                                                                
+                                                            @endforeach
+                                                        </td>
+                                                    @else
+                                                        <td colspan="4" class="text-end">Weight: {{ number_format($orderItem->product->weight, 2) }} {{ $orderItem->product->unit }}</td>
+                                                    @endif
+                                                </tr>
                                                 <tr>
                                                     <td colspan="4" class="text-end">
                                                         Grand Total : €

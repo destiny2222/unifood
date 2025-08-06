@@ -20,8 +20,7 @@
                                    <thead class="bg-light-subtle">
                                         <tr>
                                              <th> S/N </th>
-                                             <th>name</th>
-                                             <th>Delivery Time</th>
+                                             <th>Minimum Delivery</th>
                                              <th>Delivery Fee</th>
                                              <th>Status</th>
                                              <th>Action</th>
@@ -33,12 +32,9 @@
                                              <td>
                                                  {{ $loop->index + 1 }}
                                              </td>
-                                             <td>{{ $deliveryArea->delivery_area_name }}</td>
+                                             <td>{{ $deliveryArea->minimum_delivery }}</td>
                                              <td>
-                                                  {{ $deliveryArea->minimum_delivery_time }} - {{ $deliveryArea->maximum_delivery_time }} Minutes
-                                             </td>
-                                             <td>
-                                               ${{ $deliveryArea->delivery_fee  }}
+                                                €{{ $deliveryArea->delivery_fee  }}
                                              </td>
                                              <td>
                                                 @if ($deliveryArea->status == 1)

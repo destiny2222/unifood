@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\DeliveryArea;
 use App\Models\OrderItem;
+use App\Models\Product;
 use App\Models\ShippingAddress;
 use App\Traits\WeightConversion;
 use Illuminate\Http\Request;
@@ -28,64 +29,91 @@ class CheckoutController extends Controller
     public function checkout()
     {
         $cart = session('cart');
-        if (!$cart || auth()->guest()) return;
+        if (!$cart || Auth::guest()) {
+            return redirect()->route('cart.index')->with('error', 'Please add items to your cart first.');
+        }
+
+        // Cart::where('user_id', Auth::user()->id)->delete();
 
         foreach ($cart as $productId => $item) {
-            Cart::updateOrCreate([
+             Cart::updateOrCreate([
                 'user_id' => Auth::user()->id,
-                'product_id' => $productId
+                'product_id' => $productId,
+                'size' => $item['size'] ?? null,
             ], [
                 'quantity' => $item['quantity'],
-                'size' => $item['size'] ?? null,
                 'price' => $item['price'],
             ]);
         }
 
-        
-
         $cart = Cart::where('user_id', Auth::user()->id)->get();
         $shipping = ShippingAddress::where('user_id', Auth::user()->id)->get();
+        $delivery = DeliveryArea::orderBy('id', 'asc')->get();
+        
+        // Total weight convert to kg
+        $totalWeight = $this->getTotalWeightInKg($cart);
 
-        // Total price
-        $totalPrice = $cart->sum(function ($item) {
-            return $item->quantity * $item->price;
+        // Get the delivery fee by checking the total weight
+        $deliveryFee = 0;
+        foreach ($delivery as $area) {
+            if ($totalWeight < $area->minimum_delivery || $totalWeight > $area->maximum_delivery) {
+                $deliveryFee = $area->delivery_fee;
+                break;
+            }
+        }
+        
+
+        // FIX: Multiply price by quantity for each item
+        $totalProductPrice = $cart->sum(function ($item) {
+            return $item->price;
         });
+        
+        // dd($totalProductPrice);
 
+        $totalPrice = $totalProductPrice + $deliveryFee;
 
+        // dd($totalPrice);
 
         return view('frontend.checkout', [
             'cartItems' => $cart,
             'user' => Auth::user(),
             'shippingAddresses' => $shipping,
             'totalPrice' => $totalPrice,
-            // 'totalWeight' => $totalWeight, // send to view
+            'totalWeight' => $totalWeight, 
+            'subtotal' => $totalProductPrice,
+            'deliveryFee' => $deliveryFee,
         ]);
     }
 
 
-    public function processPayment(Request $request){
+    public function processPayment(Request $request)
+    {
         try {
             $user = Auth::user();
             // Get the current user's cart items
             $cartItems = Cart::where('user_id', Auth::user()->id)->get();
-             
+
             // Check if cart is empty
             if ($cartItems->isEmpty()) {
                 return back()->with('error', 'Your cart is empty.');
             }
 
             $validate = Validator::make($request->all(), [
+                'ship-address' => 'required',
+                'address' => 'required',
                 'city' => 'required|string|max:255',
                 'state' => 'required|string|max:255',
                 'country' => 'required|string|max:255',
                 'postal_code' => 'required|string|max:10',
-                'address' => 'required|string|max:500',
+                'size'=> 'nullable',
+                'delivery_fee'=> 'nullable',
             ], [
+                'ship-address.required' => 'Shipping address is required',
+                'address.required' => 'Address is required',
                 'city.required' => 'City is required',
                 'state.required' => 'State is required',
                 'country.required' => 'Country is required',
-                'postal_code.required' => 'Postal code is required',
-                'address.required' => 'Address is required',
+                'postal_code.required' => 'Postal code is required', 
             ]);
 
             if ($validate->fails()) {
@@ -100,10 +128,10 @@ class CheckoutController extends Controller
 
             $shippingAddress = ShippingAddress::updateOrCreate(
                 ['user_id' => $user->id, 'is_default' => true],
-                $request->only(['city', 'state', 'country', 'postal_code', 'address', 'is_default'])
+                $request->only(['city', 'state', 'country', 'postal_code', 'address','ship-address', 'is_default'])
             );
 
-            
+
             // Generate a unique invoice number 
             $invoiceNumber = OrderItem::generateInvoiceNumber();
             $orderItemIds = [];
@@ -112,15 +140,17 @@ class CheckoutController extends Controller
             foreach ($cartItems as $cartItem) {
                 $orderItem = OrderItem::create([
                     'user_id' => Auth::user()->id,
-                    'shipping_addresses_id'=> $shippingAddress->id,
+                    'shipping_addresses_id' => $shippingAddress->id,
                     'invoice_number' => $invoiceNumber,
                     'product_id' => $cartItem->product_id,
                     'quantity' => $cartItem->quantity,
+                    'size'=> $cartItem->size,
+                    'delivery_fee'=> $request->delivery_fee,
                     'price' => $cartItem->price,
                     'payment_method' => 'Stripe',
                     'payment_status' => 0,
                 ]);
-                
+
                 $orderItemIds[] = $orderItem->id;
             }
 

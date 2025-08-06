@@ -54,7 +54,7 @@ class PaymentController extends Controller
             return redirect($response->url, 303);
         } catch (\Exception $e) {
             Log::error('Unable to create payment session: ' . $e->getMessage());
-            return back()->withErrors(['error' => 'Unable to create payment session: ' . $e->getMessage()]);
+            return back()->with('error' , 'Unable to create payment session: ');
         }
     }
 

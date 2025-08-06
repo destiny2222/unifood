@@ -19,6 +19,8 @@ class OrderItem extends Model
         'payment_status',
         'order_status',
         'user_id',
+        'delivery_fee',
+        'size',
     ];
 
     public function user(){
