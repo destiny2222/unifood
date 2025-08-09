@@ -31,7 +31,7 @@ class PaymentController extends Controller
                 'payment_method_types' => ['link', 'card'],
                 'line_items' => [[
                     'price_data' => [
-                        'currency' => 'usd',
+                        'currency' => 'gbp',
                         'product_data' => [
                             'name' => 'Laravel Stripe Payment',
                         ],

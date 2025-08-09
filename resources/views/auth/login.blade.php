@@ -64,12 +64,16 @@
 
                                     <div class="col-xl-12">
                                         <div class="wsus__login_imput">
+                                            <div class="g-recaptcha" data-sitekey="{{ env('NOCAPTCHA_SITEKEY') }}"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-12">
+                                        <div class="wsus__login_imput">
                                             <button type="submit" class="common_btn">login</button>
                                         </div>
                                     </div>
                                 </div>
                             </form>
-
 
                             <p class="create_account">Do not have an account ? <a href="/register">Create Account</a>
                             </p>

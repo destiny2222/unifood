@@ -42,7 +42,7 @@
         </ul>
 
         @if(count($carts) > 0)
-            <p class="subtotal">Sub Total <span class="mini_sub_total">${{ number_format($total, 2) }}</span></p>
+            <p class="subtotal">Sub Total <span class="mini_sub_total">£{{ number_format($total, 2) }}</span></p>
             <a class="cart_view" href="{{ route('cart.index') }}"> view cart</a>
             <a class="checkout" href="{{ route('checkout') }}">checkout</a>
         @endif

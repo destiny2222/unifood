@@ -75,6 +75,11 @@
 
                                     <div class="col-xl-12">
                                         <div class="wsus__login_imput">
+                                            <div class="g-recaptcha" data-sitekey="{{ env('NOCAPTCHA_SITEKEY') }}"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-12">
+                                        <div class="wsus__login_imput">
                                             <button type="submit" class="common_btn">Register</button>
                                         </div>
                                     </div>
