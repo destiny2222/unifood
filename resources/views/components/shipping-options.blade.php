@@ -1,15 +1,15 @@
 @props(['shippingRates', 'subtotal', 'deliveryFee'])
 
 <div class="wsus__cart_list_footer_button_text">
-    <input type="hidden" name="shipping_rate_id" id="shipping_rate_id" value="">
-    <input type="hidden" name="shipping_delivery_type" id="shipping_delivery_type" value="">
+    <input type="hidden" name="shipping_rate_id" required id="shipping_rate_id" value="">
+    <input type="hidden" name="shipping_delivery_type" required id="shipping_delivery_type" value="">
     <p class="pt-3">Shipping</p>
     @if($shippingRates->count() > 0)
         @foreach ($shippingRates as $rate)
             <div class="card shipping-option" data-rate-id="{{ $rate->id }}">
                 <div class="card-body">
                     <div class="form-check">
-                        <input class="form-check-input" hidden type="radio" name="shipping_rate" id="shipping_rate_{{ $rate->id }}" value="{{ $rate->price }}" data-rate-id="{{ $rate->id }}" data-delivery-type="{{ $rate->delivery_type }}">
+                        <input class="form-check-input" required hidden type="radio" name="shipping_rate" id="shipping_rate_{{ $rate->id }}" value="{{ $rate->price }}" data-rate-id="{{ $rate->id }}" data-delivery-type="{{ $rate->delivery_type }}">
                         <label class="form-check-label" for="shipping_rate_{{ $rate->id }}">
                             {{ ucwords(str_replace('_', ' ', $rate->delivery_type)) }} - €{{ number_format($rate->price, 2) }}
                             <small class="text-muted d-block">
@@ -82,7 +82,9 @@
                 let rateId = $(this).data('rate-id');
                 let deliveryType = $(this).data('delivery-type');
                 
-                let newTotal = subtotal + deliveryFee + shippingCost;
+                let newTotal = subtotal  + shippingCost;
+                $('.delivery_charge').text('£' + shippingCost.toFixed(2));
+                $('input[name="delivery_fee"]').val(shippingCost.toFixed(2));
                 $('.grand_total').text('£' + newTotal.toFixed(2));
                 $('#total_price_input').val(newTotal.toFixed(2));
                 

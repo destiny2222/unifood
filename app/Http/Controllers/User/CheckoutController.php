@@ -54,6 +54,7 @@ class CheckoutController extends Controller
 
         // Total weight convert to kg
         $totalWeight = $this->getTotalWeightInKg($cart);
+        // dd($totalWeight);
         // Get shipping rates that match the total weight
         // $shippingRates = ShippingRate::where(function($query) use ($totalWeight) {
         //     $query->where('min_weight', '<=', $totalWeight)
@@ -77,6 +78,7 @@ class CheckoutController extends Controller
             return $item->price;
         });
         
+        // $totalPrice = $totalProductPrice;
         $totalPrice = $totalProductPrice + $deliveryFee;
 
         // dd($totalPrice);
@@ -115,13 +117,15 @@ class CheckoutController extends Controller
                 'postal_code' => 'required|string|max:10',
                 'size'=> 'nullable',
                 'delivery_fee'=> 'nullable',
+                'shipping_rate_id' => 'required',
             ], [
                 'ship-address.required' => 'Shipping address is required',
                 'address.required' => 'Address is required',
                 'city.required' => 'City is required',
                 'state.required' => 'State is required',
                 'country.required' => 'Country is required',
-                'postal_code.required' => 'Postal code is required', 
+                'postal_code.required' => 'Postal code is required',
+                'shipping_rate_id.required' => 'Please select a shipping option.',
             ]);
 
             if ($validate->fails()) {
