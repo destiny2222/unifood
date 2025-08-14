@@ -275,8 +275,8 @@
                                              £{{ number_format($product->price ?? 0, 2) }}
                                             @endif
                                             
-                                            @if ($product->discount)
-                                                <del>£{{ $product->discount }}</del>
+                                            @if (isset($product->discount) && $product->discount > 0)
+                                                <del>£{{ number_format($product->discount, 2) }}</del>
                                             @endif
                                         </span>
                                         <small>

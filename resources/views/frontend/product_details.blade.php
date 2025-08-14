@@ -55,15 +55,18 @@
                     @if ($product->has_variants === 1)
                         <h3 class="price ">
                             £ {{ number_format($product->variants->first()->price ?? 0, 2) }}
-                            @if ($product->discount)
-                            <del>£{{ $product->discount }}</del> 
+                            @if (isset($product->discount) && $product->discount > 0)
+                                <del>£{{ number_format($product->discount, 2) }}</del>
                             @endif
                         </h3>
                     @else
                         <h3 class="price ">
                             £ {{ number_format($product->price ?? 0, 2) }} / {{ $product->unit }}
-                            @if ($product->discount)
+                            {{-- @if ($product->discount)
                             <del>£{{ $product->discount }}</del> 
+                            @endif --}}
+                            @if (isset($product->discount) && $product->discount > 0)
+                                <del>£{{ number_format($product->discount, 2) }}</del>
                             @endif
                         </h3>
                     @endif
@@ -224,18 +227,19 @@
                                 <h5 class="price">
                                     @if ($related->has_variants === 1)
                                         £{{ optional($related->variants->first())->price ?? '0.00' }}
-                                        <del>
+                                        @if (isset($related->discount) && $related->discount > 0)
+                                            <del>£{{ number_format($related->discount, 2) }}</del>
+                                        @endif
+                                        {{-- <del>
                                             @if ($related->discount)
                                                 £{{ $related->discount }}
                                             @endif
-                                        </del>
+                                        </del> --}}
                                     @else
                                         £{{ $related->price ?? '0.00' }}
-                                        <del>
-                                            @if ($related->discount)
-                                                £{{ $related->discount }}
-                                            @endif
-                                        </del>
+                                        @if (isset($related->discount) && $related->discount > 0)
+                                            <del>£{{ number_format($related->discount, 2) }}</del>
+                                        @endif
                                     @endif
                                 </h5>
                                 <ul class="d-flex flex-wrap justify-content-center">

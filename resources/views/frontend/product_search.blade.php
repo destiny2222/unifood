@@ -142,8 +142,8 @@
 
                                         <h6 class="price">
                                             <span class="fw-bold h4 text-success">£{{ $product->price ?? 0 }}
-                                                @if ($product->discount)
-                                                    <del>£{{ $product->discount }}</del>
+                                                @if (isset($product->discount) && $product->discount > 0)
+                                                    <del>£{{ number_format($product->discount, 2) }}</del>
                                                 @endif
                                             </span>
                                             <small>/{{ $product->weight_unit ?? 'pcs' }}</small>
