@@ -8,6 +8,8 @@ use App\Models\DeliveryArea;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ShippingAddress;
+use App\Models\ShippingRate;
+use App\Traits\ShippingCost;
 use App\Traits\WeightConversion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +18,7 @@ use Illuminate\Support\Facades\Validator;
 
 class CheckoutController extends Controller
 {
-    use WeightConversion;
+    use WeightConversion, ShippingCost;
 
 
     protected $paymentController;
@@ -49,9 +51,15 @@ class CheckoutController extends Controller
         $cart = Cart::where('user_id', Auth::user()->id)->get();
         $shipping = ShippingAddress::where('user_id', Auth::user()->id)->get();
         $delivery = DeliveryArea::orderBy('id', 'asc')->get();
-        
+
         // Total weight convert to kg
         $totalWeight = $this->getTotalWeightInKg($cart);
+        // Get shipping rates that match the total weight
+        // $shippingRates = ShippingRate::where(function($query) use ($totalWeight) {
+        //     $query->where('min_weight', '<=', $totalWeight)
+        //           ->where('max_weight', '>=', $totalWeight);
+        // })->orderBy('price', 'asc')->get();
+        $shippingRates = $this->getShippingRates($totalWeight);
 
         // Get the delivery fee by checking the total weight
         $deliveryFee = 0;
@@ -62,14 +70,13 @@ class CheckoutController extends Controller
             }
         }
         
+        
+        
 
-        // FIX: Multiply price by quantity for each item
         $totalProductPrice = $cart->sum(function ($item) {
             return $item->price;
         });
         
-        // dd($totalProductPrice);
-
         $totalPrice = $totalProductPrice + $deliveryFee;
 
         // dd($totalPrice);
@@ -82,6 +89,7 @@ class CheckoutController extends Controller
             'totalWeight' => $totalWeight, 
             'subtotal' => $totalProductPrice,
             'deliveryFee' => $deliveryFee,
+            'shippingRates' => $shippingRates,
         ]);
     }
 
@@ -126,6 +134,19 @@ class CheckoutController extends Controller
             //     $user->shippingAddresses()->update(['is_default' => false]);
             // }
 
+            // Get shipping rate details if selected
+            $shippingRate = null;
+            $shippingDeliveryType = null;
+            $shippingPrice = 0;
+
+            if ($request->filled('shipping_rate_id')) {
+                $shippingRate = ShippingRate::find($request->shipping_rate_id);
+                if ($shippingRate) {
+                    $shippingDeliveryType = $shippingRate->delivery_type;
+                    $shippingPrice = $shippingRate->price;
+                }
+            }
+
             $shippingAddress = ShippingAddress::updateOrCreate(
                 ['user_id' => $user->id, 'is_default' => true],
                 $request->only(['city', 'state', 'country', 'postal_code', 'address','ship-address', 'is_default'])
@@ -146,6 +167,8 @@ class CheckoutController extends Controller
                     'quantity' => $cartItem->quantity,
                     'size'=> $cartItem->size,
                     'delivery_fee'=> $request->delivery_fee,
+                    'shipping_delivery_type' => $shippingDeliveryType,
+                    'shipping_price' => $shippingPrice,
                     'price' => $cartItem->price,
                     'payment_method' => 'Stripe',
                     'payment_status' => 0,

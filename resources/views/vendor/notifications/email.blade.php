@@ -91,7 +91,7 @@
                                                     <tr>
                                                         <td>{{ $detail['product_name'] }}</td>
                                                         <td>{{ $detail['quantity'] }}</td>
-                                                        <td>${{ number_format($detail['price'], 2) }}</td>
+                                                        <td>£{{ number_format($detail['price'], 2) }}</td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>

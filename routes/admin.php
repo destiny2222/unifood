@@ -1,23 +1,25 @@
 <?php
 
+use App\Http\Controllers\Admin\Auth\LoginController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\DeliveryAreaController;
+use App\Http\Controllers\Admin\FaqController;
+use App\Http\Controllers\Admin\HomeController;
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\PageController;
+use App\Http\Controllers\Admin\PartnerController;
 use App\Http\Controllers\Admin\PluginController;
 use App\Http\Controllers\Admin\PostCategoryController;
+use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ReviewController;
+use App\Http\Controllers\Admin\ShippingRateController;
 use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\SystemController;
 use App\Http\Controllers\Admin\TestimonialController;
-use App\Http\Controllers\Admin\ReviewController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\FaqController;
-use App\Http\Controllers\Admin\HomeController;
-use App\Http\Controllers\Admin\PostController;
-use App\Http\Controllers\Admin\OrderController;
-use App\Http\Controllers\Admin\ProductController;
-use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\Auth\LoginController;
-use App\Http\Controllers\Admin\DeliveryAreaController;
-use App\Http\Controllers\Admin\PartnerController;
 use App\Http\Controllers\Admin\UserManagementController;
+use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -200,6 +202,14 @@ Route::prefix('admin')->name('admin.')->group(function (){
         // term
         Route::get('/term/list', [PageController::class, 'terms'])->name('terms.index');
         Route::post('/term/store', [PageController::class, 'termStore'])->name('terms.store');
+
+        // Shipping Rate
+        Route::get('/shipping/rate', [ShippingRateController::class, 'index'])->name('shipping.rate.index');
+        Route::get('/shipping/rate/create', [ShippingRateController::class, 'create'])->name('shipping.rate.create');
+        Route::post('/shipping/rate/store', [ShippingRateController::class, 'store'])->name('shipping.rate.store');
+        Route::get('/shipping/rate/{id}/edit', [ShippingRateController::class, 'edit'])->name('shipping.rate.edit');
+        Route::put('/shipping/rate/{id}/update', [ShippingRateController::class, 'update'])->name('shipping.rate.update');
+        Route::get('/shipping/rate/{id}/delete', [ShippingRateController::class, 'destroy'])->name('shipping.rate.delete');
 
         // policy
         Route::get('/policy/list', [PageController::class, 'policy'])->name('policy.index');

@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
-use App\Actions\Fortify\AttemptToAuthenticate;
 use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable;
 use Laravel\Fortify\Fortify;
 use Laravel\Fortify\Contracts\LoginResponse;
@@ -96,22 +95,6 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Fortify::authenticateUsing(function (Request $request) {
-            $user = \App\Models\User::where('email', $request->email)->first();
-
-            if ($user &&
-                \Illuminate\Support\Facades\Hash::check($request->password, $user->password)) {
-                return $user;
-            }
-        });
-
-        Fortify::authenticateThrough(function (Request $request) {
-            return array_filter([
-                AttemptToAuthenticate::class,
-                RedirectIfTwoFactorAuthenticatable::class,
-            ]);
-        });
-
         Fortify::createUsersUsing(CreateNewUser::class);
         Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);

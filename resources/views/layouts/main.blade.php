@@ -171,7 +171,11 @@
                         @endauth
                     </li>
                     <li>
-                        <a class="common_btn" href="/login">Login</a>
+                        @auth
+                          <a class="common_btn" href="/dashboard">Dashboard</a>
+                        @else
+                            <a class="common_btn" href="/login">Login</a>
+                        @endauth
                     </li>
                     {{-- <li>
                         <a class="common_btn" href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop">reservation</a>

@@ -32,14 +32,9 @@ class CreateNewUser implements CreatesNewUsers
                 Rule::unique(User::class),
             ],
             'password'=> ['required', 'confirmed', Password::min(8)->numbers()->letters()->mixedCase()->symbols()],
-            'g-recaptcha-response' => ['required', 'string'],
         ])->validate();
 
-        if (!$this->validateRecaptcha(request())) {
-            throw ValidationException::withMessages([
-                'g-recaptcha-response' => ['Invalid reCAPTCHA response.'],
-            ]);
-        }
+       
 
         return User::create([
             'name' => $input['name'],

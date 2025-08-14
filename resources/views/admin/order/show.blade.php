@@ -98,15 +98,15 @@
                                                         </div>
 
                                                     </td>
-                                                    <td>${{ $orderItem->price }}</td>
+                                                    <td>£{{ $orderItem->price }}</td>
                                                     <td> {{ $orderItem->quantity }}</td>
-                                                    <td> ${{ $orderItem->price * $orderItem->quantity }}</td>
+                                                    <td> £{{ $orderItem->price * $orderItem->quantity }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td colspan="4" class="text-end pb-3"> <span >Subtotal:</span>  €{{ $orderItem->price * $orderItem->quantity }}</td>
+                                                    <td colspan="4" class="text-end pb-3"> <span >Subtotal:</span>  £{{ $orderItem->price * $orderItem->quantity }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td colspan="4" class="text-end pb-3"> <span >Discount:</span> €0</td>
+                                                    <td colspan="4" class="text-end pb-3"> <span >Discount:</span> £0</td>
                                                 </tr>
                                                 <tr>
                                                     @if ($orderItem->product->has_variants == 1)
@@ -133,10 +133,22 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
+                                                    <td colspan="4" class="text-end pb-3">
+                                                        @if($orderItem->shipping_delivery_type)
+                                                          Shipping delivery day :    {{ ucwords(str_replace('_', ' ', $orderItem->shipping_delivery_type)) }}
+                                                        @else
+                                                            <span class="badge bg-secondary">No Shipping</span>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="4" class="text-end pb-3">Shipping price: £{{ number_format($orderItem->shipping_price, 2) }}</td>
+                                                </tr>
+                                                <tr>
                                                     <td colspan="4" class="text-end pb-3 fw-bold">
-                                                       <span > Grand Total: </span> €
+                                                       <span > Grand Total: </span> £
                                                         {{
-                                                            ($orderItem->price + $orderItem->delivery_fee) 
+                                                            ($orderItem->price + $orderItem->delivery_fee + $orderItem->shipping_price)
                                                         }}
                                                     </td>
                                                 </tr>

@@ -74,11 +74,11 @@
                         <p>subtotal: <span>£{{ number_format($subtotal, 2) }}</span></p>
                         <p>discount (-): <span>£0</span></p>
                         <p>delivery (+): <span class="delivery_charge">£{{ $deliveryFee }}</span></p>
+                        <x-shipping-options :shipping-rates="$shippingRates" :subtotal="$subtotal" :delivery-fee="$deliveryFee" />
                         <p class="total">
                             <span>Total:</span> <span class="grand_total">£{{ number_format($totalPrice, 2) }}</span>
                         </p>
                         <input type="hidden" name="total_price" id="total_price_input" value="{{ $totalPrice }}"/>
-                        
                         <a class="common_btn" href="javascript:;" onclick="checkAddressAndSubmit(event)">Continue to pay</a>
                         <script>
                             function checkAddressAndSubmit(e) {
@@ -98,41 +98,6 @@
 
 @endsection
 @push('scripts')
-    <script>
-        (function($) {
-            "use strict";
-            $(document).ready(function () {
-
-                $("input[name='address_id']").on("change", function() {
-                    // var delivery_id = $("input[name='address_id']:checked").val();
-                    // var deliveryCharge = $("input[name='address_id']:checked").data('delivery-charge');
-                    var subtotal = {{ $totalPrice }};
-                    
-
-                    // Update delivery charge display
-                    // $(".delivery_charge").html(`$${deliveryCharge}`);
-                    
-                    // Calculate grand total
-                    // var grand_total = parseFloat(subtotal) + parseFloat(deliveryCharge);
-                    
-                    // Update grand total display
-                    $(".grand_total").html(`$${grand_total.toFixed(2)}`);
-                    
-                    // Update the visible total price input
-                    $("#total_price_input").val(grand_total.toFixed(2));
-                    
-                    // Update the hidden form input
-                    $("#grand_total").val(grand_total.toFixed(2));
-                    
-                    // Update shipping address ID
-                    // $('.shippingAddress_id').val(delivery_id);
-                });
-
-               
-
-            });
-        })(jQuery);
-    </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARkCEFCZpUtHsK6w0gw-Bg7jk68ilhV6g&callback=initAutocomplete&libraries=places&v=weekly" defer></script>
     <script>
         let autocomplete;

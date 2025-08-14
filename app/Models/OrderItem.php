@@ -24,6 +24,8 @@ class OrderItem extends Model
         'delivery_fee',
         'size',
         'totalWeight',
+        'shipping_delivery_type',
+        'shipping_price',
     ];
 
     public function user(){
