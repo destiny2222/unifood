@@ -50,28 +50,13 @@ class CheckoutController extends Controller
 
         $cart = Cart::where('user_id', Auth::user()->id)->get();
         $shipping = ShippingAddress::where('user_id', Auth::user()->id)->get();
-        $delivery = DeliveryArea::orderBy('id', 'asc')->get();
-
         // Total weight convert to kg
         $totalWeight = $this->getTotalWeightInKg($cart);
-        // dd($totalWeight);
-        // Get shipping rates that match the total weight
-        // $shippingRates = ShippingRate::where(function($query) use ($totalWeight) {
-        //     $query->where('min_weight', '<=', $totalWeight)
-        //           ->where('max_weight', '>=', $totalWeight);
-        // })->orderBy('price', 'asc')->get();
+        
         $shippingRates = $this->getShippingRates($totalWeight);
 
-        // Get the delivery fee by checking the total weight
-        $deliveryFee = 0;
-        foreach ($delivery as $area) {
-            if ($totalWeight < $area->minimum_delivery || $totalWeight > $area->maximum_delivery) {
-                $deliveryFee = $area->delivery_fee;
-                break;
-            }
-        }
-        
-        
+        // Get the delivery fee from the first shipping rate
+        $deliveryFee = $shippingRates->first()->price ?? 0;
         
 
         $totalProductPrice = $cart->sum(function ($item) {

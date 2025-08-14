@@ -28,6 +28,7 @@ trait ShippingCost
         // First, try to get rates matching the weight range
         $rates = ShippingRate::where('min_weight', '<=', $weight)
             ->where('max_weight', '>=', $weight)
+            ->orderBy('price', 'asc')
             ->get();
 
         if ($rates->count()) {
