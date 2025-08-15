@@ -10,8 +10,9 @@
         <ul class="mini_cart_list">
             @forelse ($carts as $cartId => $cartItem)
                 @php
-                    $product = $products[$cartId] ?? null;
-                    $subtotal = $cartItem['price'] * $cartItem['quantity'];
+                    $product = $products->get($cartId);
+                    $price = $cartItem['price'] ?? ($product->price ?? 0);
+                    $subtotal = $price * ($cartItem['quantity'] ?? 1);
                 @endphp
 
                 @if($product)
@@ -25,7 +26,7 @@
                         </a>
                         <div class="d-flex align-items-center" style="column-gap: 10px;">
                             <span class="quantity">{{ $cartItem['quantity'] }} x</span>
-                            <p class="price mini-price">£{{ number_format($cartItem['price'], 2) }}</p>
+                            <p class="price mini-price">£{{ number_format($price, 2) }}</p>
                         </div>
                     </div>
                     <button class="del_icon mini-item-remove" wire:click="removeItem('{{ $cartId }}')">

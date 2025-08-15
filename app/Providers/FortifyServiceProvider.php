@@ -9,6 +9,8 @@ use App\Actions\Fortify\UpdateUserProfileInformation;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
+use App\Models\Cart;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -32,21 +34,57 @@ class FortifyServiceProvider extends ServiceProvider
             }
         });
 
-        $this->app->instance(LoginResponse::class, new class implements LoginResponse
-        {
+        $this->app->instance(LoginResponse::class, new class implements LoginResponse {
             public function toResponse($request)
             {
-                 // Retrieve the intended URL from the session
-                 $intendedUrl = Session::get('url.intended');
+                $this->mergeCarts();
 
-                 // Clear the intended URL from the session
-                 Session::forget('url.intended');
- 
-                 // If an intended URL exists, redirect there
-                 if ($intendedUrl) {
-                     return redirect($intendedUrl);
-                 }
+                // Retrieve the intended URL from the session
+                $intendedUrl = Session::get('url.intended');
+
+                // Clear the intended URL from the session
+                Session::forget('url.intended');
+
+                // If an intended URL exists, redirect there
+                if ($intendedUrl) {
+                    return redirect($intendedUrl);
+                }
                 return redirect(RouteServiceProvider::HOME);
+            }
+
+            protected function mergeCarts()
+            {
+                if (!Auth::check()) {
+                    return;
+                }
+
+                $user = Auth::user();
+                $sessionCart = session()->get('cart', []);
+                $dbCartItems = Cart::where('user_id', $user->id)->with('product')->get();
+
+                foreach ($dbCartItems as $dbItem) {
+                    if (!$dbItem->product) {
+                        continue;
+                    }
+
+                    $productId = $dbItem->product_id;
+                    $price = $dbItem->price ?? ($dbItem->product ? $dbItem->product->price : 0);
+
+                    if (isset($sessionCart[$productId])) {
+                        $sessionCart[$productId]['quantity'] += $dbItem->quantity;
+                    } else {
+                        $sessionCart[$productId] = [
+                            'product_id' => $productId,
+                            "title" => $dbItem->product->title,
+                            "price" => $price,
+                            "quantity" => $dbItem->quantity,
+                            "size" => $dbItem->size ?? null,
+                        ];
+                    }
+                }
+
+                session()->put('cart', $sessionCart);
+                Cart::where('user_id', $user->id)->delete();
             }
         });
 

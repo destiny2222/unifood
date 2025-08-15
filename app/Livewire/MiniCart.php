@@ -35,8 +35,12 @@ class MiniCart extends Component
         $products = \App\Models\Product::whereIn('id', $productIds)->get()->keyBy('id');
 
         $total = 0;
-        foreach ($this->cart as $item) {
-            $total += $item['price'] * $item['quantity'];
+        foreach ($this->cart as $productId => $item) {
+            $product = $products->get($productId);
+            if ($product) {
+                $price = $item['price'] ?? $product->price;
+                $total += $price * ($item['quantity'] ?? 1);
+            }
         }
 
         return view('livewire.mini-cart', [

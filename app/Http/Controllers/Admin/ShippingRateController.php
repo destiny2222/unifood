@@ -24,7 +24,7 @@ class ShippingRateController extends Controller
         $request->validate([
             'min_weight' => 'required|numeric|min:0',
             'max_weight' => 'required|numeric|gte:min_weight',
-            'delivery_type' => 'required|in:next_day,next_morning,two_days',
+            'delivery_type' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
         ]);
 
@@ -50,7 +50,7 @@ class ShippingRateController extends Controller
         $request->validate([
             'min_weight' => 'required|numeric|min:0',
             'max_weight' => 'required|numeric|gte:min_weight',
-            'delivery_type' => 'required|in:next_day,next_morning,two_days',
+            'delivery_type' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
         ]);
 

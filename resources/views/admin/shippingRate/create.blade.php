@@ -23,11 +23,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="delivery_type" class="form-label">Delivery Type</label>
-                                <select class="form-select" id="delivery_type" name="delivery_type">
-                                    <option value="next_day" {{ old('delivery_type') == 'next_day' ? 'selected' : '' }}>Next Day</option>
-                                    <option value="next_morning" {{ old('delivery_type') == 'next_morning' ? 'selected' : '' }}>Next Morning</option>
-                                    <option value="two_days" {{ old('delivery_type') == 'two_days' ? 'selected' : '' }}>Two Days</option>
-                                </select>
+                                <input type="text" class="form-control" id="delivery_type" name="delivery_type" value="{{ old('delivery_type') }}">
                             </div>
                             <div class="mb-3">
                                 <label for="price" class="form-label">Price</label>
