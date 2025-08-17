@@ -12,10 +12,10 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densityDpi=device-dpi">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title> {{ config('app.name') }} - Welcome to Our Restaurant Management </title>
-    <meta name="description" content="MightyOlu Grocery - Welcome to Our Restaurant Management">
+    <title> {{ config('app.name') }} - Your Premier Online Grocery Store </title>
+    <meta name="description" content="MightyOlu Grocery offers a wide range of fresh groceries, produce, and household essentials. Shop online for fast delivery, secure payment, and excellent customer support.">
     <meta name="author" content="Dexnovate" />
-    <meta name="keywords" content="ecommerce, online shopping, fast delivery, secure payment, customer support">
+    <meta name="keywords" content="online grocery store, grocery delivery service, buy groceries online, fresh food delivery, organic produce online, supermarket online, food shopping online, best online grocery, affordable groceries, MightyOlu grocery, grocery store near me, online food shopping, ecommerce, online shopping, fast delivery, secure payment, customer support, household essentials, fresh vegetables, fresh fruits, online meat delivery, dairy products online, pantry staples, snack delivery, beverage delivery">
     <!-- Place favicon.ico in the root directory -->
     <link rel="shortcut icon" type="image/x-icon" href="https://mightyolu.com/images/logo/logo.png">
     <meta name="og:image" content="https://mightyolu.com/images/logo/logo.png">
@@ -28,8 +28,8 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="{{ config('app.name') }}">
     <meta property="og:image" content="https://mightyolu.com/images/logo/logo.png">
-    <meta property="og:image:alt" content="MightyOlu Grocery - Welcome to Our Restaurant Management">
-    <meta property="og:description" content="MightyOlu Grocery - Welcome to Our Restaurant Management">
+    <meta property="og:image:alt" content="MightyOlu Grocery - Your Premier Online Grocery Store">
+    <meta property="og:description" content="MightyOlu Grocery offers a wide range of fresh groceries, produce, and household essentials. Shop online for fast delivery, secure payment, and excellent customer support.">
     <meta property="og:site_name" content="{{ config('app.name') }}">
     <meta property="og:locale" content="en_US">
     <meta property="article:author" content="dexnovate">

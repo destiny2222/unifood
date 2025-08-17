@@ -60,7 +60,7 @@ class CheckoutController extends Controller
         
 
         $totalProductPrice = $cart->sum(function ($item) {
-            return $item->price;
+            return $item->price * $item->quantity;
         });
         
         // $totalPrice = $totalProductPrice;
