@@ -11,7 +11,7 @@
                     <div class="form-check">
                         <input class="form-check-input" required hidden type="radio" name="shipping_rate" id="shipping_rate_{{ $rate->id }}" value="{{ $rate->price }}" data-rate-id="{{ $rate->id }}" data-delivery-type="{{ $rate->delivery_type }}">
                         <label class="form-check-label" for="shipping_rate_{{ $rate->id }}">
-                            {{ ucwords(str_replace('_', ' ', $rate->delivery_type)) }} - €{{ number_format($rate->price, 2) }}
+                            {{ ucwords(str_replace('_', ' ', $rate->delivery_type)) }} - £{{ number_format($rate->price, 2) }}
                             <small class="text-muted d-block">
                                 (@if($rate->min_weight < 1)
                                     {{ $rate->min_weight * 1000 }}g

@@ -59,13 +59,13 @@
                             <p>{{ $order->product->title }}</p>
                         </td>
                         <td class="price">
-                            <b>${{ $order->product->price }}</b>
+                            <b>£{{ $order->product->price }}</b>
                         </td>
                         <td class="qnty">
                             <b>{{ $order->quantity }}</b>
                         </td>
                         <td class="total">
-                            <b>${{ $order->price * $order->quantity }}</b>
+                            <b>£{{ $order->price * $order->quantity }}</b>
                         </td>
                     </tr>
 
@@ -79,7 +79,7 @@
                             <b></b>
                         </td>
                         <td class="total">
-                            <b>${{ $order->price * $order->quantity }}</b>
+                            <b>£{{ $order->price * $order->quantity }}</b>
                         </td>
                     </tr>
                     <tr>
@@ -90,7 +90,7 @@
                             <b></b>
                         </td>
                         <td class="total coupon">
-                            <b>$0</b>
+                            <b>£0</b>
                         </td>
                     </tr>
                     <tr>
@@ -109,7 +109,7 @@
                             <b></b>
                         </td>
                         <td class="total">
-                            <b>${{($order->price * $order->quantity ?? 0) }}</b>
+                            <b>£{{($order->price * $order->quantity ?? 0) }}</b>
                         </td>
                     </tr>
                 </tfoot>

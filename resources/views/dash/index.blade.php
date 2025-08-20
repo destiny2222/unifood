@@ -363,7 +363,7 @@
                                                             </td>
                                                             <td>
                                                                 <h5>
-                                                                    €{{($order->price * $order->quantity) ?? 0 }}
+                                                                    £{{($order->price * $order->quantity) ?? 0 }}
                                                                 </h5>
                                                             </td>
                                                             <td><a class="view_invoice" data-order-id="{{ $order->id }}"> View Details </a></td>
