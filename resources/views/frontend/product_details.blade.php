@@ -76,15 +76,15 @@
                     <p class="short_description">
                         {!! \Str::limit($product->description, 200) !!}
                     </p>
-
+                    <p><strong>NOTE:</strong> This images for the goods display does not necessarily mean the product brand to you.</p>
                     
                     
-                    <form id="add_to_cart_form"  method="POST" class="py-4">
+                    {{-- <form id="add_to_cart_form"  method="POST" class="py-4">
                         @csrf
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
                         <input type="hidden" id="selected_price" name="price" value="{{ $product->has_variants === 1 ? ($product->variants->first()->price ?? 0) : $product->price }}">
                         <input type="hidden" id="selected_size" name="size_variant" value="{{ $product->has_variants === 1 ? '' : 'default' }}">
-                        <input type="hidden" id="has_variants" value="{{ $product->has_variants }}">
+                        <input type="hidden" id="has_variants" value="{{ $product->has_variants }}"> --}}
 
                         @if($product->has_variants === 1 && $product->variants && $product->variants->count() > 0)
                         <div class="details_size">
@@ -105,7 +105,7 @@
                         
                         <div class="details_quentity">
                             <h5>select quantity</h5>
-                            <div class="quentity_btn_area d-flex flex-wrapa align-items-center">
+                            {{-- <div class="quentity_btn_area d-flex flex-wrapa align-items-center">
                                 <div class="quentity_btn">
                                     <button type="button" class="btn btn-danger decrement_qty_detail_page"><i
                                             class="fal fa-minus"></i></button>
@@ -114,11 +114,35 @@
                                     <button type="button" class="btn btn-success increment_qty_detail_page"><i
                                             class="fal fa-plus"></i></button>
                                 </div>
+                            </div> --}}
+                            <div class="quentity_btn">
+                                <button type="button" class="btn btn-danger decrement_qty_detail_page">
+                                    <i class="fal fa-minus"></i>
+                                </button>
+                                <input type="text" value="1" id="product_quantity" class="product_qty" readonly="">
+                                <button type="button" class="btn btn-success increment_qty_detail_page">
+                                    <i class="fal fa-plus"></i>
+                                </button>
                             </div>
                         </div>
+                        @php
+                            $currentPrice = 0;
+                            if ($product->has_variants == 1) {
+                                $currentPrice = $product->variants->first()->price ?? 0;
+                            } else {
+                                $currentPrice = $product->price ?? 0;
+                            }
+                        @endphp
                         <ul class="details_button_area d-flex flex-wrap">
                             <li class="me-2">
-                                <button type="submit" id="add_to_cart" class="common_btn"  href="javascript:;">add to cart</button>
+                                <form   action="{{ route('cart.add') }}" method="POST">
+                                   @csrf            
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    <input type="hidden" name="slug" value="{{ $product->slug }}">
+                                    <input type="hidden" name="quantity" id="hidden_quantity" value="1">
+                                    <input type="hidden" name="price" value="{{ $currentPrice }}">
+                                    <button type="submit"  class="common_btn"  >Add to cart</button>
+                                </form>
                             </li>
                             <li>
                                 <a class="wishlist" href="{{ route('wishlist.add') }}"
@@ -134,7 +158,7 @@
 
                         </ul>
 
-                    </form>
+                    {{-- </form> --}}
                 </div>
             </div>
             <div class="col-12 wow fadeInUp" data-wow-duration="1s">
@@ -157,6 +181,7 @@
                             <div class="menu_det_description">
                                 {!! \Str::limit($product->description, 200) !!}
                             </div>
+                            <p style="padding-top: 20px;"><strong>NOTE:</strong> This images for the goods display does not necessarily mean the product brand to you.</p>
                         </div>
                         <div class="tab-pane fade" id="pills-contact" role="tabpanel"
                             aria-labelledby="pills-contact-tab" tabindex="0">
@@ -284,6 +309,42 @@
 
 @endsection
 @push('scripts')
+<script>
+    $(document).ready(function() {
+        // Increment quantity
+        $(".increment_qty_detail_page").on("click", function() {
+            let product_qty = $("#product_quantity").val();
+            let new_qty = parseInt(product_qty) + 1;
+            $("#product_quantity").val(new_qty);
+            $("#hidden_quantity").val(new_qty); // Update hidden field
+            updateQtyButtons();
+        });
+
+        // Decrement quantity
+        $(".decrement_qty_detail_page").on("click", function() {
+            let product_qty = $("#product_quantity").val();
+            if (product_qty == 1) return;
+            let new_qty = parseInt(product_qty) - 1;
+            $("#product_quantity").val(new_qty);
+            $("#hidden_quantity").val(new_qty); // Update hidden field
+            updateQtyButtons();
+        });
+
+        // Update size variant and price
+        $('input[name="size_variant"]').on('change', function() {
+            let selectedPrice = $(this).data('price');
+            $("#hidden_price").val(selectedPrice);
+            $('.price').html('£' + parseFloat(selectedPrice).toFixed(2));
+        });
+
+        function updateQtyButtons() {
+            let qty = parseInt($("#product_quantity").val());
+            $(".decrement_qty_detail_page").prop('disabled', qty <= 1);
+        }
+
+        updateQtyButtons(); // Initialize on page load
+    });
+</script>
 {{-- <script>
     (function($) {
         "use strict";

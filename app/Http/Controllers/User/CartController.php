@@ -40,42 +40,49 @@ class CartController extends Controller
         ]);
     }
 
-  
+
     public function addToCart(Request $request)
-    {
-        $productId = $request->product_id;
-        $quantity = (int) $request->quantity ?: 1;
+{
+    // dd($request->all());
+    $productId = $request->product_id;
+    $quantity = (int) $request->quantity ?: 1;
 
-        $cart = session()->get('cart', []);
-      
+    $cart = session()->get('cart', []);
 
-        if (isset($cart[$productId])) {
-            $cart[$productId]['quantity'] += $quantity;
-            $message = 'Quantity has been increased';
-        } else {
-            $product = Product::findOrFail($productId);
-            $cart[$productId] = [
-                'product_id' => $request->product_id,
-                "title" => $product->title,
-                "price" => $request->price,
-                "quantity" => $quantity,
-                "size" => $request->size_variant ?? null,
-            ];
-            $message = 'Product added to cart';
-        }
+    // --- Logic to find price if not passed (Security Best Practice) ---
+    // It is safer to fetch price from DB than request, but sticking to your structure:
+    $price = $request->price; 
+    $product = Product::find($productId);
 
-        session()->put('cart', $cart);
-        
-       $cartCount = count($cart);
-
-       
-        return response()->json([
-            'success' => true, 
-            'message' => $message,
-            'cart_count' => $cartCount,
-        ]);
-
+    // If price is missing in request, try to get it from product/variant
+    if(!$price && $product) {
+         if($product->has_variants && $product->variants->first()){
+             $price = $product->variants->first()->price;
+         } else {
+             $price = $product->price;
+         }
     }
+    // ------------------------------------------------------------------
+
+    if (isset($cart[$productId])) {
+        $cart[$productId]['quantity'] += $quantity;
+        $message = 'Quantity has been increased';
+    } else {
+        $product = Product::findOrFail($productId);
+        $cart[$productId] = [
+            "product_id" => $productId,
+            "title" => $product->title,
+            "price" => $price, // Ensure price is set
+            "quantity" => $quantity,
+            "size" => $request->size_variant ?? null,
+        ];
+        $message = 'Product added to cart';
+    }
+
+    session()->put('cart', $cart);
+
+    return redirect()->route('cart.index')->with('success', $message); 
+}
 
   public function update(Request $request)
     {
@@ -146,6 +153,7 @@ class CartController extends Controller
         }
         
     }
+    
 
     public function clear()
     {

@@ -44,6 +44,7 @@
                                                 <h6>£{{ number_format($cart['price'], 2) }}</h6>
                                             </td>
 
+                                            
                                             <td class="wsus__pro_select" data-item-price="{{ $cart['price'] }}" data-rowid="{{ $cart['id'] }}">
                                                 <div class="quentity_btn">
                                                     <button class="btn btn-danger decrement_product" data-cart-id="{{ $cart['id'] }}">
