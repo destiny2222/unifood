@@ -323,7 +323,7 @@
                                 <img src="{{ asset('images/logo/footer_logo.png') }}" alt="UniFood"
                                     class="img-fluid w-100">
                             </a>
-                            <p class="info"><i class="far fa-map-marker-alt"></i> Unit 10 western Halls Plaza Edinburgh, EH14 1SW, Wester Hails. </p>
+                            <p class="info"><i class="far fa-map-marker-alt"></i> 10/11 Westside Plaza, Edinburgh. Scotland. EH14 2SW. </p>
                             <a class="info" href="callto:07867986338"><i class="fas fa-phone-alt"></i>
                                 07867986338</a>
                             <a class="info" href="mailto:inquiry@mightyolu.com "><i class="fas fa-envelope"></i>
