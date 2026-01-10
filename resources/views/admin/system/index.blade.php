@@ -58,6 +58,7 @@
                 </div> <!-- end card body -->
             </div>
         </div>
+
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
@@ -70,6 +71,26 @@
                                 @csrf
                                 <button type="submit" class="btn btn-success" onclick="return confirm('Optimize application?')">
                                     Optimize Application
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    <p><small>This will cache config, routes, and views for better performance.</small></p>
+                </div> <!-- end card body -->
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-4 anchor" id="outline">
+                        Composer clear 
+                    </h5>
+                    <div class="mb-3">
+                        <div class="button-list">
+                            <form action="{{ route('admin.composer.clear') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-success" onclick="return confirm('Composer clear?')">
+                                     Composer clear 
                                 </button>
                             </form>
                         </div>

@@ -1,4 +1,4 @@
-<div>
+<div x-data @cart-updated.window="$wire.$refresh()">
     <div class="wsus__menu_cart_boody">
         @if (count($carts) > 0)
             <div class="wsus__menu_cart_header">

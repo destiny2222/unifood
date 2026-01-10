@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 
 class Product extends Model
 {
@@ -35,9 +37,42 @@ class Product extends Model
         return 'slug';
     }
 
-    public function getSlugAttribute(): string
+    // public function getSlugAttribute(): string
+    // {
+    //     return Str::slug($this->title);
+    // }
+
+    //  protected static function boot()
+    // {
+    //     parent::boot();
+
+    //     static::creating(function ($product) {
+    //         if (empty($product->slug)) {
+    //             $product->slug = static::generateUniqueSlug($product->title);
+    //         }
+    //     });
+    // }
+
+    // public static function generateUniqueSlug($title)
+    // {
+    //     $baseSlug = Str::slug($title);
+    //     $slug = $baseSlug;
+    //     $counter = 1;
+
+    //     while (static::where('slug', $slug)->exists()) {
+    //         $slug = $baseSlug . '-' . $counter;
+    //         $counter++;
+    //     }
+
+    //     return $slug;
+    // }
+
+    public function getSlugOptions(): SlugOptions
     {
-        return Str::slug($this->title);
+        return SlugOptions::create()
+            ->generateSlugsFrom('title')
+            ->saveSlugsTo('slug');
+            // ->doNotGenerateSlugsOnUpdate();
     }
 
 

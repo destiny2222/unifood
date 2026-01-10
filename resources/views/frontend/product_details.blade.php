@@ -76,7 +76,7 @@
                     <p class="short_description">
                         {!! \Str::limit($product->description, 200) !!}
                     </p>
-
+                    <p><strong>NOTE:</strong> This images for the goods display does not necessarily mean the product brand to you.</p>
                     
                     
                     <form id="add_to_cart_form"  method="POST" class="py-4">
@@ -116,9 +116,24 @@
                                 </div>
                             </div>
                         </div>
+                        @php
+                            $currentPrice = 0;
+                            if ($product->has_variants == 1) {
+                                $currentPrice = $product->variants->first()->price ?? 0;
+                            } else {
+                                $currentPrice = $product->price ?? 0;
+                            }
+                        @endphp
                         <ul class="details_button_area d-flex flex-wrap">
                             <li class="me-2">
-                                <button type="submit" id="add_to_cart" class="common_btn"  href="javascript:;">add to cart</button>
+                                <form   action="{{ route('cart.add') }}" method="POST">
+                                   @csrf            
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    <input type="hidden" name="slug" value="{{ $product->slug }}">
+                                    <input type="hidden" name="quantity" value="1">
+                                    <input type="hidden" name="price" value="{{ $currentPrice }}">
+                                    <button type="submit"  class="common_btn"  >Add to cart</button>
+                                </form>
                             </li>
                             <li>
                                 <a class="wishlist" href="{{ route('wishlist.add') }}"
@@ -157,6 +172,7 @@
                             <div class="menu_det_description">
                                 {!! \Str::limit($product->description, 200) !!}
                             </div>
+                            <p style="padding-top: 20px;"><strong>NOTE:</strong> This images for the goods display does not necessarily mean the product brand to you.</p>
                         </div>
                         <div class="tab-pane fade" id="pills-contact" role="tabpanel"
                             aria-labelledby="pills-contact-tab" tabindex="0">

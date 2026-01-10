@@ -79,6 +79,7 @@ Route::prefix('admin')->name('admin.')->group(function (){
         Route::post('/system/optimize', [SystemController::class, 'optimizeApp'])->name('system.optimize');
         Route::post('/system/clear-logs', [SystemController::class, 'clearLogs'])->name('system.clear-logs');
         
+        
 
         // site management
         // Route::get('/home-page', [SiteManagementController::class, 'index'])->name('home.page');

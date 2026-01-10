@@ -28,58 +28,75 @@ class CheckoutController extends Controller
         $this->paymentController = $paymentController;
     }
 
-    public function checkout()
-    {
-        $cart = session('cart');
-        if (!$cart || Auth::guest()) {
+    // public function checkout()
+    // {
+    //     $cart = session('cart');
+    //     if (!session()->has('cart') || empty(session('cart'))) {
+    //         return redirect()->route('cart.index')->with('error', 'Please add items to your cart first.');
+    //     }
+
+    //     if (Auth::guest()) {
+    //         return redirect()->route('login');
+    //     }
+
+    //     $cart = Cart::where('user_id', Auth::user()->id)->get();
+    //     $shipping = ShippingAddress::where('user_id', Auth::user()->id)->get();
+    //     // Total weight convert to kg
+    //     $totalWeight = $this->getTotalWeightInKg($cart);
+    //     $shippingRates = $this->getShippingRates($totalWeight);
+    //     // Get the delivery fee from the first shipping rate
+    //     $deliveryFee = $shippingRates->first()->price ?? 0;
+    //     $totalProductPrice = $cart->sum(function ($item) {
+    //         return $item->price * $item->quantity;
+    //     });
+    //     $totalPrice = $totalProductPrice + $deliveryFee;
+
+    //     return view('frontend.checkout', [
+    //         'cartItems' => $cart,
+    //         'user' => Auth::user(),
+    //         'shippingAddresses' => $shipping,
+    //         'totalPrice' => $totalPrice,
+    //         'totalWeight' => $totalWeight, 
+    //         'subtotal' => $totalProductPrice,
+    //         'deliveryFee' => $deliveryFee,
+    //         'shippingRates' => $shippingRates,
+    //     ]);
+    // }
+   public function checkout()
+{
+    if (!Auth::check()) {
+        if (empty(session('cart', []))) {
             return redirect()->route('cart.index')->with('error', 'Please add items to your cart first.');
         }
-
-        // Cart::where('user_id', Auth::user()->id)->delete();
-
-        foreach ($cart as $productId => $item) {
-             Cart::updateOrCreate([
-                'user_id' => Auth::user()->id,
-                'product_id' => $productId,
-                'size' => $item['size'] ?? null,
-            ], [
-                'quantity' => $item['quantity'],
-                'price' => $item['price'],
-            ]);
-        }
-
-        $cart = Cart::where('user_id', Auth::user()->id)->get();
-        $shipping = ShippingAddress::where('user_id', Auth::user()->id)->get();
-        // Total weight convert to kg
-        $totalWeight = $this->getTotalWeightInKg($cart);
-        
-        $shippingRates = $this->getShippingRates($totalWeight);
-
-        // Get the delivery fee from the first shipping rate
-        $deliveryFee = $shippingRates->first()->price ?? 0;
-        
-
-        $totalProductPrice = $cart->sum(function ($item) {
-            return $item->price * $item->quantity;
-        });
-        
-        // $totalPrice = $totalProductPrice;
-        $totalPrice = $totalProductPrice + $deliveryFee;
-
-        // dd($totalPrice);
-
-        return view('frontend.checkout', [
-            'cartItems' => $cart,
-            'user' => Auth::user(),
-            'shippingAddresses' => $shipping,
-            'totalPrice' => $totalPrice,
-            'totalWeight' => $totalWeight, 
-            'subtotal' => $totalProductPrice,
-            'deliveryFee' => $deliveryFee,
-            'shippingRates' => $shippingRates,
-        ]);
+        return redirect()->route('login'); 
     }
 
+    $cart = Cart::with('product')->where('user_id', Auth::id())->get(); // Added with('product')
+
+    if ($cart->isEmpty()) {
+        return redirect()->route('cart.index')->with('error', 'Please add items to your cart first.');
+    }
+
+    $shipping = ShippingAddress::where('user_id', Auth::id())->get();
+
+    $totalWeight = $this->getTotalWeightInKg($cart);
+    $shippingRates = $this->getShippingRates($totalWeight);
+    $deliveryFee = $shippingRates->first()->price ?? 0;
+
+    $subtotal = $cart->sum(fn ($item) => $item->price * $item->quantity);
+    $totalPrice = $subtotal + $deliveryFee;
+
+    return view('frontend.checkout', [
+        'cartItems' => $cart, // This is correct
+        'user' => Auth::user(),
+        'shippingAddresses' => $shipping,
+        'totalPrice' => $totalPrice,
+        'totalWeight' => $totalWeight,
+        'subtotal' => $subtotal,
+        'deliveryFee' => $deliveryFee,
+        'shippingRates' => $shippingRates,
+    ]);
+}
 
     public function processPayment(Request $request)
     {

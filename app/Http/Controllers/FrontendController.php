@@ -32,7 +32,7 @@ class FrontendController extends Controller
 {
     public function index()
     {
-        $Product = Product::orderBy('id', 'DESC')->paginate(12);
+        $Product = Product::orderBy('id', 'asc')->paginate(12);
         $category = Category::orderBy('id', 'asc')->get()->take(6);
         $blog = Post::where('show_homepage', 1)->get();
         $services = Service::orderBy('id', 'DESC')->get();

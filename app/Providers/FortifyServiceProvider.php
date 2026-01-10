@@ -27,7 +27,7 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-       $this->app->instance(LogoutResponse::class, new class implements LogoutResponse {
+        $this->app->instance(LogoutResponse::class, new class implements LogoutResponse {
             public function toResponse($request)
             {
                 return redirect('/login');
@@ -54,38 +54,32 @@ class FortifyServiceProvider extends ServiceProvider
 
             protected function mergeCarts()
             {
-                if (!Auth::check()) {
+                if (!Auth::check())
                     return;
-                }
 
                 $user = Auth::user();
                 $sessionCart = session()->get('cart', []);
-                $dbCartItems = Cart::where('user_id', $user->id)->with('product')->get();
 
-                foreach ($dbCartItems as $dbItem) {
-                    if (!$dbItem->product) {
-                        continue;
-                    }
-
-                    $productId = $dbItem->product_id;
-                    $price = $dbItem->price ?? ($dbItem->product ? $dbItem->product->price : 0);
-
-                    if (isset($sessionCart[$productId])) {
-                        $sessionCart[$productId]['quantity'] += $dbItem->quantity;
-                    } else {
-                        $sessionCart[$productId] = [
-                            'product_id' => $productId,
-                            "title" => $dbItem->product->title,
-                            "price" => $price,
-                            "quantity" => $dbItem->quantity,
-                            "size" => $dbItem->size ?? null,
-                        ];
-                    }
+                if (empty($sessionCart)) {
+                    return; // nothing to merge
                 }
 
-                session()->put('cart', $sessionCart);
-                Cart::where('user_id', $user->id)->delete();
+                foreach ($sessionCart as $productId => $item) {
+                    $cartItem = \App\Models\Cart::firstOrNew([
+                        'user_id' => $user->id,
+                        'product_id' => $productId,
+                        'size' => $item['size'] ?? null,
+                    ]);
+
+                    $cartItem->price = $item['price'];
+                    $cartItem->quantity = ($cartItem->exists ? $cartItem->quantity : 0) + $item['quantity'];
+                    $cartItem->save();
+                }
+
+                // session is no longer needed after login
+                session()->forget('cart');
             }
+
         });
 
         $this->app->instance(RegisterResponse::class, new class implements RegisterResponse {
@@ -106,11 +100,12 @@ class FortifyServiceProvider extends ServiceProvider
                 return redirect(RouteServiceProvider::HOME);
             }
         });
-        
+
     }
 
-    public function login(): void {
-        $this->app->instance(LoginResponse::class, new class implements LoginResponse{
+    public function login(): void
+    {
+        $this->app->instance(LoginResponse::class, new class implements LoginResponse {
             public function toResponse($request)
             {
                 // Retrieve the intended URL from the session
@@ -140,7 +135,7 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::redirectUserForTwoFactorAuthenticationUsing(RedirectIfTwoFactorAuthenticatable::class);
 
         RateLimiter::for('login', function (Request $request) {
-            $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
+            $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())) . '|' . $request->ip());
 
             return Limit::perMinute(5)->by($throttleKey);
         });

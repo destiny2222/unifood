@@ -163,10 +163,40 @@
                                             </small>
                                         </h6>
                                         <div class="d-flex gap-3 justify-content-between align-items-center">
-                                            <button type="button" onclick="event.preventDefault(); load_product_model({{ json_encode($product->slug) }})"
-                                                class="btn btn_outline_secondary btn-md border-secondary d-block mt-4 w-100 direct-add-to-cart-btn add-to-cart-text">
-                                                Add to Cart
-                                            </button>
+                                            {{-- <form class="w-100" onsubmit="addToCart(event, {{ json_encode($product) }})">
+                                                @csrf
+                                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                <input type="hidden" name="slug" value="{{ $product->slug }}">
+                                                <input type="hidden" name="quantity" value="1">
+                                                <button type="submit"
+                                                    class="btn btn_outline_secondary btn-md border-secondary d-block mt-4 w-100 direct-add-to-cart-btn add-to-cart-text">
+                                                    Add to Cart
+                                                </button>
+                                            </form> --}}
+                                            @php
+                                                $currentPrice = 0;
+                                                if ($product->has_variants == 1) {
+                                                    $currentPrice = $product->variants->first()->price ?? 0;
+                                                } else {
+                                                    $currentPrice = $product->price ?? 0;
+                                                }
+                                            @endphp
+
+                                            {{-- 1. Add action route. 2. Remove onsubmit attribute --}}
+                                            <form class="w-100" action="{{ route('cart.add') }}" method="POST">
+                                                @csrf
+                                                
+                                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                <input type="hidden" name="slug" value="{{ $product->slug }}">
+                                                <input type="hidden" name="quantity" value="1">
+                                                
+                                                {{-- IMPORTANT: Pass the price hidden input as your controller expects it --}}
+                                                <input type="hidden" name="price" value="{{ $currentPrice }}">
+
+                                                <button type="submit" class="btn btn_outline_secondary btn-md border-secondary d-block mt-4 w-100 direct-add-to-cart-btn add-to-cart-text">
+                                                    Add to Cart
+                                                </button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
@@ -242,15 +272,15 @@
                 button.prop('disabled', true).text('Adding...');
 
                 $.ajax({
-                    type: 'POST',
-                    url: "{{ route('cart.add') }}",
-                    data: form.serialize(),
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            toastr.success(response.message);
+            type: 'POST',
+            url: "{{ route('cart.add') }}",
+            data: form.serialize() + '&price=' + product.price, // Add the price
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response) {
+                if (response.success) {
+                    toastr.success(response.message);
 
                             // Update cart count badge
                             if (response.cart_count !== undefined) {
@@ -283,6 +313,7 @@
         });
     })(jQuery);
 </script> --}}
+
 
 <script>
     (function($) {
@@ -335,6 +366,37 @@
     })(jQuery);
 </script>
 <script>
+    function addToCart(event, product) {
+        event.preventDefault();
+
+        if (product.has_variants === 1) {
+            load_product_model(product.slug);
+            return;
+        }
+
+        const form = $(event.target);
+        $.ajax({
+            type: 'POST',
+            url: "{{ route('cart.add') }}",
+            data: form.serialize(),
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response) {
+                if (response.success) {
+                    toastr.success(response.message);
+                    $('.topbar_cart_qty').text(response.cart_count);
+                    window.location.href = "{{ route('cart.index') }}";
+                } else {
+                    toastr.error(response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                toastr.error("An error occurred while processing your request. Please try again.");
+            }
+        });
+    }
+
     function load_product_model(product_slug){
 
         $("#preloader").addClass('preloader')

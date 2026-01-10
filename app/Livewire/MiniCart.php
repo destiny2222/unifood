@@ -3,6 +3,8 @@
 namespace App\Livewire;
 
 use App\Models\Product;
+use App\Models\Cart;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class MiniCart extends Component
@@ -18,21 +20,46 @@ class MiniCart extends Component
 
     public function refreshCart()
     {
-        $this->cart = session()->get('cart', []);
+        if (Auth::check()) {
+            // Get cart from database for authenticated users
+            $dbCart = Cart::where('user_id', Auth::id())->get();
+            
+            // Convert to same format as session cart
+            $this->cart = [];
+            foreach ($dbCart as $item) {
+                $this->cart[$item->product_id] = [
+                    'quantity' => $item->quantity,
+                    'price' => $item->price,
+                ];
+            }
+        } else {
+            // Get cart from session for guests
+            $this->cart = session()->get('cart', []);
+        }
     }
 
     public function removeItem($id)
     {
-        $cart = session()->get('cart', []);
-        unset($cart[$id]);
-        session()->put('cart', $cart);
+        if (Auth::check()) {
+            // Remove from database
+            Cart::where('user_id', Auth::id())
+                ->where('product_id', $id)
+                ->delete();
+        } else {
+            // Remove from session
+            $cart = session()->get('cart', []);
+            unset($cart[$id]);
+            session()->put('cart', $cart);
+        }
+        
         $this->refreshCart();
+        $this->dispatch('cartUpdated');
     }
 
     public function render()
     {
         $productIds = array_keys($this->cart);
-        $products = \App\Models\Product::whereIn('id', $productIds)->get()->keyBy('id');
+        $products = Product::whereIn('id', $productIds)->get()->keyBy('id');
 
         $total = 0;
         foreach ($this->cart as $productId => $item) {
