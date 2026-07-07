@@ -51,6 +51,11 @@
 
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
    @stack('styles')
+   <style>
+    .mobile_cart_icon{
+        padding-right:20px;
+    }
+   </style>
    @livewireStyles
 </head>
 
@@ -112,6 +117,9 @@
                 <img src="{{ asset('images/logo/logo.png') }}" width="50" height="50" alt="UniFood"
                     class="img-fluid">
             </a>
+            <div class="mobile_search_icon">
+                <a href="javascript:;" class="menu_search"><i class="far fa-search"></i></a>
+            </div>
             <div class="mobile_cart_icon">
                 <a class="cart_icon">
                     <i class="fas fa-shopping-basket"></i> 
@@ -144,15 +152,8 @@
                     </li>
                 </ul>
                 <ul class="menu_icon d-flex flex-wrap">
-                    <li>
+                    <li class="wsus__search_desktop">
                         <a href="javascript:;" class="menu_search"><i class="far fa-search"></i></a>
-                        <div class="wsus__search_form">
-                            <form action="{{ route('search') }}" method="GET">
-                                <span class="close_search"><i class="far fa-times"></i></span>
-                                <input name="search" type="text" placeholder="Type your keyword">
-                                <button type="submit">search</button>
-                            </form>
-                        </div>
                     </li>
                     <li class="wsus__cart_desktop">
                         <a class="cart_icon">
@@ -181,6 +182,14 @@
             </div>
         </div>
     </nav>
+
+    <div class="wsus__search_form">
+        <form action="{{ route('search') }}" method="GET">
+            <span class="close_search"><i class="far fa-times"></i></span>
+            <input name="search" type="text" placeholder="Type your keyword">
+            <button type="submit">search</button>
+        </form>
+    </div>
 
 
 

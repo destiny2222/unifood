@@ -112,7 +112,7 @@ class CheckoutController extends Controller
 
             $validate = Validator::make($request->all(), [
                 'ship-address' => 'required',
-                'address' => 'required',
+                'address' => 'nullable|string|max:255',
                 'city' => 'required|string|max:255',
                 'state' => 'required|string|max:255',
                 'country' => 'required|string|max:255',
@@ -122,7 +122,6 @@ class CheckoutController extends Controller
                 'shipping_rate_id' => 'required',
             ], [
                 'ship-address.required' => 'Shipping address is required',
-                'address.required' => 'Address is required',
                 'city.required' => 'City is required',
                 'state.required' => 'State is required',
                 'country.required' => 'Country is required',
@@ -153,9 +152,12 @@ class CheckoutController extends Controller
                 }
             }
 
+            $addressData = $request->only(['city', 'state', 'country', 'postal_code', 'ship-address', 'is_default']);
+            $addressData['address'] = $request->address ?? '';
+
             $shippingAddress = ShippingAddress::updateOrCreate(
                 ['user_id' => $user->id, 'is_default' => true],
-                $request->only(['city', 'state', 'country', 'postal_code', 'address','ship-address', 'is_default'])
+                $addressData
             );
 
 

@@ -71,17 +71,6 @@
             let subtotal = {{ $subtotal }};
             let deliveryFee = {{ $deliveryFee }};
 
-            // Auto-select the first (cheapest) shipping option if available
-            if ($('.shipping-option').length > 0) {
-                $('.shipping-option').first().click();
-            }
-
-            $('.shipping-option').on('click', function() {
-                $('.shipping-option').removeClass('selected');
-                $(this).addClass('selected');
-                $(this).find('input[type="radio"]').prop('checked', true).trigger('change');
-            });
-
             $('input[name="shipping_rate"]').on('change', function() {
                 let shippingCost = parseFloat($(this).val());
                 let rateId = $(this).data('rate-id');
@@ -98,6 +87,17 @@
                 $('#shipping_rate_id').val(rateId);
                 $('#shipping_delivery_type').val(deliveryType);
             });
+
+            $('.shipping-option').on('click', function() {
+                $('.shipping-option').removeClass('selected');
+                $(this).addClass('selected');
+                $(this).find('input[type="radio"]').prop('checked', true).trigger('change');
+            });
+
+            // Auto-select the first (cheapest) shipping option if available
+            if ($('.shipping-option').length > 0) {
+                $('.shipping-option').first().click();
+            }
         });
     })(jQuery);
 </script>

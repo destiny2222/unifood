@@ -8391,6 +8391,7 @@ CHECKOUT PAGE START
   z-index:10000 !important;   
 }
 
+.mobile_search_icon .menu_search,
 .mobile_cart_icon .cart_icon{
     font-size: 16px;
     font-weight: 600;
@@ -8408,14 +8409,30 @@ CHECKOUT PAGE START
 }
 
 @media (min-width: 992px) {
+    .mobile_search_icon,
     .mobile_cart_icon{
         display:none;
     }
 }
 
 @media (max-width: 991px) {
+    .wsus__search_desktop,
     .wsus__cart_desktop{
         display:none;
+    }
+
+    .mobile_search_icon {
+        margin-left: auto;
+    }
+
+    .mobile_search_icon .menu_search,
+    .mobile_cart_icon .cart_icon {
+        width: 35px;
+        height: 35px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 5px;
     }
 }
 

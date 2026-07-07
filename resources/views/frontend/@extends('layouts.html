@@ -23,14 +23,14 @@
                             <div class="row">
                                 <div class="col-12">
                                     <div class="wsus__check_single_form">
-                                        <label for="">Search postcode or address*</label>
-                                        <input id="ship-address" name="ship-address" placeholder="Start typing your postcode or address" required autocomplete="off" />
+                                        <label for="">Deliver to*</label>
+                                        <input id="ship-address" name="ship-address" required autocomplete="off" />
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="wsus__check_single_form">
                                         <label for="">Apartment, unit, suite, or floor #</label>
-                                        <input type="text" id="address2" placeholder="Apartment, unit, suite, or floor #" name="address" />
+                                        <input type="text" id="address2" placeholder="Apartment, unit, suite, or floor #" name="address" required/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -41,8 +41,8 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="wsus__check_single_form">
-                                        <label for="">State</label>
-                                        <input type="text" id="state" placeholder="County/Region" name="state" />
+                                        <label for="">State/Province<span class="text-danger">*</span></label>
+                                        <input type="text" id="state" placeholder="State *" name="state" required />
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -110,47 +110,8 @@
                                     toastr.error('Your cart is empty. Please add items before checkout.');
                                     return;
                                 }
-
-                                // Validate required address fields
-                                let requiredFields = [
-                                    { id: '#ship-address', message: 'Kindly enter your street address or postcode.' },
-                                    { id: '#locality', message: 'Kindly enter your city.' },
-                                    { id: '#state', message: 'Kindly enter your state.' },
-                                    { id: '#postcode', message: 'Kindly enter your postal code.' },
-                                    { id: '#country', message: 'Kindly enter your country.' },
-                                    { id:'address2', message: 'Kindly enter your apartment, unit, suite, or floor.' }
-                                ];
                                 
-                                let firstMissingField = null;
-                                
-                                requiredFields.forEach(function(field) {
-                                    let $input = $(field.id);
-                                    if ($input.length && $input.val().trim() === '') {
-                                        $input.css('border-color', 'red');
-                                        if (!firstMissingField) {
-                                            firstMissingField = field;
-                                        }
-                                    } else if ($input.length) {
-                                        $input.css('border-color', '');
-                                    }
-                                });
-
-                                if (firstMissingField) {
-                                    toastr.error(firstMissingField.message);
-                                    
-                                    // Focus the first missing field
-                                    $(firstMissingField.id).focus();
-                                    
-                                    return;
-                                }
-
-                                // Check if shipping option is selected
-                                if ($('input[name="shipping_rate"]:checked').length === 0) {
-                                    toastr.error('Please select a shipping option before proceeding to pay.');
-                                    return;
-                                }
-                                
-                                document.getElementById('checkout_form').requestSubmit();
+                                document.getElementById('checkout_form').submit();
                             }
                         </script>
                     </div>
@@ -167,8 +128,7 @@
 @push('scripts')
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARkCEFCZpUtHsK6w0gw-Bg7jk68ilhV6g&callback=initAutocomplete&libraries=places&v=weekly" defer></script>
     <script>
-        let addressAutocomplete;
-        let postcodeAutocomplete;
+        let autocomplete;
         let address1Field;
         let address2Field;
         let postalField;
@@ -178,37 +138,19 @@
             address2Field = document.querySelector("#address2");
             postalField = document.querySelector("#postcode");
             
-            const autocompleteOptions = {
-                componentRestrictions: { country: "gb" },
-                fields: ["address_components", "formatted_address", "geometry"],
+            autocomplete = new google.maps.places.Autocomplete(address1Field, {
+                fields: ["address_components", "geometry"],
                 types: ["address"],
-            };
-
-            addressAutocomplete = new google.maps.places.Autocomplete(address1Field, autocompleteOptions);
-            postcodeAutocomplete = new google.maps.places.Autocomplete(postalField, autocompleteOptions);
+            });
             address1Field.focus();
             
-            addressAutocomplete.addListener("place_changed", function() {
-                fillInAddress(addressAutocomplete);
-            });
-            postcodeAutocomplete.addListener("place_changed", function() {
-                fillInAddress(postcodeAutocomplete);
-            });
+            autocomplete.addListener("place_changed", fillInAddress);
         }
 
-        function fillInAddress(autocompleteInstance) {
-            const place = autocompleteInstance.getPlace();
-
-            if (!place.address_components) {
-                return;
-            }
-
+        function fillInAddress() {
+            const place = autocomplete.getPlace();
             let address1 = "";
-            let address2 = "";
             let postcode = "";
-            let city = "";
-            let state = "";
-            let country = "";
 
             for (const component of place.address_components) {
                 const componentType = component.types[0];
@@ -222,12 +164,6 @@
                         address1 += component.short_name;
                         break;
                     }
-                    case "subpremise":
-                    case "premise":
-                    case "floor": {
-                        address2 = address2 ? `${address2}, ${component.long_name}` : component.long_name;
-                        break;
-                    }
                     case "postal_code": {
                         postcode = `${component.long_name}${postcode}`;
                         break;
@@ -237,32 +173,20 @@
                         break;
                     }
                     case "locality":
-                    case "postal_town":
-                        city = component.long_name;
+                        document.querySelector("#locality").value = component.long_name;
                         break;
                     case "administrative_area_level_1": {
-                        state = component.long_name;
+                        document.querySelector("#state").value = component.short_name;
                         break;
                     }
-                    case "administrative_area_level_2": {
-                        if (!state) {
-                            state = component.long_name;
-                        }
+                    case "country":
+                        document.querySelector("#country").value = component.long_name;
                         break;
-                    }
-                    case "country": {
-                        country = component.long_name;
-                        break;
-                    }
                 }
             }
 
-            address1Field.value = address1 || place.formatted_address || address1Field.value || postalField.value;
-            address2Field.value = address2 || address2Field.value;
-            postalField.value = postcode || postalField.value;
-            document.querySelector("#locality").value = city;
-            document.querySelector("#state").value = state;
-            document.querySelector("#country").value = country;
+            address1Field.value = address1;
+            postalField.value = postcode;
             address2Field.focus();
         }
 
