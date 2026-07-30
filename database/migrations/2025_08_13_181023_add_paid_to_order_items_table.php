@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('order_items', function (Blueprint $table) {
-            $table->string('shipping_delivery_type')->nullable()->after('delivery_fee');
-            $table->decimal('shipping_price', 8, 2)->default(0)->after('shipping_delivery_type');
-        });
+        if (!Schema::hasTable('order_items')) {
+            Schema::table('order_items', function (Blueprint $table) {
+                $table->string('shipping_delivery_type')->nullable()->after('delivery_fee');
+                $table->decimal('shipping_price', 8, 2)->default(0)->after('shipping_delivery_type');
+            });
+        }
     }
 
     /**
@@ -22,8 +24,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('order_items', function (Blueprint $table) {
-            $table->dropColumn(['shipping_delivery_type', 'shipping_price']);
-        });
+        if (!Schema::hasTable('order_items')) {
+            Schema::table('order_items', function (Blueprint $table) {
+                $table->dropColumn(['shipping_delivery_type', 'shipping_price']);
+            });
+        }
     }
 };

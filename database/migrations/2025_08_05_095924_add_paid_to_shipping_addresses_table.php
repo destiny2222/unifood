@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('shipping_addresses', function (Blueprint $table) {
-            $table->longText('ship-address');
-        });
+        if (!Schema::hasTable('shipping_addresses')) {
+            Schema::table('shipping_addresses', function (Blueprint $table) {
+                $table->longText('ship-address');
+            });
+        }
     }
 
     /**
@@ -21,8 +23,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('shipping_addresses', function (Blueprint $table) {
-            $table->dropColumn('ship-address');
-        });
+        if (!Schema::hasTable('shipping_addresses')) {
+            Schema::table('shipping_addresses', function (Blueprint $table) {
+                $table->dropColumn('ship-address');
+            });
+        }
     }
 };

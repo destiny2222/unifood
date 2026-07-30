@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('order_items', function (Blueprint $table) {
-            $table->decimal('delivery_fee', 10, 2)->default(0);
-            $table->string('size')->nullable();
-        });
+        if (!Schema::hasTable('order_items')) {
+            Schema::table('order_items', function (Blueprint $table) {
+                $table->decimal('delivery_fee', 10, 2)->default(0);
+                $table->string('size')->nullable();
+            });
+        }
     }
 
     /**
@@ -22,8 +24,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('order_items', function (Blueprint $table) {
-            $table->dropColumn(['delivery_fee', 'weight', 'size', 'unit']);
-        });
+        if (!Schema::hasTable('order_items')) {
+            Schema::table('order_items', function (Blueprint $table) {
+                $table->dropColumn(['delivery_fee', 'weight', 'size', 'unit']);
+            });
+        }
     }
 };

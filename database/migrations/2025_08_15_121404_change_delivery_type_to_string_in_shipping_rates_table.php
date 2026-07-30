@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('shipping_rates', function (Blueprint $table) {
-            $table->string('delivery_type')->change();
-        });
+        if (!Schema::hasTable('shipping_rates')) {
+            Schema::table('shipping_rates', function (Blueprint $table) {
+                $table->string('delivery_type')->change();
+            });
+        }
     }
 
     /**
@@ -21,8 +23,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('shipping_rates', function (Blueprint $table) {
-            $table->enum('delivery_type', ['next_day', 'next_morning', 'two_days'])->change();
-        });
+        if (!Schema::hasTable('shipping_rates')) {
+            Schema::table('shipping_rates', function (Blueprint $table) {
+                $table->enum('delivery_type', ['next_day', 'next_morning', 'two_days'])->change();
+            });
+        }
     }
 };

@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('order_items', function (Blueprint $table) {
-            $table->string('totalWeight')->nullable();
-        });
+        if (!Schema::hasTable('order_items')) {
+            Schema::table('order_items', function (Blueprint $table) {
+                $table->string('totalWeight')->nullable();
+            });
+        }
     }
 
     /**
@@ -21,8 +23,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('order_items', function (Blueprint $table) {
-            $table->dropColumn('totalWeight');
-        });
+        if (!Schema::hasTable('order_items')) {
+            Schema::table('order_items', function (Blueprint $table) {
+                $table->dropColumn('totalWeight');
+            });
+        }
     }
 };
