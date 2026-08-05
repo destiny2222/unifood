@@ -150,6 +150,11 @@ Route::prefix('admin')->name('admin.')->group(function (){
         // user management
         Route::get('/customer/list', [UserManagementController::class,'index'])->name('customer.index');
 
+        // B2B Applications
+        Route::get('/b2b/applications', [\App\Http\Controllers\Admin\AdminB2BController::class, 'index'])->name('b2b.applications.index');
+        Route::get('/b2b/applications/{id}', [\App\Http\Controllers\Admin\AdminB2BController::class, 'show'])->name('b2b.applications.show');
+        Route::post('/b2b/applications/{id}/action', [\App\Http\Controllers\Admin\AdminB2BController::class, 'handleAction'])->name('b2b.applications.action');
+
         // partner route
         Route::get('/partner/list', [PartnerController::class,'index'])->name('partner.index');
         Route::get('/partner/create', [PartnerController::class,'create'])->name('partner.create');

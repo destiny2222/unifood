@@ -107,6 +107,17 @@
                                     <option value="1">Yes</option>
                                 </select>
                             </div>
+                            <div class="col-lg-3 mb-3">
+                                <label>Is B2B / Wholesale <span class="text-danger">*</span></label>
+                                <select name="is_b2b" class="form-control" id="is_b2b_select" onchange="toggleMoqField()">
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-3 mb-3" id="moq-field" style="display: none;">
+                                <label>Minimum Order Quantity</label>
+                                <input type="number" name="minimum_order_quantity" class="form-control" value="1" min="1" placeholder="e.g. 10">
+                            </div>
                             <div class="col-lg-3 mb-3 " id="single-product-fields">
                                 <label>Weight</label>
                                 <input type="number" step="0.01" name="weight" class="form-control" placeholder="Weight (e.g. 2.5)">
@@ -213,6 +224,17 @@
 @endsection
 @push('scripts')
 <script>
+    function toggleMoqField() {
+        const isB2b = document.getElementById('is_b2b_select').value;
+        const moqField = document.getElementById('moq-field');
+        if (isB2b === '1') {
+            moqField.style.display = 'block';
+        } else {
+            moqField.style.display = 'none';
+        }
+    }
+    document.addEventListener('DOMContentLoaded', toggleMoqField);
+
     const variantSection = document.querySelector('#variant-options').closest('.variant-card');
     const singlePriceSection = document.querySelector('#product-price').closest('.col-lg-3');
     const singleFields = document.querySelector('#single-product-fields');

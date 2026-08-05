@@ -78,9 +78,20 @@
                             <div class="col-lg-3">
                                 <label>Today Special <span class="text-danger">*</span></label>
                                 <select name="today_special" class="form-control">
-                                    <option value="0" {{ ($product->status == 1) ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{ $product->status == 0 ? 'selected' : ''}}>Yes</option>
+                                    <option value="0" {{ ($product->today_special == 0) ? 'selected' : ''}}>No</option>
+                                    <option value="1" {{ ($product->today_special == 1) ? 'selected' : ''}}>Yes</option>
                                 </select>
+                            </div>
+                            <div class="col-lg-3">
+                                <label>Is B2B / Wholesale <span class="text-danger">*</span></label>
+                                <select name="is_b2b" class="form-control" id="is_b2b_select" onchange="toggleMoqField()">
+                                    <option value="0" {{ ($product->is_b2b == 0) ? 'selected' : ''}}>No</option>
+                                    <option value="1" {{ ($product->is_b2b == 1) ? 'selected' : ''}}>Yes</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-3 mb-3" id="moq-field" style="display: none;">
+                                <label>Minimum Order Quantity</label>
+                                <input type="number" name="minimum_order_quantity" class="form-control" value="{{ $product->minimum_order_quantity ?? 1 }}" min="1" placeholder="e.g. 10">
                             </div>
                             <div class="col-lg-3 mb-3 " id="single-product-fields">
                                 <label>Weight</label>
@@ -174,6 +185,17 @@
 @endsection
 @push('scripts')
 <script>
+    function toggleMoqField() {
+        const isB2b = document.getElementById('is_b2b_select').value;
+        const moqField = document.getElementById('moq-field');
+        if (isB2b === '1') {
+            moqField.style.display = 'block';
+        } else {
+            moqField.style.display = 'none';
+        }
+    }
+    document.addEventListener('DOMContentLoaded', toggleMoqField);
+
     const variantSection = document.querySelector('#variant-options').closest('.variant-card');
     const singlePriceSection = document.querySelector('#product-price').closest('.col-lg-3');
     const singleFields = document.querySelector('#single-product-fields');

@@ -47,6 +47,15 @@
                </a>
           </li>
 
+          <li class="nav-item">
+               <a  class="nav-link " href="{{ route('admin.b2b.applications.index') }}">
+                    <span class="nav-icon">
+                         <iconify-icon icon="solar:shield-keyhole-bold-duotone"></iconify-icon>
+                    </span>
+                    <span class="nav-text"> B2B Applications </span>
+               </a>
+          </li>
+
           <li class="menu-title">General</li>
 
           <li class="nav-item">

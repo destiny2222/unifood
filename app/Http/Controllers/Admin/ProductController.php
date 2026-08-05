@@ -57,6 +57,8 @@ class ProductController extends Controller
             $validatedData['slug'] = Str::slug($request->title);
             $validatedData['images'] = $result['secure_url'] ?? null;
             $validatedData['has_variants'] = $request->has('has_variants');
+            $validatedData['is_b2b'] = $request->has('is_b2b');
+            $validatedData['minimum_order_quantity'] = $request->has('is_b2b') ? ($request->minimum_order_quantity ?? 1) : 1;
 
             if (!$validatedData['has_variants']) {
                 $validatedData['weight'] = $request->weight;
@@ -128,6 +130,8 @@ class ProductController extends Controller
             $validatedData['slug'] = Str::slug($request->title);
             $validatedData['images'] = $result['secure_url'] ?? $product->images;
             $validatedData['has_variants'] = $request->has('has_variants');
+            $validatedData['is_b2b'] = $request->has('is_b2b');
+            $validatedData['minimum_order_quantity'] = $request->has('is_b2b') ? ($request->minimum_order_quantity ?? 1) : 1;
 
             if (!$validatedData['has_variants']) {
                 $validatedData['weight'] = $request->weight;

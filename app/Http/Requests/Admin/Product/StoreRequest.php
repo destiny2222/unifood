@@ -36,6 +36,8 @@ class StoreRequest extends FormRequest
             'description' => ['required', 'string'],
             'slug' => ['nullable', 'string', 'max:255'],
             'has_variants'=>['nullable','boolean'],
+            'is_b2b' => ['nullable', 'boolean'],
+            'minimum_order_quantity' => ['nullable', 'integer', 'min:1'],
         ];
     }
 

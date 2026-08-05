@@ -71,6 +71,14 @@ class CheckoutController extends Controller
         return redirect()->route('login'); 
     }
 
+    if (Auth::user()->current_view === 'business' && (!Auth::user()->kyc || Auth::user()->kyc->status !== 'approved')) {
+        $message = 'Your trade account is pending approval or has not been approved. Checkout is currently disabled.';
+        if (request()->expectsJson()) {
+            return response()->json(['error' => $message], 403);
+        }
+        return redirect()->route('cart.index')->with('error', $message);
+    }
+
     $cart = Cart::with('product')->where('user_id', Auth::id())->get(); // Added with('product')
 
     if ($cart->isEmpty()) {
@@ -102,6 +110,15 @@ class CheckoutController extends Controller
     {
         try {
             $user = Auth::user();
+
+            if ($user->current_view === 'business' && (!$user->kyc || $user->kyc->status !== 'approved')) {
+                $message = 'Your trade account is pending approval or has not been approved. Checkout is currently disabled.';
+                if ($request->expectsJson()) {
+                    return response()->json(['error' => $message], 403);
+                }
+                return back()->with('error', $message);
+            }
+
             // Get the current user's cart items
             $cartItems = Cart::where('user_id', Auth::user()->id)->get();
 

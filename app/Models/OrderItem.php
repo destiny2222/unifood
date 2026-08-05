@@ -4,12 +4,9 @@ namespace App\Models;
 
 use App\Traits\WeightConversion;
 use Illuminate\Database\Eloquent\Model;
-// use Illuminate\Database\Eloquent\Concerns\HasUuids;
-
 class OrderItem extends Model
 {
     use WeightConversion;
-    // use HasUuids;
     
      public $fillable = [
         'shipping_addresses_id',

@@ -88,8 +88,11 @@ class PaymentController extends Controller
                 $user->notify(new PaymentSuccessNotification($orderItemIds, $user));
                 
                 
-                // Clear the user's cart after successful payment
-                Cart::where('user_id', $session->metadata->user_id)->delete();
+                // Clear only the purchased items from the cart database after successful payment
+                $purchasedProductIds = OrderItem::whereIn('id', $orderItemIds)->pluck('product_id')->toArray();
+                Cart::where('user_id', $session->metadata->user_id)
+                    ->whereIn('product_id', $purchasedProductIds)
+                    ->delete();
                 session()->forget('cart');
                 $successMessage = "Payment successful! Your order has been confirmed.";
                 
