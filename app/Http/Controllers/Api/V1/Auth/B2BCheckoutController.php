@@ -182,34 +182,35 @@ class B2BCheckoutController extends Controller
             }
         }
 
-        // Update / create shipping address
-       $addressData = [
-            'label'                => $request->label ?? 'Default',
-            'company_name'         => $request->company_name,
-            'contact_name'         => $request->contact_name ?? $user->name,
-            'phone'                => $request->phone ?? $user->phone,
-            'address_line_1'       => $request->address ?? $request->address_line_1,
-            'address_line_2'       => $request->address_line_2,
-            'city'                 => $request->city,
-            'state'                => $request->state,
-            'postal_code'          => $request->postal_code,
-            'country'              => $request->country,
-            'is_default'           => true,
-            'delivery_instructions'=> $request->delivery_instructions,
-        ];
+        // Get or Create shipping address
+        if ($request->shipping_address_id) {
+            $shippingAddress = B2BShippingAddress::where('user_id', $user->id)
+                ->findOrFail($request->shipping_address_id);
+        } else {
+            $addressData = [
+                'label'                => $request->label ?? 'Default',
+                'company_name'         => $request->company_name,
+                'contact_name'         => $request->contact_name ?? $user->name,
+                'phone'                => $request->phone ?? $user->phone,
+                'address_line_1'       => $request->input('ship-address') ?? $request->address ?? $request->address_line_1,
+                'address_line_2'       => $request->address_line_2,
+                'city'                 => $request->city,
+                'state'                => $request->state,
+                'postal_code'          => $request->postal_code,
+                'country'              => $request->country,
+                'is_default'           => true,
+                'delivery_instructions'=> $request->delivery_instructions,
+            ];
 
-        // Make sure only one default exists
-        B2BShippingAddress::where('user_id', $user->id)
-            ->where('is_default', true)
-            ->update(['is_default' => false]);
+            // Make sure only one default exists
+            B2BShippingAddress::where('user_id', $user->id)
+                ->where('is_default', true)
+                ->update(['is_default' => false]);
 
-        $shippingAddress = B2BShippingAddress::updateOrCreate(
-            [
+            $shippingAddress = B2BShippingAddress::create(array_merge([
                 'user_id'    => $user->id,
-                'is_default' => true,
-            ],
-            $addressData
-        );
+            ], $addressData));
+        }
 
         // Create Purchase Order
         $internalRef = 'PO-' . strtoupper(Str::random(8));
