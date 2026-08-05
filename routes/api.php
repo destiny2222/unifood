@@ -82,8 +82,9 @@ Route::prefix('v1')->group(function () {
             Route::get('/b2b/rfq', [B2BRfqController::class, 'index']);
             Route::get('/b2b/rfq/{id}', [B2BRfqController::class, 'show']);
             Route::put('/b2b/rfq/{id}/status', [B2BRfqController::class, 'updateStatus']);
+
+            Route::put('/profile', [ProfileController::class, 'edit']);
+            Route::put('/change-password', [ProfileController::class, 'changePassword']);
         });
     });
 });
-
-// B2B Authenticated Endpoints
