@@ -12,32 +12,38 @@ return new class extends Migration
     public function up(): void
     {
         // 1. Create kycs table
-        Schema::create('kycs', function (Blueprint $table) {
-            $table->id();
-            $table->foreignUuid('user_id')->constrained()->cascadeOnDelete();
-            $table->string('company_name');
-            $table->string('company_registration_number');
-            $table->string('business_type'); // restaurant, retailer, caterer, reseller, other
-            $table->text('trade_address');
-            $table->string('billing_contact');
-            $table->string('estimated_monthly_order_volume');
-            $table->string('status')->default('pending'); // pending, approved, rejected, info_requested
-            $table->string('pricing_tier')->default('Wholesale Tier 1');
-            $table->text('status_notes')->nullable();
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('kycs')) {
+            Schema::create('kycs', function (Blueprint $table) {
+                $table->id();
+                $table->foreignUuid('user_id')->constrained()->cascadeOnDelete();
+                $table->string('company_name');
+                $table->string('company_registration_number');
+                $table->string('business_type'); // restaurant, retailer, caterer, reseller, other
+                $table->text('trade_address');
+                $table->string('billing_contact');
+                $table->string('estimated_monthly_order_volume');
+                $table->string('status')->default('pending'); // pending, approved, rejected, info_requested
+                $table->string('pricing_tier')->default('Wholesale Tier 1');
+                $table->text('status_notes')->nullable();
+                $table->timestamps();
+            });
+        }
 
         // 2. Add columns to users table
-        Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('kyc_id')->nullable()->after('id')->constrained('kycs')->nullOnDelete();
-            $table->boolean('is_business_owner')->default(false)->after('kyc_id');
-            $table->string('current_view')->default('personal')->after('is_business_owner');
-        });
+        if (!Schema::hasColumn('users', 'kyc_id')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->foreignId('kyc_id')->nullable()->after('id')->constrained('kycs')->nullOnDelete();
+                $table->boolean('is_business_owner')->default(false)->after('kyc_id');
+                $table->string('current_view')->default('personal')->after('is_business_owner');
+            });
+        }
 
         // 3. Add column to products table
-        Schema::table('products', function (Blueprint $table) {
-            $table->boolean('is_b2b')->default(false)->after('status');
-        });
+        if (!Schema::hasColumn('products', 'is_b2b')) {
+            Schema::table('products', function (Blueprint $table) {
+                $table->boolean('is_b2b')->default(false)->after('status');
+            });
+        }
     }
 
     /**

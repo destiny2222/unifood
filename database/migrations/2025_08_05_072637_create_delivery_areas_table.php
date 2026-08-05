@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         if (!Schema::hasTable('delivery_areas')) {
-        Schema::create('delivery_areas', function (Blueprint $table) {
-            $table->id();
-            $table->integer('minimum_delivery')->default(0);
-            $table->integer('delivery_fee');
-            $table->boolean('status')->default(false);
-            $table->timestamps();
-        });
+            Schema::create('delivery_areas', function (Blueprint $table) {
+                $table->id();
+                $table->integer('minimum_delivery')->default(0);
+                $table->integer('delivery_fee');
+                $table->boolean('status')->default(false);
+                $table->timestamps();
+            });
         }
     }
 

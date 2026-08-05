@@ -79,7 +79,7 @@ class B2BCheckoutController extends Controller
 
         // Credit info for frontend
         $kyc = $user->kyc;
-        $unpaidTotal = PurchaseOrder::where('kyc_id', $kyc->id)
+        $unpaidTotal = PurchaseOrder::where('user_id', $user->id)
             ->where('payment_method', 'on_account')
             ->where('status', '!=', 'Invoiced')
             ->where('is_draft', false)
@@ -166,7 +166,7 @@ class B2BCheckoutController extends Controller
 
         // Credit limit check for on_account
         if ($request->payment_method === 'on_account') {
-            $unpaidTotal = PurchaseOrder::where('kyc_id', $kyc->id)
+            $unpaidTotal = PurchaseOrder::where('user_id', $user->id)
                 ->where('payment_method', 'on_account')
                 ->where('status', '!=', 'Invoiced')
                 ->where('is_draft', false)
@@ -217,7 +217,6 @@ class B2BCheckoutController extends Controller
         $order = PurchaseOrder::create([
             'po_number'          => $request->po_number,
             'internal_reference' => $internalRef,
-            'kyc_id'             => $kyc->id,
             'user_id'            => $user->id,
             'status'             => 'Submitted',
             'payment_method'     => $request->payment_method,

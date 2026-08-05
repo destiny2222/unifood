@@ -4,6 +4,10 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\B2BWishlist;
+use App\Models\Product;
+use Illuminate\Validation\Rule;
+use App\Http\Controllers\Api\V1\Auth\B2BCartController;
 
 class B2BWishListController extends Controller
 {
@@ -57,7 +61,7 @@ class B2BWishListController extends Controller
                 'required',
                 'integer',
                 'exists:products,id',
-                Rule::unique('b2b_wishlists')->where(fn ($q) => $q->where('user_id', $user->id)),
+                Rule::unique('b2_b_wishlists')->where(fn ($q) => $q->where('user_id', $user->id)),
             ],
         ]);
 

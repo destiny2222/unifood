@@ -46,7 +46,7 @@ class B2BPurchaseOrderController extends Controller
         $kyc = $user->kyc;
         if ($request->payment_method === 'on_account') {
             // Check total unpaid non-draft orders
-            $unpaidTotal = PurchaseOrder::where('kyc_id', $kyc->id)
+            $unpaidTotal = PurchaseOrder::where('user_id', $user->id)
                 ->where('payment_method', 'on_account')
                 ->where('status', '!=', 'Invoiced') // Or Paid
                 ->where('is_draft', false)
@@ -66,7 +66,6 @@ class B2BPurchaseOrderController extends Controller
         $order = PurchaseOrder::create([
             'po_number' => $request->po_number,
             'internal_reference' => $internalRef,
-            'kyc_id' => $kyc->id,
             'user_id' => $user->id,
             'status' => 'Submitted',
             'payment_method' => $request->payment_method,
@@ -154,7 +153,7 @@ class B2BPurchaseOrderController extends Controller
         }
 
         // Exclude drafts from standard index
-        $orders = PurchaseOrder::where('kyc_id', $user->kyc_id)
+        $orders = PurchaseOrder::where('user_id', $user->id)
             ->where('is_draft', false)
             ->with(['items.product', 'user'])
             ->orderBy('created_at', 'desc')
@@ -174,7 +173,7 @@ class B2BPurchaseOrderController extends Controller
         }
 
         $order = PurchaseOrder::where('id', $id)
-            ->where('kyc_id', $user->kyc_id)
+            ->where('user_id', $user->id)
             ->with(['items.product', 'user'])
             ->firstOrFail();
 
@@ -191,7 +190,7 @@ class B2BPurchaseOrderController extends Controller
 
         $request->validate(['frequency' => 'required|in:weekly,monthly']);
 
-        $order = PurchaseOrder::where('id', $id)->where('kyc_id', $user->kyc_id)->firstOrFail();
+        $order = PurchaseOrder::where('id', $id)->where('user_id', $user->id)->firstOrFail();
         $order->is_recurring = true;
         $order->save();
 
@@ -218,7 +217,7 @@ class B2BPurchaseOrderController extends Controller
         $user = $request->user();
         if (!$user->isB2B()) return response()->json(['message' => 'Unauthorized.'], 403);
 
-        $drafts = PurchaseOrder::where('kyc_id', $user->kyc_id)
+        $drafts = PurchaseOrder::where('user_id', $user->id)
             ->where('is_draft', true)
             ->with(['items.product'])
             ->orderBy('created_at', 'desc')
@@ -235,7 +234,7 @@ class B2BPurchaseOrderController extends Controller
         $user = $request->user();
         if (!$user->isB2B()) return response()->json(['message' => 'Unauthorized.'], 403);
 
-        $order = PurchaseOrder::where('id', $id)->where('kyc_id', $user->kyc_id)->where('is_draft', true)->firstOrFail();
+        $order = PurchaseOrder::where('id', $id)->where('user_id', $user->id)->where('is_draft', true)->firstOrFail();
         
         $order->is_draft = false;
         $order->status = 'Submitted';

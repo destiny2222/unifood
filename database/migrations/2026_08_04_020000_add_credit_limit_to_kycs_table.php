@@ -12,8 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('kycs', function (Blueprint $table) {
-            $table->decimal('credit_limit', 12, 2)->default(0);
-            $table->string('payment_terms')->default('card'); // 'card' or '30_days', etc.
+            if (!Schema::hasColumn('kycs', 'credit_limit')) {
+                $table->decimal('credit_limit', 12, 2)->default(0);
+            }
+            if (!Schema::hasColumn('kycs', 'payment_terms')) {
+                $table->string('payment_terms')->default('card'); // 'card' or '30_days', etc.
+            }
         });
     }
 

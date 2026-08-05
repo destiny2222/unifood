@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('volume_discounts', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('product_id')->constrained()->cascadeOnDelete();
-            $table->integer('minimum_quantity');
-            $table->decimal('discount_percentage', 5, 2);
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('volume_discounts')) {
+            Schema::create('volume_discounts', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('product_id')->constrained()->cascadeOnDelete();
+                $table->integer('minimum_quantity');
+                $table->decimal('discount_percentage', 5, 2);
+                $table->timestamps();
+            });
+        }
     }
 
     /**

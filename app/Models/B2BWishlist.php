@@ -11,7 +11,7 @@ class B2BWishlist extends Model
 {
     use HasUuids;
 
-    protected $table = 'b2b_wishlists';
+    // protected $table = 'b2_b_wishlists';
 
     protected $fillable = [
         'user_id',

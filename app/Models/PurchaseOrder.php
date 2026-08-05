@@ -12,7 +12,6 @@ class PurchaseOrder extends Model
     protected $fillable = [
         'po_number',
         'internal_reference',
-        'kyc_id',
         'user_id',
         'status',
         'payment_method',
@@ -26,11 +25,6 @@ class PurchaseOrder extends Model
         'is_draft' => 'boolean',
         'is_recurring' => 'boolean',
     ];
-
-    public function kyc()
-    {
-        return $this->belongsTo(Kyc::class);
-    }
 
     public function user()
     {
