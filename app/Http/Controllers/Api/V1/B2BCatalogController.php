@@ -29,8 +29,8 @@ class B2BCatalogController extends Controller
                 'slug' => $product->slug,
                 'image' => $product->images, // Main image as a string
                 'product_images' => $product->photos->pluck('image_path'),
-                
                 'standard_price' => (float) $product->price,
+                'availability' => $product->availability,
                 'trade_price' => $tradePrice,
                 'is_b2b' => $product->is_b2b,
                 'description' => $product->description,

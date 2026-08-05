@@ -535,7 +535,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"product_id\": 42,\n  \"quantity\": 10,\n  \"size_variant\": \"20L\"\n}",
+              "raw": "{\n  \"product_id\": 42,\n  \"quantity\": 10,\n  \"size_variant\": \"20L\",\n  \"product_variant_id\": 1\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -747,7 +747,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"ship-address\": \"default\",\n  \"address\": \"123 Business Rd\",\n  \"city\": \"London\",\n  \"state\": \"England\",\n  \"country\": \"UK\",\n  \"postal_code\": \"EC1A 1BB\",\n  \"shipping_rate_id\": 1,\n  \"success_url\": \"https://frontend.mightyolu.com/checkout/success?session_id={CHECKOUT_SESSION_ID}\",\n  \"cancel_url\": \"https://frontend.mightyolu.com/checkout/cancel\"\n}",
+              "raw": "{\n  \"payment_method\": \"card\",\n  \"po_number\": \"PO-123456\",\n  \"ship-address\": \"default\",\n  \"address\": \"123 Business Rd\",\n  \"city\": \"London\",\n  \"state\": \"England\",\n  \"country\": \"UK\",\n  \"postal_code\": \"EC1A 1BB\",\n  \"shipping_rate_id\": 1,\n  \"schedule_frequency\": \"monthly\",\n  \"success_url\": \"https://frontend.mightyolu.com/checkout/success?session_id={CHECKOUT_SESSION_ID}\",\n  \"cancel_url\": \"https://frontend.mightyolu.com/checkout/cancel\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -764,6 +764,934 @@
                 "v1",
                 "checkout"
               ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "6. B2B Product Catalog",
+      "item": [
+        {
+          "name": "Get All B2B Products",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/b2b/catalog",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "b2b",
+                "catalog"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get B2B Product Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/b2b/catalog/commercial-cooking-oil-20l",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "b2b",
+                "catalog",
+                "commercial-cooking-oil-20l"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "7. B2B Shipping Addresses",
+      "item": [
+        {
+          "name": "List Shipping Addresses",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/shipping-addresses",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "shipping-addresses"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Shipping Address",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"label\": \"Warehouse Beta\",\n  \"company_name\": \"Acme Food Services Ltd\",\n  \"contact_name\": \"Jane Doe\",\n  \"phone\": \"+447700900088\",\n  \"address_line_1\": \"12 East Side Ave\",\n  \"address_line_2\": \"Suite B\",\n  \"city\": \"London\",\n  \"state\": \"England\",\n  \"postal_code\": \"E16 4PF\",\n  \"country\": \"UK\",\n  \"is_default\": false,\n  \"delivery_instructions\": \"Leave with reception.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/shipping-addresses",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "shipping-addresses"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Shipping Address",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/shipping-addresses/9",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "shipping-addresses",
+                "9"
+              ],
+              "description": "Replace '9' with the actual address ID."
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Shipping Address",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"label\": \"Warehouse Beta Revised\",\n  \"contact_name\": \"Jane Smith\",\n  \"is_default\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/shipping-addresses/9",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "shipping-addresses",
+                "9"
+              ],
+              "description": "Replace '9' with the actual address ID."
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Shipping Address",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/shipping-addresses/9",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "shipping-addresses",
+                "9"
+              ],
+              "description": "Replace '9' with the actual address ID."
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Set Default Shipping Address",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/shipping-addresses/9/set-default",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "shipping-addresses",
+                "9",
+                "set-default"
+              ],
+              "description": "Replace '9' with the actual address ID."
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "8. B2B Wishlist",
+      "item": [
+        {
+          "name": "Get B2B Wishlist Items",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/wishlist",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "wishlist"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Item to B2B Wishlist",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"product_id\": 42\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/wishlist",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "wishlist"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Remove Item from B2B Wishlist",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/wishlist/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "wishlist",
+                "1"
+              ],
+              "description": "Replace '1' with the actual wishlist item ID."
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Move Wishlist Item to B2B Cart",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 10,\n  \"size_variant\": \"20L\",\n  \"product_variant_id\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/wishlist/1/move-to-cart",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "wishlist",
+                "1",
+                "move-to-cart"
+              ],
+              "description": "Replace '1' with the actual wishlist item ID."
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "9. RFQ",
+      "item": [
+        {
+          "name": "Submit RFQ",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"product_id\": 42,\n      \"product_variant_id\": null,\n      \"quantity\": 150\n    }\n  ],\n  \"delivery_frequency\": \"weekly\",\n  \"notes\": \"Looking for a weekly contract of commercial oil.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/b2b/rfq",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "b2b",
+                "rfq"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List RFQs",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/b2b/rfq",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "b2b",
+                "rfq"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "View RFQ",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/b2b/rfq/3",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "b2b",
+                "rfq",
+                "3"
+              ],
+              "description": "Replace '3' with the actual RFQ ID."
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update RFQ Status",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"request_changes\",\n  \"comment\": \"Can we reduce unit price by 2%?\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/b2b/rfq/3/status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "b2b",
+                "rfq",
+                "3",
+                "status"
+              ],
+              "description": "Replace '3' with the actual RFQ ID."
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "10. Purchase Orders",
+      "item": [
+        {
+          "name": "Submit Purchase Order",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"po_number\": \"PO-9911A\",\n  \"payment_method\": \"on_account\",\n  \"items\": [\n    {\n      \"product_id\": 42,\n      \"product_variant_id\": null,\n      \"quantity\": 20,\n      \"unit_price\": 170.61\n    }\n  ],\n  \"schedule_frequency\": \"monthly\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/b2b/orders",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "b2b",
+                "orders"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Purchase Orders",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/b2b/orders",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "b2b",
+                "orders"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Draft Purchase Orders",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/b2b/orders/drafts",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "b2b",
+                "orders",
+                "drafts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Approve Draft Purchase Order",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/b2b/orders/17/approve",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "b2b",
+                "orders",
+                "17",
+                "approve"
+              ],
+              "description": "Replace '17' with the actual draft PO ID."
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "View Purchase Order",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/b2b/orders/16",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "b2b",
+                "orders",
+                "16"
+              ],
+              "description": "Replace '16' with the actual PO ID."
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Setup Recurring Schedule",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"frequency\": \"weekly\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/b2b/orders/16/recurring",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "b2b",
+                "orders",
+                "16",
+                "recurring"
+              ],
+              "description": "Replace '16' with the actual PO ID."
             }
           },
           "response": []

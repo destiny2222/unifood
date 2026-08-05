@@ -11,6 +11,8 @@ use App\Http\Controllers\Api\V1\Auth\B2BCheckoutController;
 use App\Http\Controllers\Api\V1\B2BCatalogController;
 use App\Http\Controllers\Api\V1\B2BRfqController;
 use App\Http\Controllers\Api\V1\B2BPurchaseOrderController;
+use App\Http\Controllers\Api\V1\B2BWishListController;
+use App\Http\Controllers\Api\V1\B2BShippingAddressController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -25,6 +27,7 @@ Route::prefix('v1')->group(function () {
     // Product Endpoints
     Route::get('/b2b/catalog', [B2BCatalogController::class, 'index']);
     Route::get('/b2b/catalog/{slug}', [B2BCatalogController::class, 'show']);
+    
     // Authenticated Sanctum Routes
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user/me', [B2BLoginController::class, 'me']);
@@ -38,8 +41,14 @@ Route::prefix('v1')->group(function () {
         Route::get('/authorized-buyers', [B2BKycController::class, 'getAuthorizedBuyers']);
         Route::post('/authorized-buyers', [B2BKycController::class, 'addAuthorizedBuyer']);
 
+        // Shipping Addresses
+        Route::get('/shipping-addresses', [B2BShippingAddressController::class, 'index']);
+        Route::post('/shipping-addresses', [B2BShippingAddressController::class, 'store']);
+        Route::get('/shipping-addresses/{id}', [B2BShippingAddressController::class, 'show']);
+        Route::put('/shipping-addresses/{id}', [B2BShippingAddressController::class, 'update']);
+        Route::delete('/shipping-addresses/{id}', [B2BShippingAddressController::class, 'destroy']);
+        Route::post('/shipping-addresses/{id}/set-default', [B2BShippingAddressController::class, 'setDefault']);
 
-       
 
         // B2B Protected Endpoints (Requires Approved Trade Status)
         Route::middleware('b2b.approved')->group(function () {
@@ -49,6 +58,12 @@ Route::prefix('v1')->group(function () {
             Route::put('/cart/{id}', [B2BCartController::class, 'update']);
             Route::delete('/cart/{id}', [B2BCartController::class, 'destroy']);
             Route::delete('/cart', [B2BCartController::class, 'clear']);
+
+            // Wishlist
+            Route::get('/wishlist', [B2BWishlistController::class, 'index']);
+            Route::post('/wishlist', [B2BWishlistController::class, 'store']);
+            Route::delete('/wishlist/{id}', [B2BWishlistController::class, 'destroy']);
+            Route::post('/wishlist/{id}/move-to-cart', [B2BWishlistController::class, 'moveToCart']);
 
             // Checkout Endpoints
             Route::get('/checkout', [B2BCheckoutController::class, 'getCheckoutDetails']);

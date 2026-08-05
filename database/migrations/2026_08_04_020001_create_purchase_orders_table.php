@@ -13,15 +13,12 @@ return new class extends Migration
     {
         Schema::create('purchase_orders', function (Blueprint $table) {
             $table->id();
-            $table->string('po_number')->nullable(); // Customer's reference
-            $table->string('internal_reference')->unique(); // Mightyolu's reference
-            $table->foreignId('kyc_id')->constrained('kycs')->cascadeOnDelete();
+            $table->string('po_number')->nullable();
+            $table->string('internal_reference')->unique(); 
             $table->foreignUuid('user_id')->constrained('users')->cascadeOnDelete();
-            
-            // Submitted, Processing, Dispatched, Delivered, Invoiced
+            $table->foreignUuid('shipping_address_id')->nullable()->constrained('b2_b_shipping_addresses')->nullOnDelete();
             $table->string('status')->default('Submitted'); 
-            
-            $table->string('payment_method')->default('card'); // card, on_account
+            $table->string('payment_method')->default('card');
             $table->decimal('total_amount', 12, 2);
             $table->boolean('is_draft')->default(false);
             $table->boolean('is_recurring')->default(false);

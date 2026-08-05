@@ -3,17 +3,23 @@
 namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\Cart;
-use App\Models\OrderItem;
-use App\Models\ShippingAddress;
+use App\Models\B2BCart;
+use App\Models\B2BShippingAddress;
+use App\Models\Product;
+use App\Models\PurchaseOrder;
+use App\Models\PurchaseOrderItem;
+use App\Models\RecurringSchedule; 
 use App\Models\ShippingRate;
 use App\Traits\ShippingCost;
 use App\Traits\WeightConversion;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use Stripe\Stripe;
+use Illuminate\Support\Str;
 use Stripe\Checkout\Session;
+use Stripe\Stripe;
+
 
 class B2BCheckoutController extends Controller
 {
@@ -26,19 +32,14 @@ class B2BCheckoutController extends Controller
     {
         $user = $request->user();
 
-        // 1. Block if KYC is not approved
         if (!$user->isB2B()) {
             return response()->json([
                 'error' => 'Your trade account is pending approval or has not been approved. Checkout is currently disabled.'
             ], 403);
         }
 
-        // 2. Fetch B2B cart items
-        $cart = Cart::with('product')
+        $cart = B2BCart::with(['product', 'variant'])
             ->where('user_id', $user->id)
-            ->whereHas('product', function ($query) {
-                $query->where('is_b2b', true);
-            })
             ->get();
 
         if ($cart->isEmpty()) {
@@ -47,175 +48,284 @@ class B2BCheckoutController extends Controller
             ], 400);
         }
 
-        // 3. Shipping addresses
-        $shipping = ShippingAddress::where('user_id', $user->id)->get();
+        $shipping = B2BShippingAddress::where('user_id', $user->id)->get();
 
-        // 4. Calculate total weight & shipping rates
         $totalWeight = $this->getTotalWeightInKg($cart);
         $shippingRates = $this->getShippingRates($totalWeight);
         $deliveryFee = $shippingRates->first()->price ?? 0;
 
-        // 5. Calculate total prices
-        $subtotal = $cart->sum(fn ($item) => $item->price * $item->quantity);
+        $subtotal = 0;
+        $cartItems = [];
+
+        foreach ($cart as $item) {
+            $baseVariantPrice = $item->variant?->price ?? null;
+            $dynamicPrice = $item->product->getResolvedPrice($user, $item->quantity, $baseVariantPrice);
+            $itemSubtotal = $item->quantity * $dynamicPrice;
+            $subtotal += $itemSubtotal;
+
+            $cartItems[] = [
+                'id'            => $item->id,
+                'product_id'    => $item->product_id,
+                'product_title' => $item->product->title,
+                'quantity'      => $item->quantity,
+                'price'         => (float) $dynamicPrice,
+                'subtotal'      => (float) $itemSubtotal,
+                'size'          => $item->size ?? 'N/A',
+                'variant_id'    => $item->product_variant_id,
+            ];
+        }
+
         $totalPrice = $subtotal + $deliveryFee;
 
+        // Credit info for frontend
+        $kyc = $user->kyc;
+        $unpaidTotal = PurchaseOrder::where('kyc_id', $kyc->id)
+            ->where('payment_method', 'on_account')
+            ->where('status', '!=', 'Invoiced')
+            ->where('is_draft', false)
+            ->sum('total_amount');
+
         return response()->json([
-            'cart_items' => $cart->map(fn ($item) => [
-                'id' => $item->id,
-                'product_title' => $item->product->title,
-                'quantity' => $item->quantity,
-                'price' => (float) $item->price,
-                'subtotal' => (float) ($item->price * $item->quantity),
-                'size' => $item->size,
-            ]),
+            'cart_items'         => $cartItems,
             'shipping_addresses' => $shipping,
-            'shipping_rates' => $shippingRates,
-            'total_weight' => $totalWeight,
-            'subtotal' => (float) $subtotal,
-            'delivery_fee' => (float) $deliveryFee,
-            'total_price' => (float) $totalPrice,
+            'shipping_rates'     => $shippingRates,
+            'total_weight'       => $totalWeight,
+            'subtotal'           => (float) $subtotal,
+            'delivery_fee'       => (float) $deliveryFee,
+            'total_price'        => (float) $totalPrice,
+            'credit_limit'       => (float) $kyc->credit_limit,
+            'unpaid_balance'     => (float) $unpaidTotal,
+            'available_credit'   => (float) max(0, $kyc->credit_limit - $unpaidTotal),
         ]);
     }
 
     /**
-     * Process checkout and return Stripe Session URL for B2B orders.
+     * Process checkout → Create PurchaseOrder + PurchaseOrderItems
      */
     public function processCheckout(Request $request)
     {
         $user = $request->user();
 
-        // 1. Block if KYC is not approved
         if (!$user->isB2B()) {
             return response()->json([
                 'error' => 'Your trade account is pending approval or has not been approved. Checkout is currently disabled.'
             ], 403);
         }
 
-        // 2. Validate input
         $validator = Validator::make($request->all(), [
-            'ship-address' => 'required',
-            'address' => 'nullable|string|max:255',
-            'city' => 'required|string|max:255',
-            'state' => 'required|string|max:255',
-            'country' => 'required|string|max:255',
-            'postal_code' => 'required|string|max:10',
-            'shipping_rate_id' => 'required|exists:shipping_rates,id',
-            'success_url' => 'nullable|url',
-            'cancel_url' => 'nullable|url',
-        ], [
-            'ship-address.required' => 'Shipping address selection is required.',
-            'city.required' => 'City is required.',
-            'state.required' => 'State is required.',
-            'country.required' => 'Country is required.',
-            'postal_code.required' => 'Postal code is required.',
-            'shipping_rate_id.required' => 'Please select a shipping option.',
+            'payment_method'     => 'required|in:card,on_account',
+            'po_number'          => 'nullable|string|max:255',
+            'ship-address'       => 'required',
+            'address'            => 'nullable|string|max:255',
+            'city'               => 'required|string|max:255',
+            'state'              => 'required|string|max:255',
+            'country'            => 'required|string|max:255',
+            'postal_code'        => 'required|string|max:10',
+            'shipping_rate_id'   => 'required|exists:shipping_rates,id',
+            'schedule_frequency' => 'nullable|in:weekly,monthly',
+            'success_url'        => 'nullable|url',
+            'cancel_url'         => 'nullable|url',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        // 3. Get B2B cart items
-        $cartItems = Cart::where('user_id', $user->id)
-            ->whereHas('product', function ($query) {
-                $query->where('is_b2b', true);
-            })
+        $cartItems = B2BCart::with(['product', 'variant'])
+            ->where('user_id', $user->id)
             ->get();
 
         if ($cartItems->isEmpty()) {
             return response()->json(['error' => 'Your B2B cart is empty.'], 400);
         }
 
-        // 4. Retrieve shipping rate
-        $shippingRate = ShippingRate::find($request->shipping_rate_id);
-        $shippingDeliveryType = $shippingRate->delivery_type;
+        $kyc = $user->kyc;
+        $shippingRate = ShippingRate::findOrFail($request->shipping_rate_id);
         $shippingPrice = $shippingRate->price;
 
-        // Calculate order details
-        $subtotal = $cartItems->sum(fn ($item) => $item->price * $item->quantity);
-        $totalPrice = $subtotal + $shippingPrice;
+        // Calculate totals with live trade pricing
+        $subtotal = 0;
+        $preparedItems = [];
 
-        // 5. Update or create shipping address
-        $addressData = $request->only(['city', 'state', 'country', 'postal_code', 'is_default']);
-        $addressData['address'] = $request->address ?? '';
+        foreach ($cartItems as $item) {
+            $baseVariantPrice = $item->variant?->price ?? null;
+            $unitPrice = $item->product->getResolvedPrice($user, $item->quantity, $baseVariantPrice);
+            $lineTotal = $item->quantity * $unitPrice;
+            $subtotal += $lineTotal;
 
-        $shippingAddress = ShippingAddress::updateOrCreate(
-            ['user_id' => $user->id, 'is_default' => true],
+            $preparedItems[] = [
+                'product_id'         => $item->product_id,
+                'product_variant_id' => $item->product_variant_id,
+                'quantity'           => $item->quantity,
+                'unit_price'         => $unitPrice,
+                'size'               => $item->size,
+            ];
+        }
+
+        $totalAmount = $subtotal + $shippingPrice;
+
+        // Credit limit check for on_account
+        if ($request->payment_method === 'on_account') {
+            $unpaidTotal = PurchaseOrder::where('kyc_id', $kyc->id)
+                ->where('payment_method', 'on_account')
+                ->where('status', '!=', 'Invoiced')
+                ->where('is_draft', false)
+                ->sum('total_amount');
+
+            if (($unpaidTotal + $totalAmount) > $kyc->credit_limit) {
+                return response()->json([
+                    'message'        => 'Credit limit exceeded. Please use card payment or contact your account manager.',
+                    'credit_limit'   => $kyc->credit_limit,
+                    'unpaid_balance' => $unpaidTotal,
+                    'order_total'    => $totalAmount,
+                ], 400);
+            }
+        }
+
+        // Update / create shipping address
+       $addressData = [
+            'label'                => $request->label ?? 'Default',
+            'company_name'         => $request->company_name,
+            'contact_name'         => $request->contact_name ?? $user->name,
+            'phone'                => $request->phone ?? $user->phone,
+            'address_line_1'       => $request->address ?? $request->address_line_1,
+            'address_line_2'       => $request->address_line_2,
+            'city'                 => $request->city,
+            'state'                => $request->state,
+            'postal_code'          => $request->postal_code,
+            'country'              => $request->country,
+            'is_default'           => true,
+            'delivery_instructions'=> $request->delivery_instructions,
+        ];
+
+        // Make sure only one default exists
+        B2BShippingAddress::where('user_id', $user->id)
+            ->where('is_default', true)
+            ->update(['is_default' => false]);
+
+        $shippingAddress = B2BShippingAddress::updateOrCreate(
+            [
+                'user_id'    => $user->id,
+                'is_default' => true,
+            ],
             $addressData
         );
 
-        // 6. Generate Invoice
-        $invoiceNumber = OrderItem::generateInvoiceNumber();
-        $orderItemIds = [];
+        // Create Purchase Order
+        $internalRef = 'PO-' . strtoupper(Str::random(8));
 
-        // 7. Create OrderItems
-        foreach ($cartItems as $cartItem) {
-            $orderItem = OrderItem::create([
-                'user_id' => $user->id,
-                'shipping_addresses_id' => $shippingAddress->id,
-                'invoice_number' => $invoiceNumber,
-                'product_id' => $cartItem->product_id,
-                'quantity' => $cartItem->quantity,
-                'size' => $cartItem->size,
-                'delivery_fee' => $shippingPrice,
-                'shipping_delivery_type' => $shippingDeliveryType,
-                'shipping_price' => $shippingPrice,
-                'price' => $cartItem->price,
-                'payment_method' => 'Stripe',
-                'payment_status' => 0, // Unpaid
+        $order = PurchaseOrder::create([
+            'po_number'          => $request->po_number,
+            'internal_reference' => $internalRef,
+            'kyc_id'             => $kyc->id,
+            'user_id'            => $user->id,
+            'status'             => 'Submitted',
+            'payment_method'     => $request->payment_method,
+            'total_amount'       => $totalAmount,
+            'shipping_amount'    => $shippingPrice,
+            'is_draft'           => false,
+            'is_recurring'       => !empty($request->schedule_frequency),
+            // Optional: store shipping address reference if your table has the column
+            'shipping_address_id' => $shippingAddress->id,
+        ]);
+
+        // Create Purchase Order Items
+        foreach ($preparedItems as $item) {
+            PurchaseOrderItem::create([
+                'purchase_order_id'  => $order->id,
+                'product_id'         => $item['product_id'],
+                'product_variant_id' => $item['product_variant_id'],
+                'quantity'           => $item['quantity'],
+                'unit_price'         => $item['unit_price'],
+                // 'size'            => $item['size'], // add if your table has this column
             ]);
-
-            $orderItemIds[] = $orderItem->id;
         }
 
-        // 8. Generate Stripe Checkout Session
-        Stripe::setApiKey(env('STRIPE_SECRET'));
+        // Recurring schedule
+        if ($request->schedule_frequency) {
+            $nextRun = $request->schedule_frequency === 'weekly'
+                ? Carbon::now()->addWeek()
+                : Carbon::now()->addMonth();
 
-        try {
-            $successUrl = $request->success_url ?? route('stripe.checkout.success') . '?session_id={CHECKOUT_SESSION_ID}';
-            $cancelUrl = $request->cancel_url ?? route('stripe.checkout.cancel');
+            RecurringSchedule::create([
+                'purchase_order_id' => $order->id,
+                'kyc_id'            => $kyc->id,
+                'frequency'         => $request->schedule_frequency,
+                'next_run_date'     => $nextRun,
+                'is_active'         => true,
+            ]);
+        }
 
-            $session = Session::create([
-                'success_url' => $successUrl,
-                'payment_method_types' => ['link', 'card'],
-                'line_items' => [[
+        $checkoutUrl = null;
+
+        // Stripe for card payments
+        if ($request->payment_method === 'card') {
+            Stripe::setApiKey(env('STRIPE_SECRET'));
+
+            $lineItems = [];
+            foreach ($order->items as $item) {
+                $product = Product::find($item->product_id);
+                $lineItems[] = [
                     'price_data' => [
                         'currency' => 'gbp',
                         'product_data' => [
-                            'name' => 'Mightyolu B2B Trade Order ' . $invoiceNumber,
+                            'name' => $product ? $product->title : 'Product #' . $item->product_id,
                         ],
-                        'unit_amount' => (int) round(100 * $totalPrice),
+                        'unit_amount' => (int) round($item->unit_price * 100),
+                    ],
+                    'quantity' => $item->quantity,
+                ];
+            }
+
+            // Add shipping as a line item
+            if ($shippingPrice > 0) {
+                $lineItems[] = [
+                    'price_data' => [
+                        'currency' => 'gbp',
+                        'product_data' => [
+                            'name' => 'Shipping',
+                        ],
+                        'unit_amount' => (int) round($shippingPrice * 100),
                     ],
                     'quantity' => 1,
-                ]],
-                'mode' => 'payment',
-                'allow_promotion_codes' => false,
-                'cancel_url' => $cancelUrl,
-                'metadata' => [
-                    'order_item_ids' => implode(',', $orderItemIds),
-                    'invoice_number' => $invoiceNumber,
-                    'user_id' => $user->id,
-                ],
-            ]);
+                ];
+            }
 
-            // 9. Clear the B2B Cart
-            Cart::where('user_id', $user->id)
-                ->whereHas('product', function ($query) {
-                    $query->where('is_b2b', true);
-                })
-                ->delete();
+            $frontendUrl = env('NEXT_PUBLIC_APP_URL', 'http://localhost:3000');
 
-            return response()->json([
-                'message' => 'Order initiated successfully.',
-                'invoice_number' => $invoiceNumber,
-                'stripe_checkout_url' => $session->url,
-            ]);
+            try {
+                $session = Session::create([
+                    'line_items'  => $lineItems,
+                    'mode'        => 'payment',
+                    'success_url' => $request->success_url ?? $frontendUrl . '/b2b/orders?success=1',
+                    'cancel_url'  => $request->cancel_url ?? $frontendUrl . '/b2b/checkout',
+                    'metadata'    => [
+                        'purchase_order_id' => $order->id,
+                        'user_id'           => $user->id,
+                    ],
+                ]);
 
-        } catch (\Exception $e) {
-            Log::error('B2B Stripe Payment Session generation failed: ' . $e->getMessage());
-            return response()->json([
-                'error' => 'Failed to generate payment session: ' . $e->getMessage()
-            ], 500);
+                $checkoutUrl = $session->url;
+            } catch (\Exception $e) {
+                Log::error('B2B Stripe session failed: ' . $e->getMessage());
+
+                // Optionally delete the order if Stripe fails
+                // $order->items()->delete();
+                // $order->delete();
+
+                return response()->json([
+                    'message' => 'Failed to initiate Stripe payment: ' . $e->getMessage()
+                ], 500);
+            }
         }
+
+        // Clear B2B Cart
+        B2BCart::where('user_id', $user->id)->delete();
+
+        return response()->json([
+            'message'      => 'Purchase Order submitted successfully.',
+            'order'        => $order->load('items.product'),
+            'checkout_url' => $checkoutUrl, // null when payment_method = on_account
+        ], 201);
     }
 }

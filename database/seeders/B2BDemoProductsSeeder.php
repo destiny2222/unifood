@@ -58,7 +58,7 @@ class B2BDemoProductsSeeder extends Seeder
         foreach ($productTitles as $title) {
             $basePrice = $faker->randomFloat(2, 20, 200);
             
-            $mainImage = fake()->imageUrl(width: 640, height: 480);
+            $mainImage = 'https://grostore.themetags.com/public/uploads/media/BR4qSOjlbLlMcfi9BSZXATSha6EyVHs4P53MpY6v.png';
 
             $product = Product::updateOrCreate(
                 ['slug' => Str::slug($title)],

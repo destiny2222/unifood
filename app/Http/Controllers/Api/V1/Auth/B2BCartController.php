@@ -10,150 +10,144 @@ use Illuminate\Support\Facades\Validator;
 
 class B2BCartController extends Controller
 {
-    /**
-     * Get the authenticated user's B2B cart items.
-     */
     public function index(Request $request)
     {
-        $userId = $request->user()->id;
+        $user = $request->user();
 
-        // Fetch B2B cart items (where product's is_b2b is true)
-        $dbItems = Cart::with(['product.category'])
-            ->where('user_id', $userId)
-            ->whereHas('product', function ($query) {
-                $query->where('is_b2b', true);
-            })
+        if (!$user->isB2B()) {
+            return response()->json(['message' => 'Approved Business Account required.'], 403);
+        }
+
+        $items = B2BCart::with(['product.category', 'product.variants', 'variant'])
+            ->where('user_id', $user->id)
             ->get();
 
         $cartItems = [];
         $totalPrice = 0;
         $totalQuantity = 0;
 
-        foreach ($dbItems as $item) {
-            // Determine base variant price if applicable
-            $baseVariantPrice = null;
-            if ($item->size) {
-                $variant = $item->product->variants->where('size', $item->size)->first();
-                if ($variant) {
-                    $baseVariantPrice = $variant->price;
-                }
-            }
-            if (!$baseVariantPrice && $item->product->has_variants && $item->product->variants->first()) {
-                $baseVariantPrice = $item->product->variants->first()->price;
-            }
+        foreach ($items as $item) {
+            $baseVariantPrice = $item->variant?->price ?? null;
 
-            // Calculate dynamic price based on current quantity
-            $dynamicPrice = $item->product->getResolvedPrice($request->user(), $item->quantity, $baseVariantPrice);
-            $itemSubtotal = $item->quantity * $dynamicPrice;
-            
-            $totalPrice += $itemSubtotal;
+            $dynamicPrice = $item->product->getResolvedPrice($user, $item->quantity, $baseVariantPrice);
+            $subtotal = $item->quantity * $dynamicPrice;
+
+            $totalPrice += $subtotal;
             $totalQuantity += $item->quantity;
 
             $cartItems[] = [
-                'id' => $item->id,
-                'product_id' => $item->product_id,
+                'id'            => $item->id,
+                'product_id'    => $item->product_id,
                 'product_title' => $item->product->title,
-                'product_slug' => $item->product->slug,
+                'product_slug'  => $item->product->slug,
                 'product_image' => $item->product->images,
-                'quantity' => $item->quantity,
-                'price' => (float) $dynamicPrice,
-                'subtotal' => (float) $itemSubtotal,
-                'size' => $item->size ?? 'N/A',
+                'quantity'      => $item->quantity,
+                'price'         => (float) $dynamicPrice,
+                'subtotal'      => (float) $subtotal,
+                'size'          => $item->size ?? 'N/A',
                 'category_name' => $item->product->category->title ?? 'N/A',
+                'variant_id'    => $item->product_variant_id,
             ];
         }
 
         return response()->json([
-            'items' => $cartItems,
-            'total_price' => (float) $totalPrice,
+            'items'          => $cartItems,
+            'total_price'    => (float) $totalPrice,
             'total_quantity' => $totalQuantity,
         ]);
     }
 
-    /**
-     * Add a B2B product/variant to the cart.
-     */
     public function add(Request $request)
     {
+        $user = $request->user();
+
+        if (!$user->isB2B()) {
+            return response()->json(['message' => 'Approved Business Account required.'], 403);
+        }
+
         $validator = Validator::make($request->all(), [
-            'product_id' => 'required|integer|exists:products,id',
-            'quantity' => 'nullable|integer|min:1',
-            'size_variant' => 'nullable|string',
+            'product_id'         => 'required|integer|exists:products,id',
+            'quantity'           => 'nullable|integer|min:1',
+            'size_variant'       => 'nullable|string',
+            'product_variant_id' => 'nullable|integer|exists:product_variants,id',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $productId = (int) $request->product_id;
-        $quantity = (int) ($request->quantity ?? 1);
-        $size = $request->size_variant ?? null;
-        $user = $request->user();
-
-        $product = Product::with('variants')->findOrFail($productId);
+        $product = Product::with('variants')->findOrFail($request->product_id);
 
         if (!$product->is_b2b) {
+            return response()->json(['error' => 'This product is not available for B2B.'], 400);
+        }
+
+        $quantity = (int) ($request->quantity ?? 1);
+        $size = $request->size_variant;
+        $variantId = $request->product_variant_id;
+
+        // Resolve variant
+        $variant = null;
+        if ($variantId) {
+            $variant = $product->variants->firstWhere('id', $variantId);
+        } elseif ($size) {
+            $variant = $product->variants->firstWhere('size', $size);
+        }
+
+        $baseVariantPrice = $variant?->price;
+        $size = $variant?->size ?? $size;
+
+        $cartItem = B2BCart::where('user_id', $user->id)
+            ->where('product_id', $product->id)
+            ->when($variant, fn ($q) => $q->where('product_variant_id', $variant->id))
+            ->when(!$variant && $size, fn ($q) => $q->where('size', $size))
+            ->when(!$variant && !$size, fn ($q) => $q->whereNull('product_variant_id')->whereNull('size'))
+            ->first();
+
+        $existingQty = $cartItem?->quantity ?? 0;
+        $totalQty = $existingQty + $quantity;
+
+        $minQty = $product->minimum_order_quantity ?? 1;
+        if ($totalQty < $minQty) {
             return response()->json([
-                'error' => 'This product is not a B2B product.'
+                'error' => "Minimum order quantity is {$minQty}."
             ], 400);
         }
 
-        // Determine correct base price
-        $baseVariantPrice = null;
-        if ($size) {
-            $variant = $product->variants->where('size', $size)->first();
-            if ($variant) {
-                $baseVariantPrice = $variant->price;
-            }
-        }
-
-        if (!$baseVariantPrice) {
-            if ($product->has_variants && $product->variants->first()) {
-                $baseVariantPrice = $product->variants->first()->price;
-                $size = $product->variants->first()->size;
-            }
-        }
-
-        // Fetch or create B2B cart item
-        $cartItem = Cart::where('user_id', $user->id)
-            ->where('product_id', $productId)
-            ->when($size, fn ($q) => $q->where('size', $size),
-                        fn ($q) => $q->whereNull('size'))
-            ->first();
-
-        $existingQuantity = $cartItem ? $cartItem->quantity : 0;
-        $totalQuantity = $existingQuantity + $quantity;
-
-        // Get resolved price for the new total quantity
-        $resolvedPrice = $product->getResolvedPrice($user, $totalQuantity, $baseVariantPrice);
+        $resolvedPrice = $product->getResolvedPrice($user, $totalQty, $baseVariantPrice);
 
         if ($cartItem) {
-            $cartItem->quantity = $totalQuantity;
-            $cartItem->price = $resolvedPrice; // update stored price too
-            $message = 'Cart item quantity has been increased.';
+            $cartItem->update([
+                'quantity'   => $totalQty,
+                'unit_price' => $resolvedPrice,
+            ]);
+            $message = 'Cart item quantity updated.';
         } else {
-            $cartItem = new Cart();
-            $cartItem->user_id = $user->id;
-            $cartItem->product_id = $productId;
-            $cartItem->quantity = $quantity;
-            $cartItem->size = $size;
-            $cartItem->price = $resolvedPrice;
+            $cartItem = B2BCart::create([
+                'user_id'            => $user->id,
+                'product_id'         => $product->id,
+                'product_variant_id' => $variant?->id,
+                'quantity'           => $quantity,
+                'unit_price'         => $resolvedPrice,
+                'size'               => $size,
+            ]);
             $message = 'Product added to B2B cart.';
         }
 
-        $cartItem->save();
-
         return response()->json([
-            'message' => $message,
-            'cart_item' => $cartItem,
+            'message'   => $message,
+            'cart_item' => $cartItem->load('product'),
         ], 201);
     }
 
-    /**
-     * Update the quantity of a cart item.
-     */
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id)
     {
+        $user = $request->user();
+
+        if (!$user->isB2B()) {
+            return response()->json(['message' => 'Approved Business Account required.'], 403);
+        }
+
         $validator = Validator::make($request->all(), [
             'quantity' => 'required|integer|min:1',
         ]);
@@ -162,86 +156,60 @@ class B2BCartController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $userId = $request->user()->id;
-        $cartItem = Cart::with('product')->where('user_id', $userId)
+        $cartItem = B2BCart::with('product.variants')
+            ->where('user_id', $user->id)
             ->where('id', $id)
-            ->first();
+            ->firstOrFail();
 
-        if (!$cartItem) {
-            return response()->json(['error' => 'Cart item not found.'], 404);
-        }
-
+        $newQty = (int) $request->quantity;
         $minQty = $cartItem->product->minimum_order_quantity ?? 1;
-        $newQuantity = (int) $request->quantity;
-        if ($newQuantity < $minQty) {
+
+        if ($newQty < $minQty) {
             return response()->json([
                 'error' => "Quantity cannot be less than the minimum order quantity of {$minQty}."
             ], 400);
         }
 
-        // Determine base variant price if applicable
-        $baseVariantPrice = null;
-        if ($cartItem->size) {
-            $variant = $cartItem->product->variants->where('size', $cartItem->size)->first();
-            if ($variant) {
-                $baseVariantPrice = $variant->price;
-            }
-        }
-        if (!$baseVariantPrice && $cartItem->product->has_variants && $cartItem->product->variants->first()) {
-            $baseVariantPrice = $cartItem->product->variants->first()->price;
-        }
+        $baseVariantPrice = $cartItem->variant?->price
+            ?? $cartItem->product->variants->firstWhere('size', $cartItem->size)?->price;
 
-        // Get resolved price for the new quantity
-        $resolvedPrice = $cartItem->product->getResolvedPrice($request->user(), $newQuantity, $baseVariantPrice);
+        $resolvedPrice = $cartItem->product->getResolvedPrice($user, $newQty, $baseVariantPrice);
 
         $cartItem->update([
-            'quantity' => $newQuantity,
-            'price' => $resolvedPrice, // update stored price
+            'quantity'   => $newQty,
+            'unit_price' => $resolvedPrice,
         ]);
 
         return response()->json([
-            'status' => true,
-            'message' => 'Cart updated successfully.',
+            'message'   => 'Cart updated successfully.',
             'cart_item' => $cartItem,
         ]);
     }
 
-    /**
-     * Remove a specific B2B cart item.
-     */
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request, string $id)
     {
-        $userId = $request->user()->id;
-        $cartItem = Cart::where('user_id', $userId)
-            ->where('id', $id)
-            ->first();
+        $user = $request->user();
 
-        if (!$cartItem) {
-            return response()->json(['error' => 'Cart item not found.'], 404);
+        if (!$user->isB2B()) {
+            return response()->json(['message' => 'Approved Business Account required.'], 403);
         }
 
+        $cartItem = B2BCart::where('user_id', $user->id)->where('id', $id)->firstOrFail();
         $cartItem->delete();
 
-        return response()->json([
-            'message' => 'Cart item removed successfully.'
-        ]);
+        return response()->json(['message' => 'Cart item removed successfully.']);
     }
 
-    /**
-     * Clear all B2B cart items.
-     */
     public function clear(Request $request)
     {
-        $userId = $request->user()->id;
+        $user = $request->user();
 
-        Cart::where('user_id', $userId)
-            ->whereHas('product', function ($query) {
-                $query->where('is_b2b', true);
-            })
-            ->delete();
+        if (!$user->isB2B()) {
+            return response()->json(['message' => 'Approved Business Account required.'], 403);
+        }
 
-        return response()->json([
-            'message' => 'B2B cart cleared successfully.'
-        ]);
+        B2BCart::where('user_id', $user->id)->delete();
+
+        return response()->json(['message' => 'B2B cart cleared successfully.']);
     }
 }
