@@ -39,7 +39,7 @@ class B2BRegisterController extends Controller
             $existingUser = User::where('email', $request->email)->first();
 
             if ($existingUser) {
-                if ($existingUser->kyc_id) {
+                if ($existingUser->kyc()->exists()) {
                     return response()->json([
                         'errors' => ['email' => ['This email is already associated with a B2B account. Please log in.']]
                     ], 422);

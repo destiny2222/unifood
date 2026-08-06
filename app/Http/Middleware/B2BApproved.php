@@ -15,7 +15,7 @@ class B2BApproved
     {
         $user = $request->user();
 
-        if (!$user || !$user->kyc_id || !$user->kyc || $user->kyc->status !== 'approved') {
+        if (!$user || !$user->kyc || $user->kyc->status !== 'approved') {
             return response()->json([
                 'error' => 'Your trade account is pending approval or has not been approved. Access is denied.'
             ], 403);

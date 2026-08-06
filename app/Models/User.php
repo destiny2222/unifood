@@ -26,7 +26,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'address',
         'profile_picture',
         'phone',
-        'kyc_id',
         'is_business_owner',
         'current_view',
     ];
@@ -46,7 +45,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function kyc()
     {
-        return $this->belongsTo(Kyc::class, 'kyc_id');
+        return $this->hasOne(Kyc::class);
     }
 
     /**
@@ -54,8 +53,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function isB2B(): bool
     {
-        return $this->kyc_id && 
-               $this->current_view === 'business' && 
+        return $this->current_view === 'business' && 
                $this->kyc && 
                $this->kyc->status === 'approved';
     }
@@ -65,8 +63,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function isPendingB2B(): bool
     {
-        return $this->kyc_id && 
-               $this->current_view === 'business' && 
+        return $this->current_view === 'business' && 
                $this->kyc && 
                ($this->kyc->status === 'pending' || $this->kyc->status === 'info_requested');
     }
@@ -76,8 +73,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function isB2BRejected(): bool
     {
-        return $this->kyc_id && 
-               $this->current_view === 'business' && 
+        return $this->current_view === 'business' && 
                $this->kyc && 
                $this->kyc->status === 'rejected';
     }

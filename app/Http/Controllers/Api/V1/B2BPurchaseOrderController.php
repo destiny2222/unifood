@@ -217,7 +217,7 @@ class B2BPurchaseOrderController extends Controller
         RecurringSchedule::updateOrCreate(
             ['purchase_order_id' => $order->id],
             [
-                'kyc_id' => $user->kyc_id,
+                'kyc_id' => $user->kyc->id,
                 'frequency' => $request->frequency,
                 'next_run_date' => $nextRun,
                 'is_active' => true,

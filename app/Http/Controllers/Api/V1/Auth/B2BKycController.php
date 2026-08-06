@@ -25,7 +25,7 @@ class B2BKycController extends Controller
 
 
 
-        if ($user->kyc_id) {
+        if ($user->kyc()->exists()) {
             return response()->json([
                 'error' => 'You are already associated with a B2B trade account.'
             ], 400);
@@ -62,7 +62,6 @@ class B2BKycController extends Controller
 
             // Link user to KYC record, set as owner, and set view to business
             $user->update([
-                'kyc_id' => $kyc->id,
                 'is_business_owner' => true,
                 'current_view' => 'business',
             ]);
@@ -111,7 +110,7 @@ class B2BKycController extends Controller
     {
         $user = $request->user();
 
-        if (!$user->kyc_id || !$user->kyc || $user->kyc->status !== 'approved') {
+        if (!$user->kyc || $user->kyc->status !== 'approved') {
             return response()->json([
                 'error' => 'Only approved business accounts can update details.'
             ], 403);
@@ -152,7 +151,7 @@ class B2BKycController extends Controller
     {
         $user = $request->user();
 
-        if (!$user->kyc_id) {
+        if (!$user->kyc()->exists()) {
             return response()->json([
                 'error' => 'You do not have a B2B business account associated.'
             ], 400);
@@ -177,7 +176,7 @@ class B2BKycController extends Controller
     {
         $user = $request->user();
 
-        if (!$user->kyc_id || !$user->kyc) {
+        if (!$user->kyc) {
             return response()->json(['error' => 'No KYC application found.'], 404);
         }
 
@@ -234,19 +233,7 @@ class B2BKycController extends Controller
      */
     public function getAuthorizedBuyers(Request $request)
     {
-        $user = $request->user();
-
-        if (!$user->kyc_id) {
-            return response()->json(['error' => 'No B2B business account associated.'], 400);
-        }
-
-        $buyers = User::where('kyc_id', $user->kyc_id)
-            ->where('id', '!=', $user->id)
-            ->get();
-
-        return response()->json([
-            'buyers' => $buyers,
-        ]);
+        return response()->json(['error' => 'Authorized buyers feature is disabled in this configuration.'], 403);
     }
 
     /**
@@ -254,42 +241,6 @@ class B2BKycController extends Controller
      */
     public function addAuthorizedBuyer(Request $request)
     {
-        $user = $request->user();
-
-        if (!$user->kyc_id || !$user->kyc || $user->kyc->status !== 'approved') {
-            return response()->json([
-                'error' => 'Authorized buyers can only be added to an approved B2B business account.'
-            ], 403);
-        }
-
-        if (!$user->is_business_owner) {
-            return response()->json([
-                'error' => 'Only the business account owner can add authorized buyers.'
-            ], 403);
-        }
-
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        $buyer = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'kyc_id' => $user->kyc_id,
-            'is_business_owner' => false,
-            'current_view' => 'business',
-        ]);
-
-        return response()->json([
-            'message' => 'Authorized buyer added successfully.',
-            'buyer' => $buyer,
-        ], 201);
+        return response()->json(['error' => 'Authorized buyers feature is disabled in this configuration.'], 403);
     }
 }

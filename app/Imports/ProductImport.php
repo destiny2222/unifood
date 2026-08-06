@@ -29,14 +29,19 @@ class ProductImport implements ToModel, WithHeadingRow
             $categoryId = $uncategorized->id;
         }
 
-        return new Product([
-            'title'       => $row['title'] ?? '',
-            'description' => $row['description'] ?? '',
-            'price'       => $row['price'] ?? 0,
-            'category_id' => $categoryId,
-            'slug'        => Str::slug($row['title'] ?? Str::random(6)),
-            'status'      => 1,
-            'availability'=> 'in_stock',
-        ]);
+        $title = $row['name'] ?? ($row['title'] ?? '');
+
+        return Product::updateOrCreate(
+            ['slug' => Str::slug($title ?: Str::random(6))],
+            [
+                'title'       => $title,
+                'description' => $row['description'] ?? '',
+                'price'       => $row['salepriceinctax'] ?? ($row['price'] ?? 0),
+                'category_id' => $categoryId,
+                'status'      => 1,
+                'availability'=> 'in_stock',
+                'is_b2b'      => 1,
+            ]
+        );
     }
 }

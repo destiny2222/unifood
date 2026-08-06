@@ -34,7 +34,7 @@ class B2BRfqController extends Controller
 
         $rfq = Rfq::create([
             'reference_number' => $referenceNumber,
-            'kyc_id' => $user->kyc_id,
+            'kyc_id' => $user->kyc->id,
             'user_id' => $user->id,
             'status' => 'Pending',
             'delivery_frequency' => $request->delivery_frequency,
@@ -67,7 +67,7 @@ class B2BRfqController extends Controller
             return response()->json(['message' => 'Unauthorized.'], 403);
         }
 
-        $rfqs = Rfq::where('kyc_id', $user->kyc_id)
+        $rfqs = Rfq::where('kyc_id', $user->kyc->id)
             ->with(['items.product', 'user'])
             ->orderBy('created_at', 'desc')
             ->get();
@@ -87,7 +87,7 @@ class B2BRfqController extends Controller
         }
 
         $rfq = Rfq::where('id', $id)
-            ->where('kyc_id', $user->kyc_id)
+            ->where('kyc_id', $user->kyc->id)
             ->with(['items.product', 'user'])
             ->firstOrFail();
 
@@ -111,7 +111,7 @@ class B2BRfqController extends Controller
         ]);
 
         $rfq = Rfq::where('id', $id)
-            ->where('kyc_id', $user->kyc_id)
+            ->where('kyc_id', $user->kyc->id)
             ->firstOrFail();
 
         if ($rfq->status !== 'Quoted') {
