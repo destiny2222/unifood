@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\B2BShippingAddress;
+use Illuminate\Support\Facades\Validator;
 
 class B2BShippingAddressController extends Controller
 {
