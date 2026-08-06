@@ -150,6 +150,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/contact">contact us</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://business.mightyolu.com" target="_blank">Business to Business</a>
+                    </li>
                 </ul>
                 <ul class="menu_icon d-flex flex-wrap">
                     <li class="wsus__search_desktop">

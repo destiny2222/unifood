@@ -50,6 +50,13 @@ Route::prefix('admin')->name('admin.')->group(function (){
         Route::put('/category/{id}/update', [CategoryController::class, 'update'])->name('category.update');
         Route::delete('/category/{id}/delete', [CategoryController::class, 'destroy'])->name('category.delete');
 
+        // discount rules
+        Route::get('/discount-rules/list', [\App\Http\Controllers\Admin\DiscountRuleController::class, 'index'])->name('discount-rules.index');
+        Route::get('/discount-rules/create', [\App\Http\Controllers\Admin\DiscountRuleController::class, 'create'])->name('discount-rules.create');
+        Route::post('/discount-rules/store', [\App\Http\Controllers\Admin\DiscountRuleController::class, 'store'])->name('discount-rules.store');
+        Route::get('/discount-rules/{id}/edit', [\App\Http\Controllers\Admin\DiscountRuleController::class, 'edit'])->name('discount-rules.edit');
+        Route::put('/discount-rules/{id}/update', [\App\Http\Controllers\Admin\DiscountRuleController::class, 'update'])->name('discount-rules.update');
+        Route::delete('/discount-rules/{id}/delete', [\App\Http\Controllers\Admin\DiscountRuleController::class, 'destroy'])->name('discount-rules.delete');
 
         // product 
         Route::get('/product/list', [ProductController::class, 'index'])->name('product.index');
@@ -68,6 +75,12 @@ Route::prefix('admin')->name('admin.')->group(function (){
         Route::get('/order/cancel', [OrderController::class, 'cancelledOrder'])->name('order.cancel');
         Route::put('/order/{id}/update', [OrderController::class, 'update'])->name('order.update');
         Route::delete('/order/{id}/delete', [OrderController::class, 'destroy'])->name('order.delete');
+
+        // B2B purchase orders
+        Route::get('/b2b-orders/list', [\App\Http\Controllers\Admin\AdminB2BPurchaseOrderController::class, 'index'])->name('b2b-orders.index');
+        Route::get('/b2b-orders/{id}', [\App\Http\Controllers\Admin\AdminB2BPurchaseOrderController::class, 'show'])->name('b2b-orders.show');
+        Route::put('/b2b-orders/{id}/update', [\App\Http\Controllers\Admin\AdminB2BPurchaseOrderController::class, 'update'])->name('b2b-orders.update');
+        Route::delete('/b2b-orders/{id}/delete', [\App\Http\Controllers\Admin\AdminB2BPurchaseOrderController::class, 'destroy'])->name('b2b-orders.delete');
 
         //system clear
          Route::get('/system', [SystemController::class, 'index'])->name('system.index');

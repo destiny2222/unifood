@@ -70,6 +70,7 @@ class B2BCatalogController extends Controller
             'category' => $product->category ? $product->category->title : null,
             'standard_price' => (float) $product->price,
             'trade_price' => $tradePrice,
+            'availability' => $product->availability,
             'minimum_order_quantity' => $product->minimum_order_quantity,
             'volume_discounts' => $product->volumeDiscounts->map(function ($discount) {
                 return [

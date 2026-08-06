@@ -12,8 +12,7 @@ class ProfileController extends Controller
     public function edit(Request $request)
     {
         $user = auth()->user();
-        $user->first_name = $request->first_name;
-        $user->last_name = $request->last_name;
+        $user->name = trim($request->first_name . ' ' . $request->last_name);
         $user->email = $request->email;
         $user->save();
 
@@ -47,6 +46,31 @@ class ProfileController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Password changed successfully',
+        ]);
+    }
+
+
+    public function updateAvatar(Request $request)
+    {
+        $request->validate([
+            'avatar' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+        ]);
+
+        $user = auth()->user();
+
+        // Delete old avatar
+        if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+            Storage::disk('public')->delete($user->avatar);
+        }
+
+        $path = $request->file('avatar')->store('avatars', 'public');
+        $user->avatar = $path;
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Avatar updated successfully',
+            'avatar'  => asset('storage/' . $user->avatar),
         ]);
     }
 }
