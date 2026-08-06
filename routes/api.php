@@ -13,6 +13,8 @@ use App\Http\Controllers\Api\V1\B2BRfqController;
 use App\Http\Controllers\Api\V1\B2BPurchaseOrderController;
 use App\Http\Controllers\Api\V1\B2BWishListController;
 use App\Http\Controllers\Api\V1\B2BShippingAddressController;
+use App\Http\Controllers\Api\V1\Auth\ProfileController;
+use App\Http\Controllers\Api\V1\Auth\PasswordResetController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -27,6 +29,10 @@ Route::prefix('v1')->group(function () {
     // Product Endpoints
     Route::get('/b2b/catalog', [B2BCatalogController::class, 'index']);
     Route::get('/b2b/catalog/{slug}', [B2BCatalogController::class, 'show']);
+
+    // Password Reset Endpoints
+    Route::post('/forgot-password', [PasswordResetController::class, 'forgotPassword']);
+    Route::post('/reset-password', [PasswordResetController::class, 'resetPassword']);
     
     // Authenticated Sanctum Routes
     Route::middleware('auth:sanctum')->group(function () {

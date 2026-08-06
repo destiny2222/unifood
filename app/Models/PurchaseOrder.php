@@ -18,10 +18,12 @@ class PurchaseOrder extends Model
         'total_amount',
         'is_draft',
         'is_recurring',
+        'discount_amount',
     ];
 
     protected $casts = [
         'total_amount' => 'decimal:2',
+        'discount_amount' => 'decimal:2',
         'is_draft' => 'boolean',
         'is_recurring' => 'boolean',
     ];
@@ -39,5 +41,10 @@ class PurchaseOrder extends Model
     public function recurringSchedule()
     {
         return $this->hasOne(RecurringSchedule::class, 'purchase_order_id');
+    }
+
+    public function shippingAddress()
+    {
+        return $this->belongsTo(B2BShippingAddress::class, 'shipping_address_id');
     }
 }

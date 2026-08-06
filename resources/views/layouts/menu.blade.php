@@ -166,10 +166,12 @@
                </a>
                <div class="collapse" id="sidebarOrders">
                     <ul class="nav sub-navbar-nav">
-
-                         <li class="sub-nav-item">
-                              <a class="sub-nav-link" href="{{ route('admin.order.list') }}">List</a>
-                         </li>
+                          <li class="sub-nav-item">
+                               <a class="sub-nav-link" href="{{ route('admin.order.list') }}">B2C Orders</a>
+                          </li>
+                          <li class="sub-nav-item">
+                               <a class="sub-nav-link" href="{{ route('admin.b2b-orders.index') }}">B2B Orders</a>
+                          </li>
                     </ul>
                </div>
           </li>
@@ -179,6 +181,14 @@
                          <iconify-icon icon="solar:chat-square-like-bold-duotone"></iconify-icon>
                     </span>
                     <span class="nav-text"> Reviews </span>
+               </a>
+          </li>
+          <li class="nav-item">
+               <a class="nav-link" href="{{ route('admin.discount-rules.index') }}">
+                    <span class="nav-icon">
+                         <iconify-icon icon="solar:sale-bold-duotone"></iconify-icon>
+                    </span>
+                    <span class="nav-text"> Discount Rules </span>
                </a>
           </li>
           <li class="nav-item">

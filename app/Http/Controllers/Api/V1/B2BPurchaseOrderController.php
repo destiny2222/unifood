@@ -37,10 +37,14 @@ class B2BPurchaseOrderController extends Controller
             'schedule_frequency' => 'nullable|in:weekly,monthly',
         ]);
 
-        $totalAmount = 0;
+        $subtotal = 0;
         foreach ($request->items as $item) {
-            $totalAmount += $item['quantity'] * $item['unit_price'];
+            $subtotal += $item['quantity'] * $item['unit_price'];
         }
+
+        $discountData = \App\Models\DiscountRule::calculateDiscount($subtotal);
+        $discountAmount = $discountData['discount_amount'];
+        $finalTotalAmount = $subtotal - $discountAmount;
 
         // Credit Limit Check
         $kyc = $user->kyc;
@@ -52,7 +56,7 @@ class B2BPurchaseOrderController extends Controller
                 ->where('is_draft', false)
                 ->sum('total_amount');
             
-            if (($unpaidTotal + $totalAmount) > $kyc->credit_limit) {
+            if (($unpaidTotal + $finalTotalAmount) > $kyc->credit_limit) {
                 return response()->json([
                     'message' => 'Credit limit exceeded. Please use card payment or contact your account manager.',
                     'credit_limit' => $kyc->credit_limit,
@@ -69,7 +73,8 @@ class B2BPurchaseOrderController extends Controller
             'user_id' => $user->id,
             'status' => 'Submitted',
             'payment_method' => $request->payment_method,
-            'total_amount' => $totalAmount,
+            'total_amount' => $finalTotalAmount,
+            'discount_amount' => $discountAmount,
             'is_draft' => false,
             'is_recurring' => $request->has('schedule_frequency') && $request->schedule_frequency,
         ]);
@@ -120,11 +125,24 @@ class B2BPurchaseOrderController extends Controller
             $frontendUrl = env('NEXT_PUBLIC_APP_URL', 'http://localhost:3000');
             
             try {
+                $stripeDiscounts = [];
+                if ($order->discount_amount > 0) {
+                    $coupon = \Stripe\Coupon::create([
+                        'amount_off' => (int) round($order->discount_amount * 100),
+                        'currency' => 'usd',
+                        'duration' => 'once',
+                    ]);
+                    $stripeDiscounts[] = [
+                        'coupon' => $coupon->id,
+                    ];
+                }
+
                 $checkout_session = Session::create([
                     'line_items' => $lineItems,
                     'mode' => 'payment',
                     'success_url' => $frontendUrl . '/b2b/orders',
                     'cancel_url' => $frontendUrl . '/checkout',
+                    'discounts' => $stripeDiscounts,
                     'metadata' => [
                         'purchase_order_id' => $order->id,
                     ],

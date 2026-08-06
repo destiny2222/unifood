@@ -16,7 +16,7 @@ class B2BCatalogController extends Controller
         $user = $request->user();
         
         $products = Product::where('is_b2b', true)
-            ->with(['volumeDiscounts', 'photos'])
+            ->with(['volumeDiscounts', 'photos', 'category'])
             ->paginate(15);
 
         // Map the products to include resolved trade pricing
@@ -33,6 +33,7 @@ class B2BCatalogController extends Controller
                 'availability' => $product->availability,
                 'trade_price' => $tradePrice,
                 'is_b2b' => $product->is_b2b,
+                'category' => $product->category ? $product->category->title : null,
                 'description' => $product->description,
                 'minimum_order_quantity' => $product->minimum_order_quantity,
                 'has_volume_discounts' => $product->volumeDiscounts->count() > 0,
@@ -70,6 +71,7 @@ class B2BCatalogController extends Controller
             'category' => $product->category ? $product->category->title : null,
             'standard_price' => (float) $product->price,
             'trade_price' => $tradePrice,
+            'availability' => $product->availability,
             'minimum_order_quantity' => $product->minimum_order_quantity,
             'volume_discounts' => $product->volumeDiscounts->map(function ($discount) {
                 return [

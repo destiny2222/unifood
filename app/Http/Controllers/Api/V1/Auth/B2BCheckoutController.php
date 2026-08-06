@@ -75,7 +75,9 @@ class B2BCheckoutController extends Controller
             ];
         }
 
-        $totalPrice = $subtotal + $deliveryFee;
+        $discountData = \App\Models\DiscountRule::calculateDiscount($subtotal);
+        $discountAmount = $discountData['discount_amount'];
+        $totalPrice = $subtotal + $deliveryFee - $discountAmount;
 
         // Credit info for frontend
         $kyc = $user->kyc;
@@ -92,6 +94,8 @@ class B2BCheckoutController extends Controller
             'total_weight'       => $totalWeight,
             'subtotal'           => (float) $subtotal,
             'delivery_fee'       => (float) $deliveryFee,
+            'discount_amount'    => (float) $discountAmount,
+            'discount_percentage'=> (float) $discountData['discount_percentage'],
             'total_price'        => (float) $totalPrice,
             'credit_limit'       => (float) $kyc->credit_limit,
             'unpaid_balance'     => (float) $unpaidTotal,
@@ -162,7 +166,9 @@ class B2BCheckoutController extends Controller
             ];
         }
 
-        $totalAmount = $subtotal + $shippingPrice;
+        $discountData = \App\Models\DiscountRule::calculateDiscount($subtotal);
+        $discountAmount = $discountData['discount_amount'];
+        $totalAmount = $subtotal + $shippingPrice - $discountAmount;
 
         // Credit limit check for on_account
         if ($request->payment_method === 'on_account') {
@@ -223,6 +229,7 @@ class B2BCheckoutController extends Controller
             'payment_method'     => $request->payment_method,
             'total_amount'       => $totalAmount,
             'shipping_amount'    => $shippingPrice,
+            'discount_amount'    => $discountAmount,
             'is_draft'           => false,
             'is_recurring'       => !empty($request->schedule_frequency),
             // Optional: store shipping address reference if your table has the column
@@ -294,11 +301,24 @@ class B2BCheckoutController extends Controller
             $frontendUrl = env('NEXT_PUBLIC_APP_URL', 'http://localhost:3000');
 
             try {
+                $stripeDiscounts = [];
+                if ($order->discount_amount > 0) {
+                    $coupon = \Stripe\Coupon::create([
+                        'amount_off' => (int) round($order->discount_amount * 100),
+                        'currency' => 'gbp',
+                        'duration' => 'once',
+                    ]);
+                    $stripeDiscounts[] = [
+                        'coupon' => $coupon->id,
+                    ];
+                }
+
                 $session = Session::create([
                     'line_items'  => $lineItems,
                     'mode'        => 'payment',
                     'success_url' => $request->success_url ?? $frontendUrl . '/b2b/orders?success=1',
                     'cancel_url'  => $request->cancel_url ?? $frontendUrl . '/b2b/checkout',
+                    'discounts'   => $stripeDiscounts,
                     'metadata'    => [
                         'purchase_order_id' => $order->id,
                         'user_id'           => $user->id,

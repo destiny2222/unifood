@@ -199,6 +199,93 @@ Returns the logged-in user profile, current view context, and their associated K
 
 ---
 
+### 1.4 Request Password Reset Link
+Sends a password reset link to the user's email address if it exists in the system.
+
+* **Endpoint**: `POST /api/v1/forgot-password`
+* **Headers**: `Accept: application/json`
+
+#### Request Payload
+```json
+{
+  "email": "john.doe@example.com"
+}
+```
+
+#### Response (200 OK)
+```json
+{
+  "success": true,
+  "message": "Password reset link sent to your email"
+}
+```
+
+#### Error Responses
+* **422 Unprocessable Content** (Validation failed):
+  ```json
+  {
+    "message": "The selected email is invalid.",
+    "errors": {
+      "email": [
+        "The selected email is invalid."
+      ]
+    }
+  }
+  ```
+* **500 Internal Server Error** (Unable to send email):
+  ```json
+  {
+    "success": false,
+    "message": "Unable to send reset link"
+  }
+  ```
+
+---
+
+### 1.5 Reset Password
+Resets the user's password using the token sent to their email.
+
+* **Endpoint**: `POST /api/v1/reset-password`
+* **Headers**: `Accept: application/json`
+
+#### Request Payload
+```json
+{
+  "token": "reset_token_received_in_email",
+  "email": "john.doe@example.com",
+  "password": "NewSecurePassword123!",
+  "password_confirmation": "NewSecurePassword123!"
+}
+```
+
+#### Validation Constraints
+* `token`: Required.
+* `email`: Required, valid email format, exists in users table.
+* `password`: Required, minimum 8 characters, confirmed.
+
+#### Response (200 OK)
+```json
+{
+  "success": true,
+  "message": "Password has been reset successfully"
+}
+```
+
+#### Error Responses
+* **422 Unprocessable Content** (Invalid token or validation failed):
+  ```json
+  {
+    "message": "This password reset token is invalid.",
+    "errors": {
+      "email": [
+        "This password reset token is invalid."
+      ]
+    }
+  }
+  ```
+
+---
+
 ## 2. KYC (Know Your Customer) Endpoints
 
 ### 2.1 Submit KYC Details
@@ -1495,3 +1582,76 @@ Publishes a draft order to active submitted status.
   }
 }
 ```
+
+---
+
+## 12. User Profile Management
+
+These endpoints handle updating the authenticated user's personal details and password.
+
+### 12.1 Update Personal Details
+Updates the user's first name, last name, and email address.
+
+* **Endpoint**: `PUT /api/v1/profile`
+* **Headers**: Authenticated Headers Required
+
+#### Request Payload
+```json
+{
+  "first_name": "James",
+  "last_name": "Septimus",
+  "email": "jamse@example.com"
+}
+```
+
+#### Response (200 OK)
+```json
+{
+  "success": true,
+  "message": "Profile updated successfully",
+  "data": {
+    "id": "019fb66f-c494-73ce-b7d6-db6a309ee12e",
+    "first_name": "James",
+    "last_name": "Septimus",
+    "email": "jamse@example.com"
+  }
+}
+```
+
+---
+
+### 12.2 Change Password
+Updates the user's password.
+
+* **Endpoint**: `PUT /api/v1/change-password`
+* **Headers**: Authenticated Headers Required
+
+#### Request Payload
+```json
+{
+  "current_password": "OldPassword123!",
+  "password": "NewPassword123!",
+  "password_confirmation": "NewPassword123!"
+}
+```
+
+#### Validation Constraints
+* `current_password`: Required, must match the user's current password.
+* `password`: Required, minimum 8 characters, confirmed (requires `password_confirmation` to match).
+
+#### Response (200 OK)
+```json
+{
+  "success": true,
+  "message": "Password changed successfully"
+}
+```
+
+#### Error Responses
+* **422 Unprocessable Content** (Incorrect current password):
+  ```json
+  {
+    "success": false,
+    "message": "Current password is incorrect"
+  }
+  ```
