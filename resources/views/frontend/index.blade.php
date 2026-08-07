@@ -142,12 +142,12 @@
                 <div class="col-lg-7 wow fadeInLeft" data-wow-duration="1s">
                     <h4 style="color: #22AD5C; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px;">For Restaurants & Retailers</h4>
                     <h2 style="font-size: 3rem; font-weight: 800; margin-bottom: 20px; color: #ffffff;">Buy in Bulk & Save More!</h2>
-                    <p style="font-size: 1.1rem; margin-bottom: 30px; color: #f8f9fa; line-height: 1.8;">Are you a business owner? Discover exclusive trade pricing, volume discounts, and seamless bulk ordering tailored just for you on our dedicated B2B Wholesale Platform.</p>
-                    <a href="{{ env('NEXT_PUBLIC_B2B_URL', 'http://localhost:3000') }}" class="common_btn" style="background: #22AD5C; color: #ffffff; border: none; padding: 15px 35px; border-radius: 5px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Visit B2B Portal <i class="fas fa-arrow-right ml-2"></i></a>
+                    <p style="font-size: 1.1rem; margin-bottom: 30px; color: #f8f9fa; line-height: 1.8;">Are you a business owner? Discover exclusive trade pricing, volume discounts, and seamless bulk ordering tailored just for you on our dedicated Business to Business Wholesale Platform.</p>
+                    <a href="{{ env('FRONTEND_URL') }}" class="common_btn" style="background: #22AD5C; color: #ffffff; border: none; padding: 15px 35px; border-radius: 5px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Visit Business to Business Portal <i class="fas fa-arrow-right ml-2"></i></a>
                 </div>
                 <div class="col-lg-5 text-center d-none d-lg-block wow fadeInRight" data-wow-duration="1s">
                     <div style="position: relative; padding: 20px;">
-                        <img src="{{ asset('images/dal-makhani.jpg') }}" alt="Wholesale" style="border-radius: 10px; border: 5px solid rgba(255, 255, 255, 0.1); box-shadow: 0 15px 40px rgba(0,0,0,0.4);" class="img-fluid w-100">
+                        <img src="/banner3.jpg" alt="Wholesale" style="border-radius: 10px; border: 5px solid rgba(255, 255, 255, 0.1); box-shadow: 0 15px 40px rgba(0,0,0,0.4);" class="img-fluid w-100">
                         <div style="position: absolute; bottom: 0; right: 0; background: #22AD5C; color: white; padding: 15px 25px; border-radius: 8px; font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
                             <span style="font-size: 1.5rem; display: block;">Up to 20% Off</span>
                             <span style="font-size: 0.9rem; opacity: 0.9;">on bulk orders</span>

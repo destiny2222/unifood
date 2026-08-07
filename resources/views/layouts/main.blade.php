@@ -150,8 +150,10 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/contact">contact us</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="https://business.mightyolu.com" target="_blank">Business to Business</a>
+                    <li class="nav-item my-2 my-lg-0 ms-lg-2 d-flex justify-content-center align-items-center">
+                        <a class="btn btn-sm text-white fw-bold px-3 py-2 rounded-pill shadow-sm" href="{{ env('FRONTEND_URL') }}" target="_blank" style="background-color: #22AD5C; border: none; display: inline-block;">
+                            <i class="fas fa-briefcase me-1"></i> Business to Business
+                        </a>
                     </li>
                 </ul>
                 <ul class="menu_icon d-flex flex-wrap">

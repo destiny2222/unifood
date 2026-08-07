@@ -59,6 +59,7 @@ class ProductController extends Controller
             $validatedData['has_variants'] = $request->has('has_variants');
             $validatedData['is_b2b'] = $request->has('is_b2b');
             $validatedData['minimum_order_quantity'] = $request->has('is_b2b') ? ($request->minimum_order_quantity ?? 1) : 1;
+            $validatedData['discount'] = $request->discount ?? 0;
 
             if (!$validatedData['has_variants']) {
                 $validatedData['weight'] = $request->weight;
@@ -132,6 +133,7 @@ class ProductController extends Controller
             $validatedData['has_variants'] = $request->has('has_variants');
             $validatedData['is_b2b'] = $request->has('is_b2b');
             $validatedData['minimum_order_quantity'] = $request->has('is_b2b') ? ($request->minimum_order_quantity ?? 1) : 1;
+            $validatedData['discount'] = $request->discount ?? 0;
 
             if (!$validatedData['has_variants']) {
                 $validatedData['weight'] = $request->weight;

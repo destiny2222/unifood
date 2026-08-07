@@ -56,6 +56,15 @@
                </a>
           </li>
 
+          <li class="nav-item">
+               <a class="nav-link" href="{{ route('admin.b2b-analytics.index') }}">
+                    <span class="nav-icon">
+                         <iconify-icon icon="solar:chart-2-bold-duotone"></iconify-icon>
+                    </span>
+                    <span class="nav-text"> B2B Analytics </span>
+               </a>
+          </li>
+
           <li class="menu-title">General</li>
 
           <li class="nav-item">
@@ -90,6 +99,9 @@
                     <ul class="nav sub-navbar-nav">
                          <li class="sub-nav-item">
                               <a class="sub-nav-link" href="{{ route('admin.product.index') }}">List</a>
+                         </li>
+                         <li class="sub-nav-item">
+                              <a class="sub-nav-link" href="{{ route('admin.b2b-products.index') }}">B2B Products</a>
                          </li>
                          <li class="sub-nav-item">
                               <a class="sub-nav-link" href="{{ route('admin.product.create') }}">Create</a>

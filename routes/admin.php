@@ -82,6 +82,11 @@ Route::prefix('admin')->name('admin.')->group(function (){
         Route::put('/b2b-orders/{id}/update', [\App\Http\Controllers\Admin\AdminB2BPurchaseOrderController::class, 'update'])->name('b2b-orders.update');
         Route::delete('/b2b-orders/{id}/delete', [\App\Http\Controllers\Admin\AdminB2BPurchaseOrderController::class, 'destroy'])->name('b2b-orders.delete');
 
+        // B2B Analytics & Dedicated Products
+        Route::get('/b2b-analytics', [\App\Http\Controllers\Admin\B2BAnalyticsController::class, 'index'])->name('b2b-analytics.index');
+        Route::get('/b2b-products/list', [\App\Http\Controllers\Admin\AdminB2BProductController::class, 'index'])->name('b2b-products.index');
+        Route::post('/b2b-products/{id}/toggle-b2b', [\App\Http\Controllers\Admin\AdminB2BProductController::class, 'toggleB2b'])->name('b2b-products.toggle-b2b');
+
         //system clear
          Route::get('/system', [SystemController::class, 'index'])->name('system.index');
         Route::post('/system/clear-all-cache', [SystemController::class, 'clearAllCache'])->name('system.clear-all-cache');

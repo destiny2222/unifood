@@ -22,6 +22,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call([ 
             AdminSeeder::class,
+            MerchantBacklogSeeder::class,
+            JulyBacklogOrdersSeeder::class,
         ]);
     }
 }

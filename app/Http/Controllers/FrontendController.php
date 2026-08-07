@@ -31,35 +31,38 @@ use Illuminate\Validation\ValidationException;
 class FrontendController extends Controller
 {
     public function index()
-    {
-        $Product = Product::orderBy('id', 'asc')->paginate(12);
-        $category = Category::orderBy('id', 'asc')->get()->take(6);
-        $blog = Post::where('show_homepage', 1)->get();
-        $services = Service::orderBy('id', 'DESC')->get();
-        $sliders = Slider::orderBy('id', 'DESC')->get();
-        $dailyOffer = Product::where('today_special', 1)->get();
-        $advertisements = Advertisement::orderBy('id', 'DESC')->get();
-        $counter = Counter::orderBy('id', 'DESC')->get();
-        $appSection = AppSection::first();
-        $testimonial = Testimonial::orderBy('id', 'DESC')->get();
+{
+    $Product = Product::where('is_b2b', false)
+                      ->orderBy('id', 'asc')
+                      ->paginate(12);
 
-        // $countCarts = session('cart', []);
-        // dd($countCarts);
-        // session()->forget('cart');
+    $category = Category::orderBy('id', 'asc')->get()->take(6);
+    $blog = Post::where('show_homepage', 1)->get();
+    $services = Service::orderBy('id', 'DESC')->get();
+    $sliders = Slider::orderBy('id', 'DESC')->get();
 
-        return view('frontend.index', [
-            'products' => $Product,
-            'categories' => $category,
-            'blogs' => $blog,
-            'services' => $services,
-            'sliders' => $sliders,
-            'dailyOffers' => $dailyOffer,
-            'advertisements' => $advertisements,
-            'appSection' => $appSection,
-            'counters' => $counter,
-            'testimonials' => $testimonial
-        ]);
-    }
+    $dailyOffer = Product::where('today_special', 1)
+                         ->where('is_b2b', false)
+                         ->get();
+
+    $advertisements = Advertisement::orderBy('id', 'DESC')->get();
+    $counter = Counter::orderBy('id', 'DESC')->get();
+    $appSection = AppSection::first();
+    $testimonial = Testimonial::orderBy('id', 'DESC')->get();
+
+    return view('frontend.index', [
+        'products' => $Product,
+        'categories' => $category,
+        'blogs' => $blog,
+        'services' => $services,
+        'sliders' => $sliders,
+        'dailyOffers' => $dailyOffer,
+        'advertisements' => $advertisements,
+        'appSection' => $appSection,
+        'counters' => $counter,
+        'testimonials' => $testimonial
+    ]);
+}
 
     public function about()
     {
@@ -94,82 +97,45 @@ class FrontendController extends Controller
     // }
 
 
-    public function product(Request $request)
-    {
-        // Get categories with product count
-        $categories = Category::withCount('product')
-                            ->orderBy('title', 'asc')
-                            ->get();
-        
-        // Filter products by category if category parameter exists
-        $query = Product::query();
-        
-        if ($request->has('category') && $request->category != '') {
-            $query->whereHas('category', function($q) use ($request) {
-                $q->where('slug', $request->category);
-            });
-        }
-        
-        $products = $query->paginate(9);
-        
-        return view('frontend.product', [
-            'categories' => $categories,
-            'products' => $products,
-        ]);
+public function product(Request $request)
+{
+    $categories = Category::withCount(['product' => function ($q) {
+                        $q->where('is_b2b', false);
+                    }])
+                    ->orderBy('title', 'asc')
+                    ->get();
+
+    $query = Product::where('is_b2b', false);
+
+    if ($request->has('category') && $request->category != '') {
+        $query->whereHas('category', function ($q) use ($request) {
+            $q->where('slug', $request->category);
+        });
     }
 
-    // public function product(Request $request)
-    // {
-    //     // Get categories with product count
-    //     $categories = Category::withCount('product')->orderBy('title', 'asc')->get();
-        
-    //     $query = Product::with('category');
-        
-    //     // Filter by category if exists
-    //     if ($request->has('category') && $request->category != '') {
-    //         $query->whereHas('category', function($q) use ($request) {
-    //             $q->where('slug', $request->category);
-    //         });
-    //     }
-        
-    //     // Filter by search term if exists
-    //     if ($request->has('search') && $request->search != '') {
-    //         $searchTerm = $request->search;
-    //         $query->where(function($q) use ($searchTerm) {
-    //             $q->where('title', 'LIKE', "%{$searchTerm}%")
-    //             ->orWhere('description', 'LIKE', "%{$searchTerm}%")
-    //             ->orWhereHas('category', function($categoryQuery) use ($searchTerm) {
-    //                 $categoryQuery->where('title', 'LIKE', "%{$searchTerm}%");
-    //             });
-    //         });
-    //     }
-        
-    //     // ordering
-    //     $query->orderBy('created_at', 'desc');
-        
-    //     // Paginate 
-    //     $products = $query->paginate(9);
-        
-    //     $products->appends($request->query());
-        
-    //     return view('frontend.product', [
-    //         'categories' => $categories,
-    //         'products' => $products,
-    //         'searchTerm' => $request->get('search', ''),
-    //         'selectedCategory' => $request->get('category', '')
-    //     ]);
-    // }
+    $products = $query->paginate(9);
 
+    return view('frontend.product', [
+        'categories' => $categories,
+        'products' => $products,
+    ]);
+}
+
+    
     // Add this method for category-specific products
     public function productsByCategory(Request $request, $categorySlug)
     {
-        $categories = Category::withCount('product')
-                            ->orderBy('title', 'asc')
-                            ->get();
+        $categories = Category::withCount(['product' => function ($q) {
+                            $q->where('is_b2b', false);
+                        }])
+                        ->orderBy('title', 'asc')
+                        ->get();
         
-        $products = Product::whereHas('category', function($q) use ($categorySlug) {
-            $q->where('slug', $categorySlug);
-        })->paginate(9);
+        $products = Product::where('is_b2b', false)
+            ->whereHas('category', function($q) use ($categorySlug) {
+                $q->where('slug', $categorySlug)
+                  ->orWhere('id', $categorySlug);
+            })->paginate(9);
         
         return view('frontend.product', [
             'categories' => $categories,
@@ -186,17 +152,23 @@ class FrontendController extends Controller
 
     
 
-    public function productDetails(Product $product)
-    {
-        $relatedProducts = Product::where('category_id', $product->category_id)->get();
-
-        // dd($relatedProducts);
-        return view('frontend.product_details', [
-            'product' => $product,
-            'relatedProducts' => $relatedProducts,
-
-        ]);
+public function productDetails(Product $product)
+{
+    // Optional: prevent viewing a B2B product on the public frontend
+    if ($product->is_b2b) {
+        abort(404);
     }
+
+    $relatedProducts = Product::where('category_id', $product->category_id)
+                              ->where('is_b2b', false)
+                              ->where('id', '!=', $product->id) // usually exclude current product
+                              ->get();
+
+    return view('frontend.product_details', [
+        'product' => $product,
+        'relatedProducts' => $relatedProducts,
+    ]);
+}
 
     public function blog()
     {
@@ -245,12 +217,12 @@ class FrontendController extends Controller
                             ->get();
         
         // Search products
-        $products = Product::where('title', '!=', null)
+        $products = Product::where('is_b2b', false)
             ->where(function ($query) use ($search) {
                 $query->where('title', 'LIKE', "%{$search}%")
-                    ->orWhere('description', 'LIKE', "%{$search}%") // Added description search
-                    ->orWhereHas('category', function ($query) use ($search) {
-                        $query->where('title', 'LIKE', "%{$search}%");
+                    ->orWhere('description', 'LIKE', "%{$search}%")
+                    ->orWhereHas('category', function ($q) use ($search) {
+                        $q->where('title', 'LIKE', "%{$search}%");
                     });
             })
             ->orderBy('created_at', 'desc')

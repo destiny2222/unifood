@@ -28,6 +28,7 @@ Route::prefix('v1')->group(function () {
 
     // Product Endpoints
     Route::get('/b2b/catalog', [B2BCatalogController::class, 'index']);
+    Route::get('/b2b/categories', [B2BCatalogController::class, 'categories']);
     Route::get('/b2b/catalog/{slug}', [B2BCatalogController::class, 'show']);
 
     // Password Reset Endpoints

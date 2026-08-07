@@ -53,9 +53,12 @@
                                 </li>
                                 
                                 @forelse ($categories as $category)
+                                    @php
+                                        $catSlug = $category->slug ?: (\Str::slug($category->title) ?: $category->id);
+                                    @endphp
                                     <li>
-                                        <a href="{{ route('products.by.category', $category->slug) }}" 
-                                        class="d-flex justify-content-between align-items-center {{ request()->get('category') == $category->slug ? 'active' : '' }}">
+                                        <a href="{{ route('products.by.category', $catSlug) }}" 
+                                        class="d-flex justify-content-between align-items-center {{ (request()->route('categorySlug') == $catSlug || request()->get('category') == $catSlug) ? 'active' : '' }}">
                                             {{ $category->title }}
                                             <span class="fw-bold fs-xs total-count">{{ $category->product_count }}</span>
                                         </a>
@@ -104,102 +107,146 @@
                     <!--products-->
                     <div class="row g-4">
                         @forelse ($products as $product)
-                            <div class="col-lg-4 col-md-6 col-sm-10 mb-5">
-                                <div class="vertical-product-card rounded-2 position-relative swiper-slide bg-white">
-                                    <div class="thumbnail position-relative text-center p-4">
-                                        <img src="{{ $product->images }}" alt="Badhakopi (Cabbage)" class="img-fluid">
-                                        <div class="product-btns position-absolute d-flex gap-2 flex-column">
-                                            <a href="{{ route('wishlist.add') }}"
-                                                onclick="event.preventDefault(); document.getElementById('wish-{{ $product->id }}').submit()"
-                                                class="rounded-btn">
-                                                <i class="fa fa-heart"></i>
+                            <div class="col-6 col-lg-4 col-md-6 col-sm-10 mb-4">
+                                <div class="vertical-product-card rounded-3 border shadow-sm p-3 h-100 bg-white d-flex flex-column justify-content-between position-relative">
+                                    <div>
+                                        <div class="thumbnail position-relative text-center p-2 rounded-3 bg-light mb-3 d-flex align-items-center justify-content-center" style="height: 180px; overflow: hidden;">
+                                            <a href="{{ route('frontend.product.show', $product->slug) }}" class="w-100 h-100 d-flex align-items-center justify-content-center">
+                                                <img src="{{ $product->images }}" alt="{{ $product->title }}" class="img-fluid" style="max-height: 160px; object-fit: contain;">
                                             </a>
-                                            <form action="{{ route('wishlist.add') }}" id="wish-{{ $product->id }}"
-                                                method="post">
-                                                @csrf
-                                                <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                            </form>
+                                            <div class="product-btns position-absolute d-flex gap-2 flex-column">
+                                                <a href="{{ route('wishlist.add') }}"
+                                                    onclick="event.preventDefault(); document.getElementById('wish-{{ $product->id }}').submit()"
+                                                    class="rounded-btn shadow-sm">
+                                                    <i class="fa fa-heart"></i>
+                                                </a>
+                                                <form action="{{ route('wishlist.add') }}" id="wish-{{ $product->id }}" method="post">
+                                                    @csrf
+                                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                </form>
+                                                <a href="{{ route('frontend.product.show', $product->slug) }}" class="rounded-btn shadow-sm">
+                                                    <i class="fa fa-eye"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                        <div class="card-content p-0">
+                                            <!--product category start-->
+                                            <div class="mb-1 tt-category text-uppercase fs-xxs fw-bold text-success">
+                                                {{ $product->category->title ?? 'Uncategorized' }}
+                                            </div>
+                                            <!--product category end-->
+
                                             <a href="{{ route('frontend.product.show', $product->slug) }}"
-                                                class="rounded-btn">
-                                                <i class="fa fa-eye"></i>
+                                                class="card-title fw-bold text-dark text-decoration-none mb-2 d-block text-truncate fs-6" title="{{ $product->title }}">
+                                                {{ $product->title }}
                                             </a>
+
+                                            <div class="price-box mb-3 d-flex align-items-baseline flex-wrap gap-1">
+                                                <span class="fw-bold fs-5 text-success">
+                                                    @if ($product->has_variants == 1)
+                                                    £{{ number_format($product->variants->first()->price ?? 0, 2) }}
+                                                    @else
+                                                    £{{ number_format($product->price ?? 0, 2) }}
+                                                    @endif
+                                                </span>
+                                                @if (isset($product->discount) && $product->discount > 0)
+                                                    <del class="text-muted fs-xs me-1">£{{ number_format($product->discount, 2) }}</del>
+                                                @endif
+                                                <span class="badge bg-light text-muted border fs-xs font-normal ms-1">
+                                                    /{{ $product->has_variants == 1 ? ($product->variants->first()->unit ?? 'pcs') : ($product->unit ?? 'pcs') }}
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="card-content">
-                                        <!--product category start-->
-                                        <div class="mb-2 tt-category tt-line-clamp tt-clamp-1">
-                                            <a href="{{ route('frontend.product.show', $product->slug) }}"
-                                                class="d-inline-block text-muted fs-xxs">
-                                                {{ $product->category->title ?? 'Uncategorized' }}
-                                            </a>
-                                        </div>
-                                        <!--product category end-->
 
-                                        <a href="{{ route('frontend.product.show', $product->slug) }}"
-                                            class="card-title fw-semibold mb-2 tt-line-clamp tt-clamp-1">
-                                            {{ $product->title }}
-                                        </a>
+                                    <div>
+                                        @php
+                                            $currentPrice = 0;
+                                            if ($product->has_variants == 1) {
+                                                $currentPrice = $product->variants->first()->price ?? 0;
+                                            } else {
+                                                $currentPrice = $product->price ?? 0;
+                                            }
+                                        @endphp
 
-                                        <h6 class="price">
-                                            <span class="fw-bold h4 text-success">£{{ $product->price ?? 0 }}
-                                                @if (isset($product->discount) && $product->discount > 0)
-                                                    <del>£{{ number_format($product->discount, 2) }}</del>
-                                                @endif
-                                            </span>
-                                            <small>/{{ $product->weight_unit ?? 'pcs' }}</small>
-                                        </h6>
-                                        <div class="d-flex gap-3 justify-content-between align-items-center">
-                                            <button type="button" onclick="event.preventDefault(); load_product_model({{ json_encode($product->slug) }})"
-                                                class="btn btn_outline_secondary btn-md border-secondary d-block mt-4 w-100 direct-add-to-cart-btn add-to-cart-text">
-                                                Add to Cart
+                                        <form class="w-100" action="{{ route('cart.add') }}" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                            <input type="hidden" name="slug" value="{{ $product->slug }}">
+                                            <input type="hidden" name="quantity" value="1">
+                                            <input type="hidden" name="price" value="{{ $currentPrice }}">
+
+                                            <button type="submit" class="btn w-100 py-2 fs-sm text-white font-semibold d-flex align-items-center justify-content-center gap-2 shadow-sm" style="background-color: #22AD5C; border: none; border-radius: 6px; transition: background-color 0.2s ease;">
+                                                <i class="fas fa-shopping-basket"></i> Add to Cart
                                             </button>
-                                        </div>
-
+                                        </form>
                                     </div>
                                 </div>
                             </div>
                         @empty
-                            <div class="col-12 text-center">
-                                <p>No products found.</p>
+                            <div class="col-12 text-center py-5">
+                                <p class="text-muted fs-5">No products found.</p>
                             </div>
                         @endforelse
                     </div>
-                    <div class="d-sm-block d-lg-flex align-items-center justify-content-between mt-7 tt-custom-pagination">
-                        <span>
-                            Showing {{ $products->firstItem() }}-{{ $products->lastItem() }} of {{ $products->total() }} results
+
+                    <!-- Clean Windowed Pagination -->
+                    <div class="d-sm-block d-lg-flex align-items-center justify-content-between mt-5 pt-3 border-top tt-custom-pagination">
+                        <span class="text-muted fs-sm mb-3 mb-lg-0">
+                            Showing {{ $products->firstItem() ?? 0 }}-{{ $products->lastItem() ?? 0 }} of {{ $products->total() }} results
                         </span>
                         
                         @if ($products->hasPages())
                             <nav>
-                                <ul class="pagination">
+                                <ul class="pagination pagination-sm mb-0">
                                     {{-- Previous Page Link --}}
                                     @if ($products->onFirstPage())
-                                        <li class="page-item disabled" aria-disabled="true" aria-label="« Previous">
-                                            <span class="page-link" aria-hidden="true">‹</span>
+                                        <li class="page-item disabled" aria-disabled="true">
+                                            <span class="page-link">‹</span>
                                         </li>
                                     @else
                                         <li class="page-item">
-                                            <a class="page-link" href="{{ $products->previousPageUrl() }}" rel="prev" aria-label="« Previous">‹</a>
+                                            <a class="page-link" href="{{ $products->appends(request()->query())->previousPageUrl() }}" rel="prev">‹</a>
                                         </li>
                                     @endif
 
-                                    {{-- Pagination Elements --}}
-                                    @foreach ($products->getUrlRange(1, $products->lastPage()) as $page => $url)
+                                    {{-- Windowed Pagination Elements --}}
+                                    @php
+                                        $start = max(1, $products->currentPage() - 2);
+                                        $end = min($products->lastPage(), $products->currentPage() + 2);
+                                    @endphp
+
+                                    @if ($start > 1)
+                                        <li class="page-item"><a class="page-link" href="{{ $products->appends(request()->query())->url(1) }}">1</a></li>
+                                        @if ($start > 2)
+                                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                                        @endif
+                                    @endif
+
+                                    @foreach ($products->appends(request()->query())->getUrlRange($start, $end) as $page => $url)
                                         @if ($page == $products->currentPage())
-                                            <li class="page-item active" aria-current="page"><span class="page-link">{{ $page }}</span></li>
+                                            <li class="page-item active" aria-current="page"><span class="page-link bg-success border-success text-white">{{ $page }}</span></li>
                                         @else
                                             <li class="page-item"><a class="page-link" href="{{ $url }}">{{ $page }}</a></li>
                                         @endif
                                     @endforeach
 
+                                    @if ($end < $products->lastPage())
+                                        @if ($end < $products->lastPage() - 1)
+                                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                                        @endif
+                                        <li class="page-item"><a class="page-link" href="{{ $products->appends(request()->query())->url($products->lastPage()) }}">{{ $products->lastPage() }}</a></li>
+                                    @endif
+
                                     {{-- Next Page Link --}}
                                     @if ($products->hasMorePages())
                                         <li class="page-item">
-                                            <a class="page-link" href="{{ $products->nextPageUrl() }}" rel="next" aria-label="Next »">›</a>
+                                            <a class="page-link" href="{{ $products->appends(request()->query())->nextPageUrl() }}" rel="next">›</a>
                                         </li>
                                     @else
-                                        <li class="page-item disabled" aria-disabled="true" aria-label="Next »">
-                                            <span class="page-link" aria-hidden="true">›</span>
+                                        <li class="page-item disabled" aria-disabled="true">
+                                            <span class="page-link">›</span>
                                         </li>
                                     @endif
                                 </ul>

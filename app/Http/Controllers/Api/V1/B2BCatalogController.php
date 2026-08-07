@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -14,13 +15,74 @@ class B2BCatalogController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        
-        $products = Product::where('is_b2b', true)
-            ->with(['volumeDiscounts', 'photos', 'category'])
-            ->paginate(15);
+
+        $query = Product::where('is_b2b', 1)
+            ->with(['volumeDiscounts', 'photos', 'category']);
+
+        if ($request->filled('category')) {
+            $category = $request->input('category');
+            $query->whereHas('category', function ($q) use ($category) {
+                $q->where('slug', $category)
+                  ->orWhere('title', $category);
+            });
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('min_price')) {
+            $query->where('price', '>=', (float)$request->input('min_price'));
+        }
+
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', (float)$request->input('max_price'));
+        }
+
+        if ($request->filled('sort')) {
+            $sort = (string)$request->input('sort');
+            switch ($sort) {
+                case '1':
+                case 'price_low_to_high':
+                case 'price_asc':
+                    $query->orderBy('price', 'asc');
+                    break;
+                case '2':
+                case 'price_high_to_low':
+                case 'price_desc':
+                    $query->orderBy('price', 'desc');
+                    break;
+                case '3':
+                case 'title_asc':
+                    $query->orderBy('title', 'asc');
+                    break;
+                case '4':
+                case 'title_desc':
+                    $query->orderBy('title', 'desc');
+                    break;
+                case '0':
+                case 'newest':
+                default:
+                    $query->orderBy('id', 'desc');
+                    break;
+            }
+        } else {
+            $query->orderBy('id', 'desc');
+        }
+
+        if ($request->has('per_page') || $request->has('page')) {
+            $perPage = (int) $request->input('per_page', 9);
+            $products = $query->paginate($perPage);
+        } else {
+            $products = $query->get();
+        }
 
         // Map the products to include resolved trade pricing
-        $products->getCollection()->transform(function ($product) use ($user) {
+        $products->transform(function ($product) use ($user) {
             $tradePrice = $product->getResolvedPrice($user, 1);
             
             return [
@@ -41,6 +103,27 @@ class B2BCatalogController extends Controller
         });
 
         return response()->json($products);
+    }
+
+    /**
+     * Display categories list with product counts.
+     */
+    public function categories()
+    {
+        $categories = Category::whereHas('product', function($q) {
+            $q->where('is_b2b', 1);
+        })->withCount(['product' => function($q) {
+            $q->where('is_b2b', 1);
+        }])->get()->map(function($cat) {
+            return [
+                'id' => $cat->id,
+                'title' => $cat->title,
+                'slug' => $cat->slug,
+                'products_count' => $cat->product_count,
+            ];
+        });
+
+        return response()->json($categories);
     }
 
     /**
