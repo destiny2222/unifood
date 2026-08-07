@@ -33,6 +33,9 @@ Route::prefix('v1')->group(function () {
     // Password Reset Endpoints
     Route::post('/forgot-password', [PasswordResetController::class, 'forgotPassword']);
     Route::post('/reset-password', [PasswordResetController::class, 'resetPassword']);
+
+    // Contact Form Endpoint
+    Route::post('/contact', [ProfileController::class, 'contactStore']);
     
     // Authenticated Sanctum Routes
     Route::middleware('auth:sanctum')->group(function () {

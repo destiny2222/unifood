@@ -1655,3 +1655,49 @@ Updates the user's password.
     "message": "Current password is incorrect"
   }
   ```
+
+---
+
+## 13. General & Public Endpoints
+
+### 13.1 Contact Form Submission
+Submits a message via the public contact form. Saves the message details to the database and dispatches notification emails to configured administrators.
+
+* **Endpoint**: `POST /api/v1/contact`
+* **Headers**: `Accept: application/json`
+
+#### Request Payload
+```json
+{
+  "name": "John Doe",
+  "email": "johndoe@example.com",
+  "phone": "07867986338",
+  "subject": "Bulk Quote Request",
+  "message": "We would like to request a bulk price quote for wholesale food ingredients."
+}
+```
+
+#### Validation Constraints
+* `name`: Required, string
+* `email`: Required, valid email string
+* `phone`: Optional, string
+* `subject`: Optional, string
+* `message`: Required, string
+
+#### Response (200 OK)
+```json
+{
+  "success": true,
+  "message": "Message sent successfully!"
+}
+```
+
+#### Error Responses
+* **500 Internal Server Error**:
+  ```json
+  {
+    "success": false,
+    "message": "An error occurred while sending the message. Please try again later."
+  }
+  ```
+

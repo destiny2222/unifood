@@ -5,6 +5,11 @@ namespace App\Http\Controllers\Api\V1\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+use App\Models\Contact;
+use App\Models\Admin;
 
 class ProfileController extends Controller
 {
@@ -73,4 +78,42 @@ class ProfileController extends Controller
             'avatar'  => asset('storage/' . $user->avatar),
         ]);
     }
+
+
+    public function contactStore(Request $request)
+    {
+        $contact = new Contact([
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'phone' => $request->input('phone'),
+            'subject' => $request->input('subject'),
+            'message' => $request->input('message'),
+        ]);
+        try{
+            $contact->save();
+            // mail administrator
+            $admins = ['Olumideadelugba25@gmail.com', 'dailydevo9@gmail.com', 'mightyolultd@gmail.com'];
+            foreach ($admins as $admin) {
+                $email = is_object($admin) ? $admin->email : $admin;
+                Mail::raw(
+                    "You have received a new contact message:\n\nName: {$contact->name}\nEmail: {$contact->email}\nPhone: {$contact->phone}\nSubject: {$contact->subject}\nMessage: {$contact->message}",
+                    function ($message) use ($email) {
+                        $message->to($email)
+                                ->subject('New Contact Message');
+                    }
+                );
+            }
+            return response()->json([
+                'success' => true,
+                'message' => 'Message sent successfully!'
+            ]);
+        }catch(\Exception $exception){
+            Log::error($exception->getMessage() . "\n" . $exception->getTraceAsString());
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while sending the message. Please try again later.'
+            ], 500);
+        }
+    }
+
 }

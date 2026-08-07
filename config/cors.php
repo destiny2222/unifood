@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['https://might-olu-b2-b-peach.vercel.app/', 'http://localhost:3000'],
+    'allowed_origins' => ['https://might-olu-b2-b-peach.vercel.app/', 'http://localhost:3000', 'http://localhost:3001'],
 
     'allowed_origins_patterns' => [],
 
