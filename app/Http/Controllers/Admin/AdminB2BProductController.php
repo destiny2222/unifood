@@ -39,4 +39,21 @@ class AdminB2BProductController extends Controller
 
         return back()->with('success', 'Product B2B status updated successfully.');
     }
+
+    public function bulkDelete(Request $request)
+    {
+        if ($request->has('delete_all_category') && $request->filled('category_id')) {
+            $count = Product::where('is_b2b', 1)->where('category_id', $request->input('category_id'))->delete();
+            return back()->with('success', "Successfully deleted {$count} B2B products in the selected category.");
+        }
+
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:products,id',
+        ]);
+
+        $count = Product::whereIn('id', $request->input('ids'))->delete();
+
+        return back()->with('success', "Successfully deleted {$count} selected products.");
+    }
 }

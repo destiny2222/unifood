@@ -253,4 +253,26 @@ class ProductController extends Controller
             return back()->with('error', 'Something went wrong, please try again later');
         }
     }
+
+    public function bulkDelete(Request $request)
+    {
+        try {
+            if ($request->has('delete_all_category') && $request->filled('category_id')) {
+                $count = Product::where('category_id', $request->input('category_id'))->delete();
+                return back()->with('success', "Successfully deleted {$count} products in the selected category.");
+            }
+
+            $request->validate([
+                'ids' => 'required|array',
+                'ids.*' => 'exists:products,id',
+            ]);
+
+            $count = Product::whereIn('id', $request->input('ids'))->delete();
+
+            return back()->with('success', "Successfully deleted {$count} selected products.");
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage());
+            return back()->with('error', 'Something went wrong while executing bulk deletion.');
+        }
+    }
 }

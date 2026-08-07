@@ -39,78 +39,102 @@
                         </div>
                     </form>
 
-                    <div class="table-responsive">
-                        <table class="table align-middle mb-0 table-hover table-centered">
-                            <thead class="bg-light-subtle">
-                                <tr>
-                                    <th>Product</th>
-                                    <th>Category</th>
-                                    <th>Standard Price</th>
-                                    <th>MOQ</th>
-                                    <th>Volume Discounts</th>
-                                    <th>Stock</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse ($products as $product)
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center gap-2">
-                                            <div class="rounded bg-light avatar-md d-flex align-items-center justify-content-center">
-                                                @if($product->images)
-                                                    <img src="{{ $product->images }}" alt="" class="avatar-md rounded">
-                                                @else
-                                                    <iconify-icon icon="solar:box-bold-duotone" class="fs-24 text-secondary"></iconify-icon>
-                                                @endif
+                    <!-- Bulk Delete Form Wrapper -->
+                    <form id="bulk-delete-form" action="{{ route('admin.b2b-products.bulk-delete') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete the selected items? This action cannot be undone.')">
+                        @csrf
+                        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                            <div class="d-flex align-items-center gap-2">
+                                <button type="submit" id="btn-bulk-delete" class="btn btn-danger btn-sm" disabled>
+                                    <i class="bx bx-trash"></i> Delete Selected (0)
+                                </button>
+                                @if(request()->filled('category_id'))
+                                    @php
+                                        $selectedCat = $categories->firstWhere('id', request('category_id'));
+                                    @endphp
+                                    <button type="submit" name="delete_all_category" value="1" onclick="return confirm('CAUTION: Are you sure you want to delete ALL products in {{ $selectedCat->title ?? 'this category' }}?')" class="btn btn-outline-danger btn-sm">
+                                        <i class="bx bx-trash-alt"></i> Delete All in Category ({{ $selectedCat->title ?? '' }})
+                                    </button>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table align-middle mb-0 table-hover table-centered">
+                                <thead class="bg-light-subtle">
+                                    <tr>
+                                        <th style="width: 40px;">
+                                            <input type="checkbox" id="check-all" class="form-check-input">
+                                        </th>
+                                        <th>Product</th>
+                                        <th>Category</th>
+                                        <th>Standard Price</th>
+                                        <th>MOQ</th>
+                                        <th>Volume Discounts</th>
+                                        <th>Stock</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($products as $product)
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" name="ids[]" value="{{ $product->id }}" class="form-check-input product-select-checkbox">
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div class="rounded bg-light avatar-md d-flex align-items-center justify-content-center">
+                                                    @if($product->images)
+                                                        <img src="{{ $product->images }}" alt="" class="avatar-md rounded">
+                                                    @else
+                                                        <iconify-icon icon="solar:box-bold-duotone" class="fs-24 text-secondary"></iconify-icon>
+                                                    @endif
+                                                </div>
+                                                <div>
+                                                    <a href="{{ route('admin.product.edit', $product->id) }}" class="text-dark fw-medium">{{ $product->title }}</a>
+                                                    <small class="text-muted d-block">{{ $product->slug }}</small>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <a href="{{ route('admin.product.edit', $product->id) }}" class="text-dark fw-medium">{{ $product->title }}</a>
-                                                <small class="text-muted d-block">{{ $product->slug }}</small>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>{{ $product->category->title ?? 'Uncategorized' }}</td>
-                                    <td>£{{ number_format($product->price, 2) }}</td>
-                                    <td>
-                                        <span class="badge bg-info-subtle text-info px-2 py-1 fs-12">
-                                            MOQ: {{ $product->minimum_order_quantity ?? 1 }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        @if($product->volumeDiscounts->count() > 0)
-                                            <span class="badge bg-success-subtle text-success">
-                                                {{ $product->volumeDiscounts->count() }} Tiers Active
+                                        </td>
+                                        <td>{{ $product->category->title ?? 'Uncategorized' }}</td>
+                                        <td>£{{ number_format($product->price, 2) }}</td>
+                                        <td>
+                                            <span class="badge bg-info-subtle text-info px-2 py-1 fs-12">
+                                                MOQ: {{ $product->minimum_order_quantity ?? 1 }}
                                             </span>
-                                        @else
-                                            <span class="badge bg-secondary-subtle text-secondary">None</span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if($product->availability == 'in_stock' || (is_numeric($product->availability) && $product->availability > 0))
-                                            <span class="text-success fw-medium">In Stock ({{ $product->availability }})</span>
-                                        @else
-                                            <span class="text-danger fw-medium">Out of Stock</span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <div class="d-flex gap-2">
-                                            <a href="{{ route('admin.product.edit', $product->id) }}" class="btn btn-soft-primary btn-sm">Edit</a>
-                                            <form action="{{ route('admin.b2b-products.toggle-b2b', $product->id) }}" method="POST" style="display:inline;">
-                                                @csrf
-                                                <button type="submit" class="btn btn-soft-warning btn-sm" onclick="return confirm('Toggle B2B flag for this product?')">Disable B2B</button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="7" class="text-center py-4">No B2B wholesale products found.</td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
+                                        </td>
+                                        <td>
+                                            @if($product->volumeDiscounts->count() > 0)
+                                                <span class="badge bg-success-subtle text-success">
+                                                    {{ $product->volumeDiscounts->count() }} Tiers Active
+                                                </span>
+                                            @else
+                                                <span class="badge bg-secondary-subtle text-secondary">None</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($product->availability == 'in_stock' || (is_numeric($product->availability) && $product->availability > 0))
+                                                <span class="text-success fw-medium">In Stock ({{ $product->availability }})</span>
+                                            @else
+                                                <span class="text-danger fw-medium">Out of Stock</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <div class="d-flex gap-2">
+                                                <a href="{{ route('admin.product.edit', $product->id) }}" class="btn btn-soft-primary btn-sm">Edit</a>
+                                                <button type="submit" name="ids[]" value="{{ $product->id }}" class="btn btn-soft-danger btn-sm" onclick="return confirm('Delete this product?')">Delete</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @empty
+                                    <tr>
+                                        <td colspan="8" class="text-center py-4">No B2B wholesale products found.</td>
+                                    </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                        <input type="hidden" name="category_id" value="{{ request('category_id') }}">
+                    </form>
                 </div>
                 <div class="card-footer border-top">
                     @if ($products->hasPages())
@@ -164,3 +188,35 @@
 
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const checkAll = document.getElementById('check-all');
+    const checkboxes = document.querySelectorAll('.product-select-checkbox');
+    const btnBulkDelete = document.getElementById('btn-bulk-delete');
+
+    if (checkAll) {
+        checkAll.addEventListener('change', function() {
+            checkboxes.forEach(cb => cb.checked = this.checked);
+            updateBulkCount();
+        });
+    }
+
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', updateBulkCount);
+    });
+
+    function updateBulkCount() {
+        const checkedCount = document.querySelectorAll('.product-select-checkbox:checked').length;
+        if (btnBulkDelete) {
+            btnBulkDelete.disabled = checkedCount === 0;
+            btnBulkDelete.innerHTML = `<i class="bx bx-trash"></i> Delete Selected (${checkedCount})`;
+        }
+        if (checkAll) {
+            checkAll.checked = checkedCount > 0 && checkedCount === checkboxes.length;
+        }
+    }
+});
+</script>
+@endpush
