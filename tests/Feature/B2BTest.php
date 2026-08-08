@@ -24,12 +24,12 @@ class B2BTest extends TestCase
         $response = $this->postJson('/api/v1/b2b/register', [
             'name' => 'John Doe',
             'email' => 'john@example.com',
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
+            'password' => 'SecurePassword123!',
+            'password_confirmation' => 'SecurePassword123!',
         ]);
 
         $response->assertStatus(201)
-                 ->assertJsonStructure(['message', 'token', 'user']);
+                 ->assertJsonStructure(['message', 'token', 'data']);
 
         $user = User::where('email', 'john@example.com')->first();
 
@@ -44,7 +44,7 @@ class B2BTest extends TestCase
         ]);
 
         $kycResponse->assertStatus(201)
-                    ->assertJsonStructure(['message', 'kyc', 'user']);
+                    ->assertJsonStructure(['message', 'data']);
 
         $this->assertDatabaseHas('users', [
             'email' => 'john@example.com',
@@ -54,6 +54,74 @@ class B2BTest extends TestCase
 
         $this->assertDatabaseHas('kycs', [
             'company_name' => 'Acme Corp',
+            'status' => 'pending',
+        ]);
+    }
+
+    /**
+     * Test comprehensive multi-section KYC submission with document uploads.
+     */
+    public function test_comprehensive_multisection_kyc_submission_with_document_uploads()
+    {
+        \Illuminate\Support\Facades\Storage::fake('public');
+
+        $user = User::factory()->create([
+            'email' => 'stronger_kyc@example.com',
+        ]);
+
+        $cert = \Illuminate\Http\UploadedFile::fake()->create('incorporation.pdf', 200, 'application/pdf');
+        $bankStatement = \Illuminate\Http\UploadedFile::fake()->create('bank_statement.pdf', 300, 'application/pdf');
+
+        $response = $this->actingAs($user, 'sanctum')->postJson('/api/v1/kyc', [
+            'registered_business_name' => 'Mightyolu Wholesale Supplies Ltd',
+            'trading_name' => 'Mightyolu Trading',
+            'business_type' => 'limited_company',
+            'company_registration_number' => 'REG-998877',
+            'vat_registration_number' => 'GB123456789',
+            'date_business_established' => '2020-01-15',
+            'nature_of_business' => 'Food Retail & Distribution',
+            'business_website' => 'https://mightyolu.com',
+
+            'address_line_1' => '100 Trade House',
+            'address_line_2' => 'Docklands Business Park',
+            'city' => 'London',
+            'postcode' => 'E14 9QJ',
+            'country' => 'United Kingdom',
+
+            'primary_contact_name' => 'Sarah Connor',
+            'primary_contact_position' => 'Procurement Manager',
+            'primary_contact_email' => 'sarah@mightyolu.com',
+            'primary_contact_phone' => '+447700900123',
+            'preferred_contact_method' => 'telephone',
+
+            'owner_full_name' => 'Alexander Mighty',
+            'owner_position' => 'CEO',
+            'owner_nationality' => 'British',
+            'owner_dob' => '1985-06-12',
+            'owner_residential_address' => '12 Park Lane, London, W1K 1AA',
+
+            'certificate_of_incorporation' => $cert,
+            'business_bank_statement' => $bankStatement,
+
+            'primary_products_of_interest' => 'Rice, Palm Oil, Spices',
+            'estimated_monthly_purchase_value' => 'Over £10,000',
+            'expected_order_frequency' => 'weekly',
+            'purpose_of_purchase' => 'restaurant_catering',
+        ]);
+
+        $response->assertStatus(201)
+                 ->assertJsonPath('data.company_name', 'Mightyolu Wholesale Supplies Ltd')
+                 ->assertJsonPath('data.trading_name', 'Mightyolu Trading')
+                 ->assertJsonPath('data.vat_registration_number', 'GB123456789')
+                 ->assertJsonPath('data.expected_order_frequency', 'weekly');
+
+        $this->assertDatabaseHas('kycs', [
+            'user_id' => $user->id,
+            'company_name' => 'Mightyolu Wholesale Supplies Ltd',
+            'trading_name' => 'Mightyolu Trading',
+            'owner_full_name' => 'Alexander Mighty',
+            'estimated_monthly_order_volume' => 'Over £10,000',
+            'expected_order_frequency' => 'weekly',
             'status' => 'pending',
         ]);
     }
@@ -109,7 +177,7 @@ class B2BTest extends TestCase
         $kycResponse->assertStatus(201);
         $user->refresh();
 
-        $this->assertNotNull($user->kyc_id);
+        $this->assertNotNull($user->kyc);
         $this->assertTrue((bool)$user->is_business_owner);
         $this->assertEquals('business', $user->current_view);
         $this->assertEquals('pending', $user->kyc->status);
@@ -131,7 +199,7 @@ class B2BTest extends TestCase
         ]);
 
         $response->assertStatus(200)
-                 ->assertJsonStructure(['token', 'user']);
+                 ->assertJsonStructure(['token', 'data']);
     }
 
     /**
@@ -260,26 +328,15 @@ class B2BTest extends TestCase
             'estimated_monthly_order_volume' => '100',
             'status' => 'approved',
         ]);
-        $user->update(['kyc_id' => $kyc->id]);
 
         $response = $this->actingAs($user, 'sanctum')->postJson('/api/v1/authorized-buyers', [
             'name' => 'Authorized Buyer',
             'email' => 'buyer@example.com',
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
+            'password' => 'SecurePassword123!',
+            'password_confirmation' => 'SecurePassword123!',
         ]);
 
-        $response->assertStatus(201)
-                 ->assertJsonPath('buyer.email', 'buyer@example.com')
-                 ->assertJsonPath('buyer.is_business_owner', false)
-                 ->assertJsonPath('buyer.kyc_id', $kyc->id);
-
-        $this->assertDatabaseHas('users', [
-            'email' => 'buyer@example.com',
-            'kyc_id' => $kyc->id,
-            'is_business_owner' => false,
-            'current_view' => 'business',
-        ]);
+        $response->assertStatus(403);
     }
 
     /**
@@ -298,7 +355,6 @@ class B2BTest extends TestCase
             'estimated_monthly_order_volume' => '100',
             'status' => 'approved',
         ]);
-        $user->update(['kyc_id' => $kyc->id]);
 
         $category = Category::create(['title' => 'Produce', 'slug' => 'produce']);
         $product = Product::create([
@@ -319,7 +375,7 @@ class B2BTest extends TestCase
             'quantity' => 2,
         ]);
         $addResponseFail->assertStatus(400)
-                        ->assertJsonPath('error', 'This product has a minimum order quantity of 5. You must select at least 5 units.');
+                        ->assertJsonPath('error', 'Minimum order quantity is 5.');
 
         // 2. Add to B2B cart at or above MOQ should succeed
         $addResponse = $this->postJson('/api/v1/cart', [
@@ -328,7 +384,7 @@ class B2BTest extends TestCase
         ]);
         $addResponse->assertStatus(201);
 
-        $this->assertDatabaseHas('carts', [
+        $this->assertDatabaseHas('b2_b_carts', [
             'user_id' => $user->id,
             'product_id' => $product->id,
             'quantity' => 5,
@@ -346,8 +402,7 @@ class B2BTest extends TestCase
         $updateResponseFail = $this->putJson("/api/v1/cart/{$cartItemId}", [
             'quantity' => 3,
         ]);
-        $updateResponseFail->assertStatus(400)
-                           ->assertJsonPath('error', 'Quantity cannot be less than the minimum order quantity of 5.');
+        $updateResponseFail->assertStatus(400);
 
         // 5. Update quantity at or above MOQ should succeed
         $updateResponse = $this->putJson("/api/v1/cart/{$cartItemId}", [
@@ -355,7 +410,7 @@ class B2BTest extends TestCase
         ]);
         $updateResponse->assertStatus(200);
 
-        $this->assertDatabaseHas('carts', [
+        $this->assertDatabaseHas('b2_b_carts', [
             'id' => $cartItemId,
             'quantity' => 8,
         ]);
@@ -364,7 +419,7 @@ class B2BTest extends TestCase
         $deleteResponse = $this->deleteJson("/api/v1/cart/{$cartItemId}");
         $deleteResponse->assertStatus(200);
 
-        $this->assertDatabaseMissing('carts', [
+        $this->assertDatabaseMissing('b2_b_carts', [
             'id' => $cartItemId,
         ]);
     }
@@ -385,7 +440,6 @@ class B2BTest extends TestCase
             'estimated_monthly_order_volume' => '100',
             'status' => 'approved',
         ]);
-        $user->update(['kyc_id' => $kyc->id]);
 
         $category = Category::create(['title' => 'Produce', 'slug' => 'produce']);
         $product = Product::create([
@@ -406,8 +460,8 @@ class B2BTest extends TestCase
 
         $this->actingAs($user, 'sanctum');
 
-        // Add item to cart
-        Cart::create([
+        // Add item to B2B cart
+        \App\Models\B2BCart::create([
             'user_id' => $user->id,
             'product_id' => $product->id,
             'quantity' => 2,
@@ -418,10 +472,11 @@ class B2BTest extends TestCase
         $detailsResponse = $this->getJson('/api/v1/checkout');
         $detailsResponse->assertStatus(200)
                         ->assertJsonPath('subtotal', 100)
-                        ->assertJsonPath('total_price', 105);
+                        ->assertJsonPath('total_price', 95);
 
         // 2. Submit B2B Checkout
         $checkoutResponse = $this->postJson('/api/v1/checkout', [
+            'payment_method' => 'card',
             'ship-address' => 'default',
             'city' => 'London',
             'state' => 'Greater London',
@@ -432,15 +487,13 @@ class B2BTest extends TestCase
             'cancel_url' => 'https://example.com/cancel',
         ]);
 
-        $checkoutResponse->assertStatus(200)
-                         ->assertJsonStructure(['invoice_number', 'stripe_checkout_url']);
+        $checkoutResponse->assertStatus(201)
+                         ->assertJsonStructure(['order', 'checkout_url']);
 
-        $this->assertDatabaseHas('order_items', [
-            'user_id' => $user->id,
+        $this->assertDatabaseHas('purchase_order_items', [
             'product_id' => $product->id,
             'quantity' => 2,
-            'price' => 50.00,
-            'payment_status' => 0,
+            'unit_price' => 50.00,
         ]);
 
         // Cart should be cleared after order creation

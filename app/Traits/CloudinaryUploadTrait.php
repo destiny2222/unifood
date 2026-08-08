@@ -64,6 +64,44 @@ trait CloudinaryUploadTrait
                 'file_name' => $file->getClientOriginalName() ?? 'unknown'
             ]);
             
+        }
+    }
+
+    /**
+     * Upload document (PDF, DOCX, images) to Cloudinary
+     * 
+     * @param mixed $file The document file to upload
+     * @param string $folder The folder to store the file in
+     * @param array $options Additional upload options
+     * @return array Upload result with secure_url and public_id
+     */
+    public function uploadDocumentToCloudinary($file, string $folder = 'mightyolu/kyc_documents', array $options = [])
+    {
+        try {
+            $cloudinary = $this->getCloudinaryInstance();
+            
+            $defaultOptions = [
+                'folder' => $folder,
+                'resource_type' => 'auto',
+            ];
+            
+            $uploadOptions = array_merge($defaultOptions, $options);
+            
+            $result = $cloudinary->uploadApi()->upload($file->getRealPath(), $uploadOptions);
+            
+            return [
+                'success' => true,
+                'secure_url' => $result['secure_url'],
+                'public_id' => $result['public_id'],
+                'format' => $result['format'] ?? null,
+                'bytes' => $result['bytes'] ?? null
+            ];
+        } catch (\Exception $e) {
+            Log::error('Cloudinary document upload error: ' . $e->getMessage(), [
+                'folder' => $folder,
+                'file_name' => $file->getClientOriginalName() ?? 'unknown'
+            ]);
+            
             return [
                 'success' => false,
                 'error' => $e->getMessage()

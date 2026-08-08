@@ -289,95 +289,121 @@ Resets the user's password using the token sent to their email.
 ## 2. KYC (Know Your Customer) Endpoints
 
 ### 2.1 Submit KYC Details
-Submits company credentials for trade account review. This must be called after the user is authenticated and has no existing KYC record.
+Submits company credentials and verification documents for trade account review. Supports `application/json` or `multipart/form-data` for file uploads.
 
 * **Endpoint**: `POST /api/v1/kyc`
-* **Headers**: Authenticated Headers Required
+* **Headers**: Authenticated Headers Required (`Authorization: Bearer <token>`, Content-Type: `multipart/form-data` or `application/json`)
 
-#### Request Payload
+#### Request Payload (Full Multi-Section Verification Form)
 ```json
 {
-  "company_name": "Acme Corp",
+  "registered_business_name": "Acme Catering Supplies Ltd",
+  "trading_name": "Acme Foods",
+  "business_type": "limited_company",
   "company_registration_number": "VAT-12345-67",
-  "business_type": "restaurant",
-  "trade_address": "123 Business Rd, London",
-  "billing_contact": "John Doe",
-  "estimated_monthly_order_volume": "£5,000"
+  "vat_registration_number": "GB999888777",
+  "date_business_established": "2018-05-15",
+  "nature_of_business": "Food Catering & Wholesale Services",
+  "business_website": "https://www.acmefoods.co.uk",
+
+  "address_line_1": "123 Commercial Way",
+  "address_line_2": "Suite 4B",
+  "city": "London",
+  "postcode": "EC1A 1BB",
+  "country": "United Kingdom",
+
+  "primary_contact_name": "John Doe",
+  "primary_contact_position": "Managing Director",
+  "primary_contact_email": "john.doe@acmefoods.co.uk",
+  "primary_contact_phone": "+44 20 7946 0912",
+  "preferred_contact_method": "email",
+
+  "owner_full_name": "Johnathan Doe",
+  "owner_position": "Sole Shareholder & Director",
+  "owner_nationality": "British",
+  "owner_dob": "1980-08-20",
+  "owner_residential_address": "45 High Street, London, EC1A 2CC, UK",
+
+  "primary_products_of_interest": "African Spices, Bulk Grains, Palm Oil 20L",
+  "estimated_monthly_purchase_value": "£5,001–£10,000",
+  "expected_order_frequency": "weekly",
+  "purpose_of_purchase": "restaurant_catering"
 }
 ```
 
+> [!NOTE]
+> For document uploads (Section 5), submit using `multipart/form-data` with file attachments corresponding to any of the following fields (accepted formats: PDF, JPG, PNG, WEBP, DOCX, max 10MB per file):
+> - `certificate_of_incorporation`
+> - `proof_of_business_address`
+> - `vat_registration_certificate`
+> - `business_bank_statement`
+> - `government_id`
+> - `proof_of_residential_address`
+> - `partnership_agreement`
+> - `sole_trader_evidence`
+> - `other_documents`
+
 #### Validation Constraints
-* `company_name`: Required, string, max 255.
-* `company_registration_number`: Required, alphanumeric (letters and numbers only, hyphens, and spaces allowed), between 5 and 20 characters (Regex: `/^[A-Z0-9\-\s]{5,20}$/i`).
-* `business_type`: Required, must be one of: `restaurant`, `retailer`, `caterer`, `reseller`, `other`.
-* `trade_address`: Required, string.
-* `billing_contact`: Required, string, max 255.
-* `estimated_monthly_order_volume`: Required, string, max 255.
+* **Section 1 (Business Info)**:
+  * `registered_business_name` or `company_name`: Required, string, max 255.
+  * `trading_name`: Optional, string, max 255.
+  * `business_type`: Required. Options: `sole_trader`, `limited_company`, `partnership`, `charity_non_profit`, `restaurant`, `retailer`, `caterer`, `reseller`, `other`.
+  * `company_registration_number`: Optional for sole traders/partnerships. If provided, must be 5-20 alphanumeric characters (Regex: `/^[A-Z0-9\-\s]{5,20}$/i`).
+  * `vat_registration_number`: Optional, string.
+  * `date_business_established`: Optional, valid date (`YYYY-MM-DD`).
+  * `nature_of_business`: Optional, string.
+  * `business_website`: Optional, valid URL or string.
+* **Section 2 (Address)**:
+  * `trade_address` or `address_line_1`: Required. (If individual address lines are provided, `trade_address` is auto-generated).
+  * `address_line_2`, `city`, `postcode`, `country`: Optional, string.
+* **Section 3 (Primary Contact)**:
+  * `billing_contact` or `primary_contact_name`: Required.
+  * `primary_contact_position`, `primary_contact_email`, `primary_contact_phone`: Optional.
+  * `preferred_contact_method`: Optional (`email` or `telephone`).
+* **Section 4 (Ownership)**:
+  * `owner_full_name`, `owner_position`, `owner_nationality`, `owner_dob`, `owner_residential_address`: Optional.
+* **Section 5 (Documents)**:
+  * Document file attachments (`certificate_of_incorporation`, `proof_of_business_address`, etc.): File upload, max 10MB each.
+* **Section 6 (Purchasing Info)**:
+  * `primary_products_of_interest`: Optional, text.
+  * `estimated_monthly_purchase_value` or `estimated_monthly_order_volume`: Optional. Options: `£1,000–£2,500`, `£2,501–£5,000`, `£5,001–£10,000`, `Over £10,000`.
+  * `expected_order_frequency`: Optional (`weekly`, `fortnightly`, `monthly`, `ad_hoc`).
+  * `purpose_of_purchase`: Optional (`retail_resale`, `restaurant_catering`, `distribution`, `hospitality`, `corporate_use`, `other`).
 
 #### Response (201 Created)
 ```json
 {
   "message": "Your application has been received and is pending review.",
-  "kyc": {
+  "data": {
     "id": 5,
     "user_id": "019fb66f-c494-73ce-b7d6-db6a309ee12e",
-    "company_name": "Acme Corp",
+    "company_name": "Acme Catering Supplies Ltd",
+    "trading_name": "Acme Foods",
+    "business_type": "limited_company",
     "company_registration_number": "VAT-12345-67",
-    "business_type": "restaurant",
-    "trade_address": "123 Business Rd, London",
-    "billing_contact": "John Doe",
-    "estimated_monthly_order_volume": "£5,000",
+    "vat_registration_number": "GB999888777",
+    "trade_address": "123 Commercial Way, Suite 4B, London, EC1A 1BB, United Kingdom",
+    "billing_contact": "John Doe - (Managing Director) - john.doe@acmefoods.co.uk - +44 20 7946 0912",
+    "certificate_of_incorporation": "kyc_documents/cert_12345.pdf",
+    "proof_of_business_address": "kyc_documents/proof_address.pdf",
+    "estimated_monthly_order_volume": "£5,001–£10,000",
     "status": "pending",
-    "created_at": "2026-07-31T04:40:00.000000Z",
-    "updated_at": "2026-07-31T04:40:00.000000Z"
-  },
-  "user": {
-    "id": "019fb66f-c494-73ce-b7d6-db6a309ee12e",
-    "name": "John Doe",
-    "email": "john.doe@example.com",
-    "kyc_id": 5,
-    "is_business_owner": 1,
-    "current_view": "business",
-    "kyc": {
-      "id": 5,
-      "user_id": "019fb66f-c494-73ce-b7d6-db6a309ee12e",
-      "company_name": "Acme Corp",
-      "company_registration_number": "VAT-12345-67",
-      "business_type": "restaurant",
-      "status": "pending"
-    }
+    "created_at": "2026-08-08T05:00:00.000000Z",
+    "updated_at": "2026-08-08T05:00:00.000000Z"
   }
 }
 ```
 
-#### Error Responses
-* **400 Bad Request** (Already associated with B2B):
-  ```json
-  {
-    "error": "You are already associated with a B2B trade account."
-  }
-  ```
-* **422 Unprocessable Content** (Validation failed):
-  ```json
-  {
-    "errors": {
-      "company_registration_number": [
-        "The company/VAT number format is invalid. It should be alphanumeric, between 5 and 20 characters."
-      ]
-    }
-  }
-  ```
-
 ---
 
 ### 2.2 Resubmit KYC Details
-Resubmits a rejected or info-requested B2B KYC application with corrected details.
+Resubmits a rejected or info-requested B2B KYC application with updated fields or replacement verification documents.
 
 * **Endpoint**: `POST /api/v1/resubmit`
 * **Headers**: Authenticated Headers Required
 
-#### Request Payload
-Same fields and validation constraints as **Submit KYC Details** (Section 2.1).
+#### Request Payload & Validation
+Accepts the same multi-section fields and document attachments as **Submit KYC Details** (Section 2.1).
 
 #### Response (200 OK)
 ```json
@@ -385,16 +411,9 @@ Same fields and validation constraints as **Submit KYC Details** (Section 2.1).
   "message": "Your application has been successfully updated and resubmitted for review.",
   "kyc": {
     "id": 5,
-    "user_id": "019fb66f-c494-73ce-b7d6-db6a309ee12e",
-    "company_name": "Acme Corp Updated",
-    "company_registration_number": "VAT-12345-67",
-    "business_type": "restaurant",
-    "trade_address": "123 Business Rd, London",
-    "billing_contact": "John Doe",
-    "estimated_monthly_order_volume": "£5,000",
+    "company_name": "Acme Catering Supplies Ltd Updated",
     "status": "pending",
-    "status_notes": null,
-    "updated_at": "2026-08-01T09:00:00.000000Z"
+    "status_notes": null
   }
 }
 ```
