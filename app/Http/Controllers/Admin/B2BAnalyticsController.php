@@ -44,20 +44,39 @@ class B2BAnalyticsController extends Controller
             ->take(8)
             ->get();
 
-        // July Chart Data Aggregation
-        $julyDays = [];
-        $julyOrdersData = [];
-        $julyUsersData = [];
+        // 12-Month Chart Data Aggregation starting from July 2026
+        $monthlyLabels = [];
+        $monthlyOrdersData = [];
+        $monthlyRevenueData = [];
 
-        for ($day = 1; $day <= 31; $day++) {
-            $dateStr = sprintf('2026-07-%02d', $day);
-            $julyDays[] = $day . ' Jul';
+        $monthsList = [
+            ['year' => 2026, 'month' => 7, 'label' => 'Jul'],
+            ['year' => 2026, 'month' => 8, 'label' => 'Aug'],
+            ['year' => 2026, 'month' => 9, 'label' => 'Sep'],
+            ['year' => 2026, 'month' => 10, 'label' => 'Oct'],
+            ['year' => 2026, 'month' => 11, 'label' => 'Nov'],
+            ['year' => 2026, 'month' => 12, 'label' => 'Dec'],
+            ['year' => 2027, 'month' => 1, 'label' => 'Jan'],
+            ['year' => 2027, 'month' => 2, 'label' => 'Feb'],
+            ['year' => 2027, 'month' => 3, 'label' => 'Mar'],
+            ['year' => 2027, 'month' => 4, 'label' => 'Apr'],
+            ['year' => 2027, 'month' => 5, 'label' => 'May'],
+            ['year' => 2027, 'month' => 6, 'label' => 'Jun'],
+        ];
 
-            $ordersCount = PurchaseOrder::whereDate('created_at', $dateStr)->count();
-            $julyOrdersData[] = $ordersCount;
+        foreach ($monthsList as $m) {
+            $monthlyLabels[] = $m['label'];
 
-            $usersCount = User::whereDate('created_at', $dateStr)->count();
-            $julyUsersData[] = $usersCount;
+            $ordersCount = PurchaseOrder::whereYear('created_at', $m['year'])
+                ->whereMonth('created_at', $m['month'])
+                ->count();
+            $monthlyOrdersData[] = $ordersCount;
+
+            $revenueSum = PurchaseOrder::whereNotIn('status', ['cancelled', 'rejected'])
+                ->whereYear('created_at', $m['year'])
+                ->whereMonth('created_at', $m['month'])
+                ->sum('total_amount');
+            $monthlyRevenueData[] = (float) $revenueSum;
         }
 
         return view('admin.b2b_analytics.index', compact(
@@ -68,9 +87,9 @@ class B2BAnalyticsController extends Controller
             'totalB2BProducts',
             'topMerchants',
             'recentOrders',
-            'julyDays',
-            'julyOrdersData',
-            'julyUsersData'
+            'monthlyLabels',
+            'monthlyOrdersData',
+            'monthlyRevenueData'
         ));
     }
 }

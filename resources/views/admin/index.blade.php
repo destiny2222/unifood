@@ -182,8 +182,8 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
-                            <h4 class="card-title mb-2">Total Earning</h4>
-                            <p class="text-muted fw-medium fs-22 mb-0">{{ $totalEarnings }}</p>
+                             <h4 class="card-title mb-2">Total Earning</h4>
+                            <p class="text-muted fw-medium fs-22 mb-0">£{{ number_format($totalEarnings, 2) }}</p>
                         </div>
                         <div>
                             <div class="avatar-md bg-primary bg-opacity-10 rounded">
@@ -200,7 +200,7 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
                             <h4 class="card-title mb-2">Today Pending Earning</h4>
-                            <p class="text-muted fw-medium fs-22 mb-0">{{ $todayPendingEarnings }}</p>
+                            <p class="text-muted fw-medium fs-22 mb-0">£{{ number_format($todayPendingEarnings, 2) }}</p>
                         </div>
                         <div>
                             <div class="avatar-md bg-primary bg-opacity-10 rounded">
@@ -217,7 +217,7 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
                             <h4 class="card-title mb-2">This Month Earning</h4>
-                            <p class="text-muted fw-medium fs-22 mb-0">{{ $thisMonthEarnings }}</p>
+                            <p class="text-muted fw-medium fs-22 mb-0">£{{ number_format($thisMonthEarnings, 2) }}</p>
                         </div>
                         <div>
                             <div class="avatar-md bg-primary bg-opacity-10 rounded">
@@ -234,7 +234,7 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
                             <h4 class="card-title mb-2">This Year Earning</h4>
-                            <p class="text-muted fw-medium fs-22 mb-0">{{ $thisYearEarnings }}</p>
+                            <p class="text-muted fw-medium fs-22 mb-0">£{{ number_format($thisYearEarnings, 2) }}</p>
                         </div>
                         <div>
                             <div class="avatar-md bg-primary bg-opacity-10 rounded">

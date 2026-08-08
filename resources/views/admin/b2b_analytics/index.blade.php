@@ -79,17 +79,34 @@
         </div>
     </div>
 
-    <!-- July Analytics Chart Section -->
+    <!-- Monthly Sales Revenue Chart Section -->
     <div class="row">
         <div class="col-xl-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h4 class="card-title">July 2026 Activity: Daily Orders & Registered Users</h4>
-                    <span class="badge bg-primary-subtle text-primary fs-12">July 2026</span>
+                    <h4 class="card-title">Completed Sales Revenue (£) vs Month</h4>
+                    <span class="badge bg-success-subtle text-success fs-12">Monthly Revenue Trend</span>
                 </div>
                 <div class="card-body">
-                    <div style="height: 340px; position: relative;">
-                        <canvas id="julyAnalyticsChart"></canvas>
+                    <div style="height: 320px; position: relative;">
+                        <canvas id="monthlyRevenueChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Monthly Total Orders Chart Section -->
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="card-title">Monthly Total Orders</h4>
+                    <span class="badge bg-primary-subtle text-primary fs-12">Monthly Orders Volume</span>
+                </div>
+                <div class="card-body">
+                    <div style="height: 320px; position: relative;">
+                        <canvas id="monthlyOrdersChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -236,32 +253,22 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    var ctx = document.getElementById('julyAnalyticsChart');
-    if (ctx && typeof Chart !== 'undefined') {
-        new Chart(ctx.getContext('2d'), {
+    // 1. Completed Sales Revenue vs Month Chart
+    var revCtx = document.getElementById('monthlyRevenueChart');
+    if (revCtx && typeof Chart !== 'undefined') {
+        new Chart(revCtx.getContext('2d'), {
             type: 'line',
             data: {
-                labels: {!! json_encode($julyDays) !!},
+                labels: {!! json_encode($monthlyLabels) !!},
                 datasets: [
                     {
-                        label: 'Daily B2B Orders',
-                        data: {!! json_encode($julyOrdersData) !!},
-                        borderColor: '#3b82f6',
-                        backgroundColor: 'rgba(59, 130, 246, 0.15)',
+                        label: 'Completed Sales Revenue (£)',
+                        data: {!! json_encode($monthlyRevenueData) !!},
+                        borderColor: '#059669',
+                        backgroundColor: 'rgba(5, 150, 105, 0.15)',
                         borderWidth: 2.5,
-                        pointRadius: 3,
-                        pointHoverRadius: 6,
-                        fill: true,
-                        tension: 0.3
-                    },
-                    {
-                        label: 'Registered Users / Merchants',
-                        data: {!! json_encode($julyUsersData) !!},
-                        borderColor: '#10b981',
-                        backgroundColor: 'rgba(16, 185, 129, 0.15)',
-                        borderWidth: 2.5,
-                        pointRadius: 3,
-                        pointHoverRadius: 6,
+                        pointRadius: 4,
+                        pointHoverRadius: 7,
                         fill: true,
                         tension: 0.3
                     }
@@ -271,12 +278,58 @@ document.addEventListener('DOMContentLoaded', function () {
                 responsive: true,
                 maintainAspectRatio: false,
                 scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                            precision: 0
+                    yAxes: [
+                        {
+                            ticks: {
+                                beginAtZero: true,
+                                callback: function(value) {
+                                    return '£' + value.toLocaleString();
+                                }
+                            }
                         }
-                    }]
+                    ]
+                },
+                legend: {
+                    display: true,
+                    position: 'top'
+                }
+            }
+        });
+    }
+
+    // 2. Monthly Total Orders Chart
+    var orderCtx = document.getElementById('monthlyOrdersChart');
+    if (orderCtx && typeof Chart !== 'undefined') {
+        new Chart(orderCtx.getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: {!! json_encode($monthlyLabels) !!},
+                datasets: [
+                    {
+                        label: 'Monthly Total Orders',
+                        data: {!! json_encode($monthlyOrdersData) !!},
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.15)',
+                        borderWidth: 2.5,
+                        pointRadius: 4,
+                        pointHoverRadius: 7,
+                        fill: true,
+                        tension: 0.3
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    yAxes: [
+                        {
+                            ticks: {
+                                beginAtZero: true,
+                                precision: 0
+                            }
+                        }
+                    ]
                 },
                 legend: {
                     display: true,

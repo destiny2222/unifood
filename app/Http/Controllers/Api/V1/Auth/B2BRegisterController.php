@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\DB;
+
 
 class B2BRegisterController extends Controller
 {
@@ -36,10 +38,12 @@ class B2BRegisterController extends Controller
         }
 
         try {
+            DB::beginTransaction();
             $existingUser = User::where('email', $request->email)->first();
 
             if ($existingUser) {
                 if ($existingUser->kyc()->exists()) {
+                    DB::rollBack();
                     return response()->json([
                         'errors' => ['email' => ['This email is already associated with a B2B account. Please log in.']]
                     ], 422);
@@ -47,6 +51,7 @@ class B2BRegisterController extends Controller
 
                 if (Hash::check($request->password, $existingUser->password)) {
                     $token = $existingUser->createToken('b2b_token')->plainTextToken;
+                    DB::commit();
                     return response()->json([
                         'message' => 'Account linked successfully. Please complete your B2B profile.',
                         'token' => $token,
@@ -54,6 +59,7 @@ class B2BRegisterController extends Controller
                         'data' => $existingUser,
                     ], 200);
                 } else {
+                    DB::rollBack();
                     return response()->json([
                         'errors' => ['password' => ['This email belongs to an existing personal account. Please enter your correct password to link it, or log in first.']]
                     ], 422);
@@ -68,6 +74,8 @@ class B2BRegisterController extends Controller
 
             $token = $user->createToken('b2b_token')->plainTextToken;
 
+            DB::commit();
+
             return response()->json([
                 'message' => 'Registration successful.',
                 'token' => $token,
@@ -75,6 +83,7 @@ class B2BRegisterController extends Controller
                 'data' => $user,
             ], 201);
         } catch (\Exception $e) {
+            DB::rollBack();
             Log::error("Error registration: " . $e->getMessage());
             return response()->json([
                 'message' => 'An error occurred while registering.',
