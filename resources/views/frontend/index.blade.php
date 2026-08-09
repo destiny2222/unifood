@@ -95,7 +95,7 @@
                         <span>
                             <img src="/user/images/heading_shapes.png" alt="shapes" class="img-fluid w-100">
                         </span>
-                        <p>Prefect for your next meal - whether it's a quick bite or a family feast.</p>
+                        <p>Perfect for your next meal - whether it's a quick bite or a family feast.</p>
                     </div>
                 </div>
             </div>
