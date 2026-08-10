@@ -24,3 +24,4 @@ Route::post('/contact/store', [FrontendController::class, 'contactStore'])->name
 Route::get('/products/category/{categorySlug}', [FrontendController::class, 'productsByCategory'])
      ->name('products.by.category');
 Route::post('/subscribe', [FrontendController::class, 'subscribe'])->name('subscribe');
+Route::post('/chatbot', [FrontendController::class, 'chatbot'])->name('frontend.chatbot');

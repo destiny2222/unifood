@@ -92,6 +92,7 @@ class B2BCatalogController extends Controller
                 'image' => $product->images, // Main image as a string
                 'product_images' => $product->photos->pluck('image_path'),
                 'standard_price' => (float) $product->price,
+                'discount_price' => (float) $product->discount,
                 'availability' => $product->availability,
                 'trade_price' => $tradePrice,
                 'is_b2b' => $product->is_b2b,
@@ -153,6 +154,7 @@ class B2BCatalogController extends Controller
             'product_images' => $product->photos->pluck('image_path'), // Gallery images array
             'category' => $product->category ? $product->category->title : null,
             'standard_price' => (float) $product->price,
+            'discount_price' => (float) $product->discount,
             'trade_price' => $tradePrice,
             'availability' => $product->availability,
             'minimum_order_quantity' => $product->minimum_order_quantity,

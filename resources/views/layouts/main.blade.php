@@ -378,8 +378,362 @@
             });
         })(jQuery);
     </script>
+    <!-- Chatbot Button -->
+    <button id="chatbot-toggle-btn" class="chatbot-btn" aria-label="Open AI Assistant">
+        <svg class="chatbot-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+        </svg>
+    </button>
+
+    <!-- Chatbot Panel -->
+    <div id="chatbot-panel" class="chatbot-panel-container d-none">
+        <div class="chatbot-header">
+            <div class="chatbot-header-info">
+                <div class="chatbot-avatar">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 21m0 0l-.813-5.096M9 21h3m-3.078-5.096a9.045 9.045 0 112.136 0M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    <span class="avatar-status-badge"></span>
+                </div>
+                <div>
+                    <h4 class="chatbot-title">Mightyolu Assistant</h4>
+                    <p class="chatbot-subtitle">Retail AI Help</p>
+                </div>
+            </div>
+            <button id="chatbot-close-btn" class="chatbot-close-btn">&times;</button>
+        </div>
+
+        <div id="chatbot-messages" class="chatbot-messages-body"></div>
+
+        <div class="chatbot-quick-actions">
+            <button class="quick-action-chip" data-query="How do I place an order?">Order Help</button>
+            <button class="quick-action-chip" data-query="What are your opening hours?">Opening Hours</button>
+            <button class="quick-action-chip" data-query="Do you deliver across the UK?">Delivery Info</button>
+            <button class="quick-action-chip" data-query="What is your return policy?">Returns</button>
+        </div>
+
+        <form id="chatbot-input-form" class="chatbot-input-footer">
+            <input type="text" id="chatbot-input" placeholder="Type a message..." required autocomplete="off">
+            <button type="submit" id="chatbot-submit-btn">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </button>
+        </form>
+    </div>
+
+    <style>
+        .chatbot-btn {
+            position: fixed;
+            bottom: 110px;
+            right: 24px;
+            z-index: 999999;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background-color: #40872a;
+            border: none;
+            color: white;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+        .chatbot-btn:hover {
+            transform: scale(1.1);
+            background-color: #326b21;
+        }
+        .chatbot-icon {
+            width: 28px;
+            height: 28px;
+        }
+        .chatbot-panel-container {
+            position: fixed;
+            bottom: 110px;
+            right: 24px;
+            z-index: 1000000;
+            width: 380px;
+            height: 520px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+            border: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            font-family: inherit;
+        }
+        @media (max-width: 480px) {
+            .chatbot-panel-container {
+                width: 100%;
+                height: 100%;
+                bottom: 0;
+                right: 0;
+                border-radius: 0;
+            }
+        }
+        .chatbot-header {
+            background: linear-gradient(135deg, #40872a, #326b21);
+            color: white;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+        }
+        .chatbot-header-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-grow: 1;
+        }
+        .chatbot-avatar {
+            position: relative;
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .chatbot-avatar svg {
+            width: 20px;
+            height: 20px;
+        }
+        .avatar-status-badge {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 10px;
+            height: 10px;
+            background: #4ade80;
+            border: 2px solid #40872a;
+            border-radius: 50%;
+        }
+        .chatbot-title {
+            margin: 0;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .chatbot-subtitle {
+            margin: 0;
+            font-size: 11px;
+            opacity: 0.85;
+        }
+        .chatbot-close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0 4px;
+        }
+        .chatbot-messages-body {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .chat-msg {
+            max-width: 85%;
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+        .chat-msg.bot {
+            align-self: flex-start;
+            background: #f3f4f6;
+            color: #1f2937;
+            border-top-left-radius: 4px;
+        }
+        .chat-msg.user {
+            align-self: flex-end;
+            background: #40872a;
+            color: white;
+            border-top-right-radius: 4px;
+        }
+        .chat-msg.loading {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #9ca3af;
+        }
+        .chat-dot {
+            width: 6px;
+            height: 6px;
+            background-color: currentColor;
+            border-radius: 50%;
+            animation: chatDotPulse 1.2s infinite;
+        }
+        .chat-dot:nth-child(2) { animation-delay: 0.2s; }
+        .chat-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes chatDotPulse {
+            0%, 100% { transform: scale(1); opacity: 0.4; }
+            50% { transform: scale(1.4); opacity: 1; }
+        }
+        .chatbot-quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 8px 16px;
+            border-top: 1px solid #f3f4f6;
+            background: #fafafa;
+        }
+        .quick-action-chip {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 6px 12px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .quick-action-chip:hover {
+            background-color: #40872a;
+            color: white;
+            border-color: #40872a;
+        }
+        .chatbot-input-footer {
+            display: flex;
+            border-top: 1px solid #e5e7eb;
+            padding: 8px;
+            background: white;
+        }
+        .chatbot-input-footer input {
+            flex-grow: 1;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 13px;
+            outline: none;
+        }
+        .chatbot-input-footer input:focus {
+            border-color: #40872a;
+        }
+        .chatbot-input-footer button {
+            background: #40872a;
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            margin-left: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .chatbot-input-footer button svg {
+            width: 18px;
+            height: 18px;
+        }
+    </style>
+
     @livewireScripts
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script>
+        $(document).ready(function() {
+            const $toggleBtn = $('#chatbot-toggle-btn');
+            const $panel = $('#chatbot-panel');
+            const $closeBtn = $('#chatbot-close-btn');
+            const $messages = $('#chatbot-messages');
+            const $form = $('#chatbot-input-form');
+            const $input = $('#chatbot-input');
+            
+            let messagesHistory = [];
+            
+            // Toggle Chatbot
+            $toggleBtn.on('click', function() {
+                $panel.toggleClass('d-none');
+                if (!$panel.hasClass('d-none') && messagesHistory.length === 0) {
+                    addMessage('bot', "Hello! I'm your Mightyolu Assistant. How can I help you today?");
+                }
+                scrollToBottom();
+            });
+            
+            $closeBtn.on('click', function() {
+                $panel.addClass('d-none');
+            });
+            
+            // Quick action handler
+            $(document).on('click', '.quick-action-chip', function() {
+                const query = $(this).data('query');
+                handleUserMessage(query);
+            });
+            
+            // Form submission
+            $form.on('submit', function(e) {
+                e.preventDefault();
+                const text = $input.val().trim();
+                if (!text) return;
+                $input.val('');
+                handleUserMessage(text);
+            });
+            
+            function addMessage(sender, text) {
+                let content = text;
+                if (sender === 'bot') {
+                    content = content.replace(/\n\n/g, '<div class="mb-2"></div>');
+                    content = content.replace(/\n/g, "<br />");
+                    content = content.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+                    content = content.replace(/•\s(.*?)(<br \/>|$)/g, '<div class="d-flex align-items-start gap-1 ml-1 my-1"><span class="text-success font-weight-bold">•</span><span>$1</span></div>');
+                }
+                
+                const msgHtml = `<div class="chat-msg ${sender}">${content}</div>`;
+                $messages.append(msgHtml);
+                
+                messagesHistory.push({ sender: sender, text: text });
+                scrollToBottom();
+            }
+            
+            function showLoading() {
+                const loadingHtml = `
+                    <div id="chat-loading" class="chat-msg bot loading">
+                        <span class="chat-dot"></span>
+                        <span class="chat-dot"></span>
+                        <span class="chat-dot"></span>
+                    </div>
+                `;
+                $messages.append(loadingHtml);
+                scrollToBottom();
+            }
+            
+            function hideLoading() {
+                $('#chat-loading').remove();
+            }
+            
+            function scrollToBottom() {
+                $messages.scrollTop($messages[0].scrollHeight);
+            }
+            
+            function handleUserMessage(text) {
+                addMessage('user', text);
+                showLoading();
+                
+                $.ajax({
+                    url: "{{ route('frontend.chatbot') }}",
+                    method: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        messages: messagesHistory
+                    },
+                    success: function(response) {
+                        hideLoading();
+                        if (response.message) {
+                            addMessage('bot', response.message);
+                        } else {
+                            addMessage('bot', "Sorry, I encountered an issue. Please try again.");
+                        }
+                    },
+                    error: function() {
+                        hideLoading();
+                        addMessage('bot', "Sorry, I encountered an error. Please try again.");
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>

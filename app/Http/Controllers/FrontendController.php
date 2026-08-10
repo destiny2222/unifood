@@ -328,4 +328,101 @@ public function productDetails(Product $product)
 
         return back()->with('success', 'You have successfully subscribed!');
     }
+
+    public function chatbot(Request $request)
+    {
+        $apiKey = env('GEMINI_API_KEY');
+        if (!$apiKey) {
+            return response()->json(['error' => 'GEMINI_API_KEY is not configured on the server.'], 500);
+        }
+
+        // Fetch B2C products to provide live catalog context to Gemini
+        $products = \App\Models\Product::where('is_b2b', 0)->take(15)->get();
+        $catalogContext = "\n\nAVAILABLE PRODUCT CATALOG:\n";
+        foreach ($products as $item) {
+            $catalogContext .= "- **{$item->title}**:\n" .
+                "  * Standard Price: £{$item->price}" . ($item->discount > 0 ? " (Discount Price: £{$item->discount})" : "") . "\n" .
+                "  * Availability: {$item->availability}\n" .
+                "  * Link Slug: {$item->slug}\n" .
+                "  * Description: " . strip_tags(\Illuminate\Support\Str::limit($item->description, 100)) . "\n";
+        }
+
+        // B2C System Prompt
+        $systemPrompt = "You are the Mightyolu AI Assistant, a helpful and professional customer service agent for Mightyolu.com, a UK-based retailer of African food products, groceries, beverages, spices, household essentials and personal care products based in Edinburgh, Scotland, United Kingdom.
+
+Behavioral Guidelines:
+1. Direct Contact Info:
+   - Location: 10/11 Westside Plaza, Edinburgh, Scotland, EH14 2SW.
+   - Opening Hours: Monday – Friday: 9:00am – 6:00pm | Saturday: 10:00am – 5:00pm | Sunday: Closed.
+   - Phone Support: 07867986338.
+   - General Enquiries: inquiry@mightyolu.com.
+2. How to Purchase:
+   - B2C customers simply browse the catalog, add products to their cart, and complete checkout using credit card, debit card, Apple Pay, or Google Pay.
+3. Formatting: Keep responses readable, well-spaced, and use bullet points for lists. Always be polite, professional, and clear.
+4. Product Stock & Catalog Enquiries:
+   - When a user asks about product stock, catalog items, pricing, or specifications, consult the catalog list below.
+   - If the product exists in the catalog list, confirm it is available and provide its details and price.
+   - Crucial Link Formatting: Always include a link to the product's details page using standard Markdown format exactly as follows: [Product Title](/products/link-slug) replacing link-slug with the actual Link Slug provided.
+   - If the product is not in the catalog below, politely explain that we don't currently have it in stock.
+
+KNOWLEDGE BASE & FREQUENTLY ASKED QUESTIONS (FAQS):
+1. General Company Information:
+   - What is MightyOlu?: MightyOlu is a UK-based retailer and wholesaler of African food products, groceries, beverages, spices, household essentials and personal care products.
+   - Where are you located?: We are based in Edinburgh, Scotland, United Kingdom (10/11 Westside Plaza, Edinburgh, EH14 2SW).
+   - Do you deliver across the UK?: Yes. We deliver throughout the United Kingdom.
+2. Orders:
+   - How do I place an order?: Add products to your basket and proceed to checkout.
+   - Can I return products?: Eligible products may be returned in accordance with our Returns Policy.
+" . $catalogContext;
+
+        // Map messages history to Gemini API format
+        $messages = $request->input('messages', []);
+        $contents = [];
+        
+        foreach ($messages as $m) {
+            if (isset($m['text'])) {
+                $contents[] = [
+                    'role' => (isset($m['sender']) && $m['sender'] === 'user') ? 'user' : 'model',
+                    'parts' => [
+                        ['text' => $m['text']]
+                    ]
+                ];
+            }
+        }
+
+        if (empty($contents)) {
+            $contents[] = [
+                'role' => 'user',
+                'parts' => [
+                    ['text' => 'Hello']
+                ]
+            ];
+        }
+
+        // Post request directly to Gemini API
+        $response = \Illuminate\Support\Facades\Http::post(
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key={$apiKey}",
+            [
+                'contents' => $contents,
+                'systemInstruction' => [
+                    'parts' => [
+                        ['text' => $systemPrompt]
+                    ]
+                ],
+                'generationConfig' => [
+                    'temperature' => 0.7,
+                    'maxOutputTokens' => 800,
+                ]
+            ]
+        );
+
+        if (!$response->successful()) {
+            return response()->json(['error' => 'Failed to connect to Gemini API.'], 502);
+        }
+
+        $data = $response->json();
+        $candidateText = $data['candidates'][0]['content']['parts'][0]['text'] ?? 'Sorry, I am unable to generate a response right now.';
+
+        return response()->json(['message' => $candidateText]);
+    }
 }
