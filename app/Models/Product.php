@@ -12,11 +12,26 @@ class Product extends Model
      public $fillable = [ 
         'title',
         'slug',
+        'stock_number',
+        'barcode',
         'availability',
         'featured',
         'badge',
         'price',
         'discount',
+        'cost_price',
+        'tax_rate',
+        'cost_inc_tax',
+        'margin_percent',
+        'rr_price',
+        'bottle_deposit_item_name',
+        'product_type',
+        'size',
+        'colour',
+        'tare_weight',
+        'age_restriction',
+        'is_variable_price',
+        'tax_exempt_eligible',
         'today_special',
         'images',
         'weight',
@@ -27,6 +42,20 @@ class Product extends Model
         'minimum_order_quantity',
         'category_id',
         'description',
+    ];
+
+    protected $casts = [
+        'is_b2b' => 'boolean',
+        'has_variants' => 'boolean',
+        'is_variable_price' => 'boolean',
+        'tax_exempt_eligible' => 'boolean',
+        'price' => 'decimal:2',
+        'discount' => 'decimal:2',
+        'cost_price' => 'decimal:2',
+        'cost_inc_tax' => 'decimal:2',
+        'margin_percent' => 'decimal:6',
+        'rr_price' => 'decimal:2',
+        'tare_weight' => 'decimal:2',
     ];
 
     public function category()
